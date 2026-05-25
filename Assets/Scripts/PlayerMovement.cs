@@ -6,7 +6,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float xPos;
     [SerializeField] float yPos;
     [SerializeField] float zPos;
-    [SerializeField] int trackNumber = 1;
+    [SerializeField] int trackNumber = 0;
     [SerializeField] private int sideSpeed = 9;
     [SerializeField] private bool isMoving;
     [SerializeField] int moveDirection; //  (1=Left) (2=Right)
@@ -41,33 +41,33 @@ public class PlayerMovement : MonoBehaviour
     
     public void LeftMove()
     {
+        if (trackNumber == 0)
+        {
+            isMoving = true;
+            moveDirection = 1;
+            trackNumber = -1;
+        }
         if (trackNumber == 1)
         {
             isMoving = true;
             moveDirection = 1;
             trackNumber = 0;
         }
-        if (trackNumber == 2)
-        {
-            isMoving = true;
-            moveDirection = 1;
-            trackNumber = 1;
-        }
     }
 
     public void RightMove()
     {
-        if (trackNumber == 1)
-        {
-            isMoving = true;
-            moveDirection = 2;
-            trackNumber = 2;
-        }
         if (trackNumber == 0)
         {
             isMoving = true;
             moveDirection = 2;
             trackNumber = 1;
+        }
+        if (trackNumber == -1)
+        {
+            isMoving = true;
+            moveDirection = 2;
+            trackNumber = 0;
         }
     }
 }
