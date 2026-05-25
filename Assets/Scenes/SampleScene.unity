@@ -3577,11 +3577,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   moveSpeed: 4
-  xPos: 1
-  yPos: 1
-  zPos: 8
-  trackNumber: 1
   sideSpeed: 9
+  trackNumber: 0
   isMoving: 0
   moveDirection: 0
 --- !u!65 &1808064515
