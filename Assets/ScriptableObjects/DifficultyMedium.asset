@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   movementSpeed: 7
   spawnRate: 1
-  maxObstaclesPerTrack: 3
+  maxObstaclesPerTrack: 15
   allowedItems: []
