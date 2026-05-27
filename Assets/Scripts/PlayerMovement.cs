@@ -2,8 +2,9 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    [field: SerializeField] public float moveSpeed {get; private set;} = 5f;
+    [field: SerializeField] public float moveSpeed {get; set;} = 5f;
     [SerializeField] private int sideSpeed = 9;
+    
     
     [SerializeField] int trackNumber = 0; // Tracks target X position (-1, 0, 1)
     [SerializeField] private bool isMoving;

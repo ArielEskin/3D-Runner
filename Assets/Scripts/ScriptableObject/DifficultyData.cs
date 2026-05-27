@@ -13,7 +13,7 @@ public class SpawnableItem
 public class DifficultyData : ScriptableObject
 {
     [Header("Game Settings")]
-    public float movementSpeed = 10f;
+    public float movementSpeed;
     
     [Header("Spawning Settings")]
     public float spawnRate = 1f; // How frequently a track tile tries to spawn things
