@@ -8,21 +8,11 @@ public class DifficultyManager : ScriptableObject
     public DifficultyData currentDifficulty;
     
     [Header("Progression Setup")]
-    public List<DifficultyData> difficultyTiers; // E.g., 0=Easy, 1=Medium, 2=Hard
+    public List<DifficultyData> difficultyTiers; //  0=Easy, 1=Medium, 2=Hard
     private int currentTierIndex = 0;
 
-    // Call this from a start screen or game initialization
-    public void ResetDifficulty()
-    {
-        if (difficultyTiers.Count > 0)
-        {
-            currentTierIndex = 0;
-            currentDifficulty = difficultyTiers[currentTierIndex];
-        }
-    }
-
-    // Call this when the player reaches a certain distance/score
-    public void LevelUpDifficulty()
+    
+    public void LevelUpDifficulty() // Call this when the player reaches a certain distance/score
     {
         if (currentTierIndex < difficultyTiers.Count - 1)
         {

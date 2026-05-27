@@ -4,7 +4,7 @@ using UnityEngine;
 [System.Serializable]
 public class SpawnableItem
 {
-    public string poolTag; // e.g., "Rock", "Coin"
+    public string poolTag; // "obstacle", "Coin"
     [Range(0f, 1f)] 
     public float spawnProbability; // 0.5 = 50% chance, 1.0 = 100% chance
 }

@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83c6b1c06a404a143b0f5da869deba50, type: 3}
   m_Name: DifficultyManager
   m_EditorClassIdentifier: 
-  currentDifficulty: {fileID: 0}
+  currentDifficulty: {fileID: 11400000, guid: 471a35fa23f35e046b1cc3c956002e8e, type: 2}
   difficultyTiers:
   - {fileID: 11400000, guid: 471a35fa23f35e046b1cc3c956002e8e, type: 2}
   - {fileID: 11400000, guid: 8d7a900e63b761e45aae9aaa3fb5a717, type: 2}
