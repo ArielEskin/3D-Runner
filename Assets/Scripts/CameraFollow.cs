@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 4;
+    [SerializeField] private float moveSpeed = 5;
+    [SerializeField] private PlayerMovement playerMovement;
     void Start()
     {
         
@@ -10,6 +11,6 @@ public class CameraFollow : MonoBehaviour
 
     void Update()
     {
-        transform.Translate(Vector3.forward * (moveSpeed * Time.deltaTime),Space.World);
+        transform.Translate(Vector3.forward * (playerMovement.moveSpeed * Time.deltaTime),Space.World);
     }
 }
