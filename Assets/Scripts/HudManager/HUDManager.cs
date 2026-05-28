@@ -1,4 +1,5 @@
 using System.Drawing;
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using Color = UnityEngine.Color;
@@ -10,10 +11,11 @@ public class NewMonoBehaviourScript : MonoBehaviour
    [SerializeField] private TextMeshProUGUI distanceText;
    [SerializeField] private TextMeshProUGUI MediumLevel;
    [SerializeField] private TextMeshProUGUI HardLevel;
+   private int lastTierIndex = -1;
    
    // ==========reference=========
    private GameManager gameManager;
-   private DifficultyManager difficultyManager;
+   [SerializeField] private DifficultyManager difficultyManager;
    
     void Start()
     {
@@ -31,35 +33,53 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
     private void UpdateLevelText()
     {
-        if (difficultyManager.currentTierIndex > 0 && difficultyManager.currentTierIndex < 2)
-        {
-            MediumLevel.gameObject.SetActive(true);
-            MediumLevel.text = $"Medium Level!";
-            timeText.color = Color.red;
-            timeText.fontSize = 80;
-            
-        }
+        if (difficultyManager.currentTierIndex == lastTierIndex)
+            return;
+        
+        lastTierIndex = difficultyManager.currentTierIndex;
+        
+        MediumLevel.gameObject.SetActive(false);
+        HardLevel.gameObject.SetActive(false);
 
-        if (difficultyManager.currentTierIndex > 1)
+        if (difficultyManager.currentTierIndex == 1)
         {
-            HardLevel.gameObject.SetActive(true);
-            HardLevel.text = $"Hard Level!";
-            timeText.color = Color.red;
-            timeText.fontSize = 80;
+            StartCoroutine(ShowTextFor2Seconds(MediumLevel));
+            MediumLevel.color = Color.red;
         }
+        else if (difficultyManager.currentTierIndex >= 2)
+        {
+            StartCoroutine(ShowTextFor2Seconds(HardLevel));
+            HardLevel.color = Color.red;
+        }
+    }
+
+    private IEnumerator ShowTextFor2Seconds(TextMeshProUGUI text)
+    {
+        // wait 2 seconds for the medium level text
+        MediumLevel.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        MediumLevel.gameObject.SetActive(false);
+        
+        // wait 2 seconds for the medium level text
+        HardLevel.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        HardLevel.gameObject.SetActive(false);
+        
     }
 
     private void UpdateTime()
     {
+        // managing the time text 
         timeText.text = $"Time: {gameManager.timeSurvived:F1}";
         timeText.color = Color.black;
-        timeText.fontSize = 80;
+        timeText.fontSize = 60;
     }
 
     private void UpdateDistance()
     {
+        //managing the distance text 
         distanceText.text = $"{Mathf.RoundToInt(gameManager.distanceTravelled)}/meters";
         distanceText.color = Color.black;
-        distanceText.fontSize = 80;
+        distanceText.fontSize = 60;
     }
 }

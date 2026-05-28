@@ -6,7 +6,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlayerMovement playerMovement;
     public static GameManager gameManager;
     [SerializeField] private DifficultyManager difficultyManager;
-    [SerializeField] private DifficultyManager difficultyTierManager;
+    // [SerializeField] private DifficultyManager difficultyTierManager;
 
     [Header("=========GameManager Settings=========")]
     [field: SerializeField] public float timeSurvived { get; private set; }
@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     [field: SerializeField] public int DifficultyUpLevel { get; private set; }
     
     // =========DifficultyManager=========
-    [SerializeField] private float nextDifficultyDistance = 300f;
+    [SerializeField] private float nextDifficultyDistance;
     
     // =========PlayerManager=========
     public bool isDead { get; private set; } = false;
@@ -64,14 +64,14 @@ public class GameManager : MonoBehaviour
     //================== Difficulty Changer methods ==================
     public void LevelUp()
     {
-        if (distanceTravelled >= nextDifficultyDistance) // if the travelled distance is bigger the nextDifficultyDistance is (20)
+        if (distanceTravelled >= nextDifficultyDistance) // if the travelled distance is bigger the nextDifficultyDistance
         {
             Debug.Log("Level up!");
             difficultyManager.LevelUpDifficulty(); // change the difficulty 
             
             playerMovement.moveSpeed = difficultyManager.currentDifficulty.movementSpeed; // Changing the speed of the player each level 
 
-            nextDifficultyDistance += 300; // next level up will be more 20 distance travelled 
+            nextDifficultyDistance += 100; // next level up will be more 100 distance travelled 
         }
     }
     
