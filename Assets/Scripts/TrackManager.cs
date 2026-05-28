@@ -56,7 +56,7 @@ public class TrackManager : MonoBehaviour
     {
         int itemsSpawnedOnThisTile = 0;
 
-        // NATURAL SCENERY SPAWNING 
+        // NATURAL SCENERY SPAWNING ====================================================
 
         int leftSceneryCount = Random.Range(2, 6); 
         for (int i = 0; i < leftSceneryCount; i++)
@@ -93,36 +93,60 @@ public class TrackManager : MonoBehaviour
                 activeItemsOnTracks.Enqueue(scenery);
                 itemsSpawnedOnThisTile++;
             }
-        }
-
-        //  GAMEPLAY ITEMS (OBSTACLES/COINS) ---
-
+        } 
+        // GAMEPLAY ITEMS (OBSTACLES/COIN) ===================================================
         int maxObstacles = difficultyManager.currentDifficulty.maxObstaclesPerTrack;
         
-        for (int i = 0; i < maxObstacles; i++)
+        // Prevent division by zero if easy mode ever has 0 obstacles
+        if (maxObstacles > 0) 
         {
-            int randomLane = Random.Range(-1, 2); 
-            float randomZOffset = Random.Range(10, tileLength - 10);
-            
-            // 3-WAY SPLIT: 40% Coin, 30% LowObstacle, 30% HighObstacle
-            int itemRoll = Random.Range(0, 100);
-            string itemTag = "Coin"; 
-            if (itemRoll >= 40 && itemRoll < 70) itemTag = "LowObstacle";
-            else if (itemRoll >= 70) itemTag = "HighObstacle";
+            // We only spawn between Z=10 and Z=(tileLength - 10) to avoid the very edges
+            float availableLength = tileLength - 20f; 
+            float zSpacing = availableLength / maxObstacles; // How much Z-space each item gets
 
-            float itemY = 1.0f; // Default for obstacles
-            if (itemTag == "Coin") itemY = 1.5f; 
-
-            Quaternion spawnRotation = (itemTag == "LowObstacle" || itemTag == "HighObstacle") ? Quaternion.Euler(0, 90, 0) : Quaternion.identity;
-
-            GameObject spawnedItem = ObjectPooler.Instance.SpawnFromPool(itemTag, new Vector3(randomLane, itemY, currentZ + randomZOffset), spawnRotation);
-            
-            if (spawnedItem != null)
+            for (int i = 0; i < maxObstacles; i++)
             {
-                activeItemsOnTracks.Enqueue(spawnedItem);
-                itemsSpawnedOnThisTile++; 
+                int randomLane = Random.Range(-1, 2); 
+                
+                // Calculate the start of this specific item's "slice"
+                float sliceStart = 10f + (i * zSpacing);
+                
+                // Pick a random spot strictly inside its own slice (using 0.8f leaves a small gap between slices)
+                float randomZOffset = sliceStart + Random.Range(0f, zSpacing * 0.8f);
+                
+                // 3-WAY SPLIT: 40% Coin, 30% LowObstacle, 30% HighObstacle
+                int itemRoll = Random.Range(0, 100);
+                string itemTag = "Coin"; 
+                if (itemRoll >= 40 && itemRoll < 70) itemTag = "LowObstacle";
+                else if (itemRoll >= 70) itemTag = "HighObstacle";
+
+                // SPECIFIC HEIGHTS FOR EVERY ITEM
+                float itemY = 1.0f; // Default fallback just in case
+                if (itemTag == "Coin") 
+                {
+                    itemY = 1.5f;
+                }
+                else if (itemTag == "LowObstacle") 
+                {
+                    itemY = 0.8f;
+                }
+                else if (itemTag == "HighObstacle") 
+                {
+                    itemY = 1.5f;
+                }
+
+                Quaternion spawnRotation = (itemTag == "LowObstacle" || itemTag == "HighObstacle") ? Quaternion.Euler(0, 90, 0) : Quaternion.identity;
+
+                GameObject spawnedItem = ObjectPooler.Instance.SpawnFromPool(itemTag, new Vector3(randomLane, itemY, currentZ + randomZOffset), spawnRotation);
+                
+                if (spawnedItem != null)
+                {
+                    activeItemsOnTracks.Enqueue(spawnedItem);
+                    itemsSpawnedOnThisTile++; 
+                }
             }
         }
+        itemsPerTileQueue.Enqueue(itemsSpawnedOnThisTile);
     }
 
     private void RecycleTile()

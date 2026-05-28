@@ -1171,19 +1171,19 @@ MonoBehaviour:
   pools:
   - tag: LowObstacle
     prefab: {fileID: 5007924321860663339, guid: 336f83d095cc7c9459db11fa38f20f7e, type: 3}
-    size: 10
+    size: 20
   - tag: HighObstacle
     prefab: {fileID: 7460602978283781795, guid: bf3eb9f382de32b46bf0e7d751ad177f, type: 3}
-    size: 10
+    size: 20
   - tag: Coin
     prefab: {fileID: 3664100224609117633, guid: a73eca55382651c449497eca9a2be0be, type: 3}
-    size: 20
+    size: 30
   - tag: Tree
     prefab: {fileID: 1400461039152700, guid: c7821bc923171f24094e69062402d005, type: 3}
-    size: 15
+    size: 40
   - tag: Bush
     prefab: {fileID: 1309910605144772, guid: 27ce25370e5628e4097b7cb95b3a151d, type: 3}
-    size: 5
+    size: 40
 --- !u!4 &922626213
 Transform:
   m_ObjectHideFlags: 0
