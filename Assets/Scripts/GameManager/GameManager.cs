@@ -1,5 +1,12 @@
 using UnityEngine;
 
+public enum DifficultyTier
+{
+    Easy,
+    Medium,
+    Hard
+}
+
 public class GameManager : MonoBehaviour
 {
     // ==========reference=========
@@ -16,6 +23,7 @@ public class GameManager : MonoBehaviour
     
     // =========DifficultyManager=========
     [SerializeField] private float nextDifficultyDistance;
+    public DifficultyTier currentTier = DifficultyTier.Easy;
     
     // =========PlayerManager=========
     public bool isDead { get; private set; } = false;
@@ -64,14 +72,23 @@ public class GameManager : MonoBehaviour
     //================== Difficulty Changer methods ==================
     public void LevelUp()
     {
-        if (distanceTravelled >= nextDifficultyDistance) // if the travelled distance is bigger the nextDifficultyDistance
+        if (currentTier == DifficultyTier.Easy && distanceTravelled >= 150f) // if currentTier = easy && ditance bigger then 150
         {
-            Debug.Log("Level up!");
-            difficultyManager.LevelUpDifficulty(); // change the difficulty 
-            
-            playerMovement.moveSpeed = difficultyManager.currentDifficulty.movementSpeed; // Changing the speed of the player each level 
+            currentTier = DifficultyTier.Medium; // change the currentTier easy to medium
 
-            nextDifficultyDistance += 100; // next level up will be more 100 distance travelled 
+            Debug.Log("Medium reached!");
+
+            difficultyManager.LevelUpDifficulty(); //the scriptablescript changing the level to medium
+            playerMovement.moveSpeed = difficultyManager.currentDifficulty.movementSpeed; // match the playerSpeed to player like in the new level
+        }
+        else if (currentTier == DifficultyTier.Medium && distanceTravelled >= 400f) // if currentTier = medium && ditance bigger then 400
+        {
+            currentTier = DifficultyTier.Hard;// change the currentTier medium to hard
+
+            Debug.Log("Hard reached!");
+
+            difficultyManager.LevelUpDifficulty();//the scriptablescript changing the level to hard
+            playerMovement.moveSpeed = difficultyManager.currentDifficulty.movementSpeed; // match the playerSpeed to player like in the new level
         }
     }
     

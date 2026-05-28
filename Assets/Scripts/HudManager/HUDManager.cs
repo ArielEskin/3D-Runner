@@ -11,6 +11,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
    [SerializeField] private TextMeshProUGUI distanceText;
    [SerializeField] private TextMeshProUGUI MediumLevel;
    [SerializeField] private TextMeshProUGUI HardLevel;
+   [SerializeField] private TextMeshProUGUI CoinsAmountText;
    private int lastTierIndex = -1;
    
    // ==========reference=========
@@ -43,23 +44,27 @@ public class NewMonoBehaviourScript : MonoBehaviour
 
         if (difficultyManager.currentTierIndex == 1)
         {
-            StartCoroutine(ShowTextFor2Seconds(MediumLevel));
+            StartCoroutine(ShowTextFor2SecondsMediumLevel(MediumLevel));
             MediumLevel.color = Color.red;
         }
         else if (difficultyManager.currentTierIndex >= 2)
         {
-            StartCoroutine(ShowTextFor2Seconds(HardLevel));
+            StartCoroutine(ShowTextFor2SecondsHardLevel(HardLevel));
             HardLevel.color = Color.red;
         }
     }
 
-    private IEnumerator ShowTextFor2Seconds(TextMeshProUGUI text)
+    private IEnumerator ShowTextFor2SecondsMediumLevel(TextMeshProUGUI MediumLevel)
     {
         // wait 2 seconds for the medium level text
         MediumLevel.gameObject.SetActive(true);
         yield return new WaitForSeconds(2f);
         MediumLevel.gameObject.SetActive(false);
         
+    }
+    
+    private IEnumerator ShowTextFor2SecondsHardLevel(TextMeshProUGUI HardLevel)
+    {
         // wait 2 seconds for the medium level text
         HardLevel.gameObject.SetActive(true);
         yield return new WaitForSeconds(2f);
@@ -70,7 +75,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
     private void UpdateTime()
     {
         // managing the time text 
-        timeText.text = $"Time: {gameManager.timeSurvived:F1}";
+        timeText.text = $"Time:{gameManager.timeSurvived:F1}";
         timeText.color = Color.black;
         timeText.fontSize = 60;
     }
@@ -78,7 +83,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
     private void UpdateDistance()
     {
         //managing the distance text 
-        distanceText.text = $"{Mathf.RoundToInt(gameManager.distanceTravelled)}/meters";
+        distanceText.text = $"{Mathf.RoundToInt(gameManager.distanceTravelled)}/M";
         distanceText.color = Color.black;
         distanceText.fontSize = 60;
     }
