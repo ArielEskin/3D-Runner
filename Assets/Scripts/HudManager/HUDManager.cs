@@ -1,3 +1,4 @@
+using System;
 using System.Drawing;
 using System.Collections;
 using TMPro;
@@ -17,11 +18,18 @@ public class NewMonoBehaviourScript : MonoBehaviour
    // ==========reference=========
    private GameManager gameManager;
    [SerializeField] private DifficultyManager difficultyManager;
-   
-    void Start()
+   public static NewMonoBehaviourScript instance;
+
+   private void Awake()
+   {
+       instance = this;
+   }
+
+   void Start()
     {
         gameManager = GameManager.gameManager;
         
+
     }
 
     // Update is called once per frame
@@ -30,6 +38,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
         UpdateTime();
         UpdateDistance();
         UpdateLevelText();
+        
     }
 
     private void UpdateLevelText()
@@ -86,5 +95,13 @@ public class NewMonoBehaviourScript : MonoBehaviour
         distanceText.text = $"{Mathf.RoundToInt(gameManager.distanceTravelled)}/M";
         distanceText.color = Color.black;
         distanceText.fontSize = 60;
+    }
+    
+    //=============COINS===============
+    public void UpdateCoinsText(int amount)
+    {
+        CoinsAmountText.text = amount.ToString();
+        CoinsAmountText.color = Color.black;
+        CoinsAmountText.fontSize = 40;
     }
 }

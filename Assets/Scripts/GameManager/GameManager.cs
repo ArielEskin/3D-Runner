@@ -13,7 +13,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlayerMovement playerMovement;
     public static GameManager gameManager;
     [SerializeField] private DifficultyManager difficultyManager;
-    // [SerializeField] private DifficultyManager difficultyTierManager;
+    
+    
 
     [Header("=========GameManager Settings=========")]
     [field: SerializeField] public float timeSurvived { get; private set; }
@@ -28,9 +29,17 @@ public class GameManager : MonoBehaviour
     // =========PlayerManager=========
     public bool isDead { get; private set; } = false;
     
-    void Start()
+    //=========Coins=========
+    [field: SerializeField] public int Coins { get; private set; }
+
+    private void Awake()
     {
         gameManager = this;
+    }
+    
+    void Start()
+    {
+        
     }
 
     // Update is called once per frame
@@ -41,6 +50,13 @@ public class GameManager : MonoBehaviour
         LevelUp();
         
         // when is falling will stop the game need to stop the counting
+    }
+    
+    public void AddCoin(int amount)
+    {
+        Coins += amount;
+        NewMonoBehaviourScript.instance.UpdateCoinsText(Coins);
+        
     }
 
     private void TimeSurvived()
