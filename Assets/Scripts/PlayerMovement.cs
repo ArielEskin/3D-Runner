@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private Animator animator; // Reference to trigger the jump animation
     
     private bool isJumping = false;
-    private bool isFalling = false;
+    public bool isFalling {get; set;}
     private float originalY;
 
     void Start()

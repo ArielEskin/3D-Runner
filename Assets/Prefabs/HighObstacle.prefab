@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 1970966582307652615}
   - component: {fileID: 9096687862082562367}
   - component: {fileID: 5019121153902909847}
+  - component: {fileID: 6454004327709425303}
   m_Layer: 0
   m_Name: HighObstacle
   m_TagString: Untagged
@@ -102,10 +103,22 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 2267518610397129622, guid: 9f246ab041f11af498454df273e6c008, type: 3}
+--- !u!114 &6454004327709425303
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7460602978283781795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cab8179528b4f38448f45a8a84752878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -13,6 +13,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
    [SerializeField] private TextMeshProUGUI MediumLevel;
    [SerializeField] private TextMeshProUGUI HardLevel;
    [SerializeField] private TextMeshProUGUI CoinsAmountText;
+   [SerializeField] private TextMeshProUGUI DeadText;
    private int lastTierIndex = -1;
    
    // ==========reference=========
@@ -38,6 +39,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
         UpdateTime();
         UpdateDistance();
         UpdateLevelText();
+        UpdateDeadText();
         
     }
 
@@ -103,5 +105,14 @@ public class NewMonoBehaviourScript : MonoBehaviour
         CoinsAmountText.text = amount.ToString();
         CoinsAmountText.color = Color.black;
         CoinsAmountText.fontSize = 40;
+    }
+    
+    //=============Death===============
+    public void UpdateDeadText()
+    {
+        if (gameManager.isDead)
+        {
+            DeadText.gameObject.SetActive(true);
+        }
     }
 }

@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     public DifficultyTier currentTier = DifficultyTier.Easy;
     
     // =========PlayerManager=========
-    public bool isDead { get; private set; } = false;
+    public bool isDead;
     
     //=========Coins=========
     [field: SerializeField] public int Coins { get; private set; }
@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
 
     private void TimeSurvived()
     {
-        if (!PlayerIsDead())
+        if (!isDead)
         {
             timeSurvived += Time.deltaTime; // count +1 after every 1 second
         }
@@ -69,20 +69,19 @@ public class GameManager : MonoBehaviour
 
     private void DistancePlayed()
     {
-        if (!PlayerIsDead())
+        if (!isDead)
         {
             distanceTravelled += Time.deltaTime * playerMovement.moveSpeed; // The playerspeed is 5f so the distance will be 5 units/meter
         }
     }
-
-    public bool PlayerIsDead() // if the player falls that's mean he dead and the game is pause.
+    
+    
+    public void KillPlayer()
     {
-        if (isDead)
-        {
-            Time.timeScale = 0f;
-            return true;
-        }
-        return false;
+        isDead = true;
+        Time.timeScale = 0f;
+
+        Debug.Log("Player Died");
     }
     
     //================== Difficulty Changer methods ==================
