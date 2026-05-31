@@ -99,25 +99,30 @@ public class GameManager : MonoBehaviour
     }
     
     //================== Difficulty Changer methods ==================
+    //================== Difficulty Changer methods ==================
     public void LevelUp()
     {
-        if (currentTier == DifficultyTier.Easy && distanceTravelled >= 150f) // if currentTier = easy && ditance bigger then 150
+        // Check if there is another difficulty tier available to upgrade to
+        if (difficultyManager.currentTierIndex < difficultyManager.difficultyTiers.Count - 1)
         {
-            currentTier = DifficultyTier.Medium; // change the currentTier easy to medium
+            // Get the data for the NEXT tier
+            DifficultyData nextTierData = difficultyManager.difficultyTiers[difficultyManager.currentTierIndex + 1];
 
-            Debug.Log("Medium reached!");
+            // Check if distance travelled meets the requirement in the Scriptable Object
+            if (distanceTravelled >= nextTierData.distanceToReach)
+            {
+                // Update our Enum (Easy -> Medium -> Hard)
+                if (currentTier == DifficultyTier.Easy) currentTier = DifficultyTier.Medium;
+                else if (currentTier == DifficultyTier.Medium) currentTier = DifficultyTier.Hard;
 
-            difficultyManager.LevelUpDifficulty(); //the scriptablescript changing the level to medium
-            playerMovement.moveSpeed = difficultyManager.currentDifficulty.movementSpeed; // match the playerSpeed to player like in the new level
-        }
-        else if (currentTier == DifficultyTier.Medium && distanceTravelled >= 400f) // if currentTier = medium && ditance bigger then 400
-        {
-            currentTier = DifficultyTier.Hard;// change the currentTier medium to hard
+                Debug.Log(currentTier.ToString() + " reached!");
 
-            Debug.Log("Hard reached!");
-
-            difficultyManager.LevelUpDifficulty();//the scriptablescript changing the level to hard
-            playerMovement.moveSpeed = difficultyManager.currentDifficulty.movementSpeed; // match the playerSpeed to player like in the new level
+                // Tell the DifficultyManager to step up its index
+                difficultyManager.LevelUpDifficulty(); 
+                
+                // Apply the new movement speed from the Scriptable Object
+                playerMovement.moveSpeed = difficultyManager.currentDifficulty.movementSpeed; 
+            }
         }
     }
     

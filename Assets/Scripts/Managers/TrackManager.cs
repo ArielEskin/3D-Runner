@@ -97,43 +97,46 @@ public class TrackManager : MonoBehaviour
         // GAMEPLAY ITEMS (OBSTACLES/COIN) ===================================================
         int maxObstacles = difficultyManager.currentDifficulty.maxObstaclesPerTrack;
         
-        // Prevent division by zero if easy mode ever has 0 obstacles
-        if (maxObstacles > 0) 
+        // Grab the list of allowed items directly from the current Difficulty Scriptable Object
+        List<SpawnableItem> allowedItems = difficultyManager.currentDifficulty.allowedItems;
+        
+        // Only spawn if we have obstacles allowed AND items in the list
+        if (maxObstacles > 0 && allowedItems.Count > 0) 
         {
-            // We only spawn between Z=10 and Z=(tileLength - 10) to avoid the very edges
             float availableLength = tileLength - 20f; 
-            float zSpacing = availableLength / maxObstacles; // How much Z-space each item gets
+            float zSpacing = availableLength / maxObstacles; 
 
             for (int i = 0; i < maxObstacles; i++)
             {
                 int randomLane = Random.Range(-1, 2); 
-                
-                // Calculate the start of this specific item's "slice"
                 float sliceStart = 10f + (i * zSpacing);
-                
-                // Pick a random spot strictly inside its own slice (using 0.8f leaves a small gap between slices)
                 float randomZOffset = sliceStart + Random.Range(0f, zSpacing * 0.8f);
-                
-                // 3-WAY SPLIT: 40% Coin, 30% LowObstacle, 30% HighObstacle
-                int itemRoll = Random.Range(0, 100);
-                string itemTag = "Coin"; 
-                if (itemRoll >= 40 && itemRoll < 70) itemTag = "LowObstacle";
-                else if (itemRoll >= 70) itemTag = "HighObstacle";
 
-                // SPECIFIC HEIGHTS FOR EVERY ITEM
-                float itemY = 1.0f; // Default fallback just in case
-                if (itemTag == "Coin") 
+                //  Calculate the total weight of all probabilities
+                float totalWeight = 0f;
+                foreach (SpawnableItem item in allowedItems)
                 {
-                    itemY = 1.5f;
+                    totalWeight += item.spawnProbability;
                 }
-                else if (itemTag == "LowObstacle") 
+
+                // Pick a random number between 0 and the total weight
+                float randomVal = Random.Range(0f, totalWeight);
+                SpawnableItem chosenItem = allowedItems[0];
+
+                // Loop through the items to find the winner
+                foreach (SpawnableItem item in allowedItems)
                 {
-                    itemY = 0.8f;
+                    if (randomVal <= item.spawnProbability)
+                    {
+                        chosenItem = item;
+                        break;
+                    }
+                    randomVal -= item.spawnProbability;
                 }
-                else if (itemTag == "HighObstacle") 
-                {
-                    itemY = 1.5f;
-                }
+
+                // Apply the data from the Scriptable Object
+                string itemTag = chosenItem.poolTag;
+                float itemY = chosenItem.spawnHeight; 
 
                 Quaternion spawnRotation = (itemTag == "LowObstacle" || itemTag == "HighObstacle") ? Quaternion.Euler(0, 90, 0) : Quaternion.identity;
 
