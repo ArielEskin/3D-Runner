@@ -5,10 +5,17 @@ public class GameManager : MonoBehaviour
     // ==========reference=========
     [SerializeField] private PlayerMovement playerMovement;
     public static GameManager gameManager;
+    [SerializeField] private DifficultyManager difficultyManager;
+    // [SerializeField] private DifficultyManager difficultyTierManager;
 
     [Header("=========GameManager Settings=========")]
     [field: SerializeField] public float timeSurvived { get; private set; }
     [field: SerializeField] public  float distanceTravelled { get; private set; }
+    
+    [field: SerializeField] public int DifficultyUpLevel { get; private set; }
+    
+    // =========DifficultyManager=========
+    [SerializeField] private float nextDifficultyDistance;
     
     // =========PlayerManager=========
     public bool isDead { get; private set; } = false;
@@ -23,6 +30,7 @@ public class GameManager : MonoBehaviour
     {
         TimeSurvived();
         DistancePlayed();
+        LevelUp();
         
         // when is falling will stop the game need to stop the counting
     }
@@ -43,7 +51,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public bool PlayerIsDead()
+    public bool PlayerIsDead() // if the player falls that's mean he dead and the game is pause.
     {
         if (isDead)
         {
@@ -51,6 +59,20 @@ public class GameManager : MonoBehaviour
             return true;
         }
         return false;
+    }
+    
+    //================== Difficulty Changer methods ==================
+    public void LevelUp()
+    {
+        if (distanceTravelled >= nextDifficultyDistance) // if the travelled distance is bigger the nextDifficultyDistance
+        {
+            Debug.Log("Level up!");
+            difficultyManager.LevelUpDifficulty(); // change the difficulty 
+            
+            playerMovement.moveSpeed = difficultyManager.currentDifficulty.movementSpeed; // Changing the speed of the player each level 
+
+            nextDifficultyDistance += 100; // next level up will be more 100 distance travelled 
+        }
     }
     
 }
