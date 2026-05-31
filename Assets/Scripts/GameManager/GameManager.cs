@@ -1,12 +1,20 @@
 using UnityEngine;
 
+public enum DifficultyTier
+{
+    Easy,
+    Medium,
+    Hard
+}
+
 public class GameManager : MonoBehaviour
 {
     // ==========reference=========
     [SerializeField] private PlayerMovement playerMovement;
     public static GameManager gameManager;
     [SerializeField] private DifficultyManager difficultyManager;
-    // [SerializeField] private DifficultyManager difficultyTierManager;
+    
+    
 
     [Header("=========GameManager Settings=========")]
     [field: SerializeField] public float timeSurvived { get; private set; }
@@ -16,13 +24,22 @@ public class GameManager : MonoBehaviour
     
     // =========DifficultyManager=========
     [SerializeField] private float nextDifficultyDistance;
+    public DifficultyTier currentTier = DifficultyTier.Easy;
     
     // =========PlayerManager=========
-    public bool isDead { get; private set; } = false;
+    public bool isDead;
+    
+    //=========Coins=========
+    [field: SerializeField] public int Coins { get; private set; }
+
+    private void Awake()
+    {
+        gameManager = this;
+    }
     
     void Start()
     {
-        gameManager = this;
+        
     }
 
     // Update is called once per frame
@@ -34,10 +51,17 @@ public class GameManager : MonoBehaviour
         
         // when is falling will stop the game need to stop the counting
     }
+    
+    public void AddCoin(int amount)
+    {
+        Coins += amount;
+        NewMonoBehaviourScript.instance.UpdateCoinsText(Coins);
+        
+    }
 
     private void TimeSurvived()
     {
-        if (!PlayerIsDead())
+        if (!isDead)
         {
             timeSurvived += Time.deltaTime; // count +1 after every 1 second
         }
@@ -45,33 +69,41 @@ public class GameManager : MonoBehaviour
 
     private void DistancePlayed()
     {
-        if (!PlayerIsDead())
+        if (!isDead)
         {
             distanceTravelled += Time.deltaTime * playerMovement.moveSpeed; // The playerspeed is 5f so the distance will be 5 units/meter
         }
     }
-
-    public bool PlayerIsDead() // if the player falls that's mean he dead and the game is pause.
+    
+    
+    public void KillPlayer()
     {
-        if (isDead)
-        {
-            Time.timeScale = 0f;
-            return true;
-        }
-        return false;
+        isDead = true;
+        Time.timeScale = 0f;
+
+        Debug.Log("Player Died");
     }
     
     //================== Difficulty Changer methods ==================
     public void LevelUp()
     {
-        if (distanceTravelled >= nextDifficultyDistance) // if the travelled distance is bigger the nextDifficultyDistance
+        if (currentTier == DifficultyTier.Easy && distanceTravelled >= 150f) // if currentTier = easy && ditance bigger then 150
         {
-            Debug.Log("Level up!");
-            difficultyManager.LevelUpDifficulty(); // change the difficulty 
-            
-            playerMovement.moveSpeed = difficultyManager.currentDifficulty.movementSpeed; // Changing the speed of the player each level 
+            currentTier = DifficultyTier.Medium; // change the currentTier easy to medium
 
-            nextDifficultyDistance += 100; // next level up will be more 100 distance travelled 
+            Debug.Log("Medium reached!");
+
+            difficultyManager.LevelUpDifficulty(); //the scriptablescript changing the level to medium
+            playerMovement.moveSpeed = difficultyManager.currentDifficulty.movementSpeed; // match the playerSpeed to player like in the new level
+        }
+        else if (currentTier == DifficultyTier.Medium && distanceTravelled >= 400f) // if currentTier = medium && ditance bigger then 400
+        {
+            currentTier = DifficultyTier.Hard;// change the currentTier medium to hard
+
+            Debug.Log("Hard reached!");
+
+            difficultyManager.LevelUpDifficulty();//the scriptablescript changing the level to hard
+            playerMovement.moveSpeed = difficultyManager.currentDifficulty.movementSpeed; // match the playerSpeed to player like in the new level
         }
     }
     
