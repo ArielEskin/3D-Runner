@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public enum DifficultyTier
 {
@@ -13,7 +14,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private PlayerMovement playerMovement;
     public static GameManager gameManager;
     [SerializeField] private DifficultyManager difficultyManager;
-    
     
 
     [Header("=========GameManager Settings=========")]
@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
     public void AddCoin(int amount)
     {
         Coins += amount;
-        NewMonoBehaviourScript.instance.UpdateCoinsText(Coins);
+        HUDManager.instance.UpdateCoinsText(Coins);
         
     }
 
@@ -76,12 +76,26 @@ public class GameManager : MonoBehaviour
     }
     
     
-    public void KillPlayer()
+    public void KillPlayer(string obstacleTag)
     {
+        if (isDead) return; // Prevent this from triggering twice if you hit two hitboxes at once
+        
         isDead = true;
-        Time.timeScale = 0f;
+        Debug.Log("Player hit: " + obstacleTag);
 
-        Debug.Log("Player Died");
+        // Tell the player to play the specific death animation
+        playerMovement.TriggerDeathAnimation(obstacleTag);
+
+        // Start the timer to wait for the animation to finish
+        StartCoroutine(GameOverSequence());
+    }
+
+    private IEnumerator GameOverSequence()
+    {
+        // Wait for 3 seconds so death animations finishes
+        yield return new WaitForSeconds(3f);
+        HUDManager.instance.UpdateDeadText();
+        Time.timeScale = 0f;
     }
     
     //================== Difficulty Changer methods ==================

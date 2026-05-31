@@ -27,8 +27,9 @@ public class PlayerMovement : MonoBehaviour
 
     void Update()
     {
-        // Constant forward movement
-        transform.Translate(Vector3.forward * (moveSpeed * Time.deltaTime), Space.World);
+        if (GameManager.gameManager.isDead) return; // Stop all movement if the player is dead
+        
+        transform.Translate(Vector3.forward * (moveSpeed * Time.deltaTime), Space.World); // Constant forward movement
 
         if (isMoving) // Handle horizontal movement
         {
@@ -134,6 +135,20 @@ public class PlayerMovement : MonoBehaviour
             if (animator != null)
             {
                 animator.SetTrigger("Jump");
+            }
+        }
+    }
+    public void TriggerDeathAnimation(string obstacleTag)
+    {
+        if (animator != null)
+        {
+            if (obstacleTag == "LowObstacle")
+            {
+                animator.SetTrigger("DieLow");
+            }
+            else if (obstacleTag == "HighObstacle")
+            {
+                animator.SetTrigger("DieHigh");
             }
         }
     }

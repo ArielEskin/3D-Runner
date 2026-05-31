@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using Color = UnityEngine.Color;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class HUDManager : MonoBehaviour
 {
    [Header("=========HUDManager Settings=========")]
    [SerializeField] private TextMeshProUGUI timeText;
@@ -19,7 +19,7 @@ public class NewMonoBehaviourScript : MonoBehaviour
    // ==========reference=========
    private GameManager gameManager;
    [SerializeField] private DifficultyManager difficultyManager;
-   public static NewMonoBehaviourScript instance;
+   public static HUDManager instance;
 
    private void Awake()
    {

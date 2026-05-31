@@ -14,6 +14,9 @@ public class ObjectPooler : MonoBehaviour
     public static ObjectPooler Instance;
     public List<Pool> pools;
     public Dictionary<string, Queue<GameObject>> poolDictionary;
+    
+    // NEW: Dictionary to keep track of prefabs so we can expand the pool dynamically
+    private Dictionary<string, GameObject> prefabDictionary;
 
     void Awake()
     {
@@ -22,9 +25,13 @@ public class ObjectPooler : MonoBehaviour
         else Destroy(gameObject);
 
         poolDictionary = new Dictionary<string, Queue<GameObject>>();
+        prefabDictionary = new Dictionary<string, GameObject>(); 
 
         foreach (Pool pool in pools)
         {
+            // Store the prefab reference so we can clone it later if needed
+            prefabDictionary.Add(pool.tag, pool.prefab);
+            
             Queue<GameObject> objectPool = new Queue<GameObject>();
 
             for (int i = 0; i < pool.size; i++)
@@ -47,7 +54,20 @@ public class ObjectPooler : MonoBehaviour
             return null;
         }
 
+        // Grab the next object in the queue
         GameObject objectToSpawn = poolDictionary[tag].Dequeue();
+
+        // FIX: If the object we just grabbed is ALREADY active in the scene,
+        // it means our pool is empty! We must dynamically expand it.
+        if (objectToSpawn.activeInHierarchy)
+        {
+            // Put the active object back into the queue safely so we don't lose its reference
+            poolDictionary[tag].Enqueue(objectToSpawn);
+            
+            // Instantiate a brand new object to handle the increased difficulty spawn rate
+            objectToSpawn = Instantiate(prefabDictionary[tag]);
+            objectToSpawn.transform.SetParent(this.transform);
+        }
 
         objectToSpawn.SetActive(true);
         objectToSpawn.transform.position = position;
@@ -58,7 +78,7 @@ public class ObjectPooler : MonoBehaviour
         return objectToSpawn;
     }
     
-    public void ReturnToPool(GameObject obj) // Call this from the item itself when it needs to be disabled (a coin is collected)
+    public void ReturnToPool(GameObject obj) 
     {
         obj.SetActive(false);
         obj.transform.SetParent(this.transform);
