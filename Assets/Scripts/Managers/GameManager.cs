@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public enum DifficultyTier
 {
@@ -31,6 +33,9 @@ public class GameManager : MonoBehaviour
     
     //=========Coins=========
     [field: SerializeField] public int Coins { get; private set; }
+    
+    //=========Button=========
+    private Button retryButton;
 
     private void Awake()
     {
@@ -99,7 +104,6 @@ public class GameManager : MonoBehaviour
     }
     
     //================== Difficulty Changer methods ==================
-    //================== Difficulty Changer methods ==================
     public void LevelUp()
     {
         // Check if there is another difficulty tier available to upgrade to
@@ -125,5 +129,24 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    
+    // =====================Buttons====================
+    private IEnumerator GameOverRetryButton()
+    {
+        if (isDead)
+        {
+            yield return new WaitForSeconds(3f);
+            Debug.Log("Showing retry button");
+            retryButton.gameObject.SetActive(true);
+            Debug.Log("Press On the retryButton");
+            
+            Time.timeScale = 1f;
+            SceneManager.LoadScene("Game");
+
+
+        }
+
+    }
+    
     
 }
