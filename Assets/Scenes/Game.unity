@@ -971,11 +971,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerTransform: {fileID: 1808064518}
+  mainCamera: {fileID: 330585546}
   pooler: {fileID: 1013993312}
   difficultyManager: {fileID: 11400000, guid: 2ad2e4ba41ebc3c4e8e0546a8e73c333, type: 2}
   tileLength: 50
   tilesOnScreen: 5
   despawnBuffer: 10
+  startingSafeTiles: 1
+  resetThreshold: 1000
 --- !u!4 &623022674
 Transform:
   m_ObjectHideFlags: 0
@@ -2241,7 +2244,7 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1.7996218, z: 1.1602216}
+  m_Size: {x: 0.78, y: 1.29, z: 0.53}
   m_Center: {x: 0, y: 0.3998109, z: 0.08011079}
 --- !u!23 &1808064516
 MeshRenderer:
