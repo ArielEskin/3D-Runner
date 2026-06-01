@@ -5,6 +5,7 @@ public class TrackManager : MonoBehaviour
 {
     [Header("References")]
     public Transform playerTransform;
+    public Transform mainCamera; // NEW: Drag your Main Camera here in the Inspector!
     public TrackPooler pooler;
     public DifficultyManager difficultyManager; 
 
@@ -12,6 +13,10 @@ public class TrackManager : MonoBehaviour
     public float tileLength = 50f;
     public int tilesOnScreen = 5;
     public float despawnBuffer = 10f; 
+    public int startingSafeTiles = 2; 
+    
+    [Header("Floating Origin")]
+    public float resetThreshold = 1000f; // NEW: When the player hits Z=1000, snap the world back
     
     private float spawnZ = 0f;
     private Queue<GameObject> activeTiles;
@@ -24,7 +29,7 @@ public class TrackManager : MonoBehaviour
         activeTiles = new Queue<GameObject>();
         for (int i = 0; i < tilesOnScreen; i++)
         {
-            SpawnTile(); 
+            SpawnTile(i >= startingSafeTiles); 
         }
     }
 
@@ -32,41 +37,72 @@ public class TrackManager : MonoBehaviour
     {
         float oldestTileZ = spawnZ - (tilesOnScreen * tileLength);
 
-        // Uses the despawn buffer so tiles don't vanish exactly at the player's heels
         if (playerTransform.position.z > oldestTileZ + tileLength + despawnBuffer)
         {
-            SpawnTile();
+            SpawnTile(true);
             RecycleTile();
         }
+
+        // NEW: Check if we have traveled too far
+        if (playerTransform.position.z > resetThreshold)
+        {
+            ResetOrigin();
+        }
+    }
+    
+    private void ResetOrigin()
+    {
+        // Find exactly how far we need to move everything back
+        float offset = playerTransform.position.z;
+
+        // Snap Player back to Z=0
+        playerTransform.position = new Vector3(playerTransform.position.x, playerTransform.position.y, 0f);
+
+        // Snap Camera back by the exact same offset
+        if (mainCamera != null)
+        {
+            mainCamera.position = new Vector3(mainCamera.position.x, mainCamera.position.y, mainCamera.position.z - offset);
+        }
+
+        // 3. Reset the Track Spawner's target Z
+        spawnZ -= offset;
+
+        // 4. Snap all active track tiles back
+        foreach (GameObject tile in activeTiles)
+        {
+            tile.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y, tile.transform.position.z - offset);
+        }
+
+        // 5. Snap all active scenery, coins, and obstacles back
+        foreach (GameObject item in activeItemsOnTracks)
+        {
+            item.transform.position = new Vector3(item.transform.position.x, item.transform.position.y, item.transform.position.z - offset);
+        }
+
     }
 
-    private void SpawnTile()
+    private void SpawnTile(bool spawnObstacles)
     {
         GameObject tile = pooler.GetTile();
         tile.transform.position = Vector3.forward * spawnZ;
         activeTiles.Enqueue(tile);
         
-        // Call this unconditionally so every tile gets obstacles
-        SpawnItemsOnTile(spawnZ);
+        SpawnItemsOnTile(spawnZ, spawnObstacles);
 
         spawnZ += tileLength;
     }
 
-    private void SpawnItemsOnTile(float currentZ)
+    private void SpawnItemsOnTile(float currentZ, bool spawnObstacles)
     {
         int itemsSpawnedOnThisTile = 0;
 
-        // NATURAL SCENERY SPAWNING ====================================================
-
+        // NATURAL SCENERY SPAWNING
         int leftSceneryCount = Random.Range(2, 6); 
         for (int i = 0; i < leftSceneryCount; i++)
         {
-            //  20% chance for a Tree, 80% chance for a Plant
-            string sceneryTag = Random.Range(0, 100) < 20 ? "Tree" : "Bush";
-   
+            string sceneryTag = Random.Range(0, 100) < 20 ? "Tree" : "Plant";
             float randomX = Random.Range(-8f, -3.5f); 
             float randomZ = currentZ + Random.Range(0f, tileLength);
-
             float sceneryY = -0.6f; 
 
             GameObject scenery = ObjectPooler.Instance.SpawnFromPool(sceneryTag, new Vector3(randomX, sceneryY, randomZ), Quaternion.identity);
@@ -81,10 +117,8 @@ public class TrackManager : MonoBehaviour
         for (int i = 0; i < rightSceneryCount; i++)
         {
             string sceneryTag = Random.Range(0, 100) < 20 ? "Tree" : "Plant";
-            
             float randomX = Random.Range(3.5f, 8f); 
             float randomZ = currentZ + Random.Range(0f, tileLength);
-            
             float sceneryY = -0.5f;
 
             GameObject scenery = ObjectPooler.Instance.SpawnFromPool(sceneryTag, new Vector3(randomX, sceneryY, randomZ), Quaternion.identity);
@@ -94,14 +128,12 @@ public class TrackManager : MonoBehaviour
                 itemsSpawnedOnThisTile++;
             }
         } 
-        // GAMEPLAY ITEMS (OBSTACLES/COIN) ===================================================
+
+        // GAMEPLAY ITEMS
         int maxObstacles = difficultyManager.currentDifficulty.maxObstaclesPerTrack;
-        
-        // Grab the list of allowed items directly from the current Difficulty Scriptable Object
         List<SpawnableItem> allowedItems = difficultyManager.currentDifficulty.allowedItems;
         
-        // Only spawn if we have obstacles allowed AND items in the list
-        if (maxObstacles > 0 && allowedItems.Count > 0) 
+        if (spawnObstacles && maxObstacles > 0 && allowedItems.Count > 0) 
         {
             float availableLength = tileLength - 20f; 
             float zSpacing = availableLength / maxObstacles; 
@@ -112,18 +144,15 @@ public class TrackManager : MonoBehaviour
                 float sliceStart = 10f + (i * zSpacing);
                 float randomZOffset = sliceStart + Random.Range(0f, zSpacing * 0.8f);
 
-                //  Calculate the total weight of all probabilities
                 float totalWeight = 0f;
                 foreach (SpawnableItem item in allowedItems)
                 {
                     totalWeight += item.spawnProbability;
                 }
 
-                // Pick a random number between 0 and the total weight
                 float randomVal = Random.Range(0f, totalWeight);
                 SpawnableItem chosenItem = allowedItems[0];
 
-                // Loop through the items to find the winner
                 foreach (SpawnableItem item in allowedItems)
                 {
                     if (randomVal <= item.spawnProbability)
@@ -134,7 +163,6 @@ public class TrackManager : MonoBehaviour
                     randomVal -= item.spawnProbability;
                 }
 
-                // Apply the data from the Scriptable Object
                 string itemTag = chosenItem.poolTag;
                 float itemY = chosenItem.spawnHeight; 
 
@@ -149,6 +177,7 @@ public class TrackManager : MonoBehaviour
                 }
             }
         }
+        
         itemsPerTileQueue.Enqueue(itemsSpawnedOnThisTile);
     }
 
@@ -157,7 +186,6 @@ public class TrackManager : MonoBehaviour
         GameObject oldTile = activeTiles.Dequeue();
         pooler.ReturnTile(oldTile);
 
-        // Dequeue the exact number of items that were on this specific tile
         int itemsToRecycle = itemsPerTileQueue.Dequeue();
         
         for(int i = 0; i < itemsToRecycle; i++) 
