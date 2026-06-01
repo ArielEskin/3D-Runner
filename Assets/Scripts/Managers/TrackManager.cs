@@ -13,6 +13,9 @@ public class TrackManager : MonoBehaviour
     public int tilesOnScreen = 5;
     public float despawnBuffer = 10f; 
     
+    // NEW: How many track tiles should be totally empty at the start of the game
+    public int startingSafeTiles = 1; 
+    
     private float spawnZ = 0f;
     private Queue<GameObject> activeTiles;
 
@@ -24,7 +27,8 @@ public class TrackManager : MonoBehaviour
         activeTiles = new Queue<GameObject>();
         for (int i = 0; i < tilesOnScreen; i++)
         {
-            SpawnTile(); 
+            // If 'i' is less than startingSafeTiles (e.g., 0 and 1), pass 'false' to disable obstacles
+            SpawnTile(i >= startingSafeTiles); 
         }
     }
 
@@ -32,41 +36,42 @@ public class TrackManager : MonoBehaviour
     {
         float oldestTileZ = spawnZ - (tilesOnScreen * tileLength);
 
-        // Uses the despawn buffer so tiles don't vanish exactly at the player's heels
         if (playerTransform.position.z > oldestTileZ + tileLength + despawnBuffer)
         {
-            SpawnTile();
+            // Normal gameplay tiles spawned while running will always have obstacles (pass true)
+            SpawnTile(true);
             RecycleTile();
         }
     }
 
-    private void SpawnTile()
+    // Added the spawnObstacles parameter
+    private void SpawnTile(bool spawnObstacles)
     {
         GameObject tile = pooler.GetTile();
         tile.transform.position = Vector3.forward * spawnZ;
         activeTiles.Enqueue(tile);
         
-        // Call this unconditionally so every tile gets obstacles
-        SpawnItemsOnTile(spawnZ);
+        // Pass the decision down to the item spawner
+        SpawnItemsOnTile(spawnZ, spawnObstacles);
 
         spawnZ += tileLength;
     }
 
-    private void SpawnItemsOnTile(float currentZ)
+    // Added the spawnObstacles parameter here too
+    private void SpawnItemsOnTile(float currentZ, bool spawnObstacles)
     {
         int itemsSpawnedOnThisTile = 0;
 
-        // NATURAL SCENERY SPAWNING ====================================================
+        // ===================================================================
+        // NATURAL SCENERY SPAWNING (Always happens, even in the safe zone)
+        // ===================================================================
 
         int leftSceneryCount = Random.Range(2, 6); 
         for (int i = 0; i < leftSceneryCount; i++)
         {
-            //  20% chance for a Tree, 80% chance for a Plant
             string sceneryTag = Random.Range(0, 100) < 20 ? "Tree" : "Bush";
-   
             float randomX = Random.Range(-8f, -3.5f); 
             float randomZ = currentZ + Random.Range(0f, tileLength);
-
             float sceneryY = -0.6f; 
 
             GameObject scenery = ObjectPooler.Instance.SpawnFromPool(sceneryTag, new Vector3(randomX, sceneryY, randomZ), Quaternion.identity);
@@ -81,10 +86,8 @@ public class TrackManager : MonoBehaviour
         for (int i = 0; i < rightSceneryCount; i++)
         {
             string sceneryTag = Random.Range(0, 100) < 20 ? "Tree" : "Plant";
-            
             float randomX = Random.Range(3.5f, 8f); 
             float randomZ = currentZ + Random.Range(0f, tileLength);
-            
             float sceneryY = -0.5f;
 
             GameObject scenery = ObjectPooler.Instance.SpawnFromPool(sceneryTag, new Vector3(randomX, sceneryY, randomZ), Quaternion.identity);
@@ -94,14 +97,16 @@ public class TrackManager : MonoBehaviour
                 itemsSpawnedOnThisTile++;
             }
         } 
-        // GAMEPLAY ITEMS (OBSTACLES/COIN) ===================================================
-        int maxObstacles = difficultyManager.currentDifficulty.maxObstaclesPerTrack;
+
+        // ===================================================================
+        // GAMEPLAY ITEMS 
+        // ===================================================================
         
-        // Grab the list of allowed items directly from the current Difficulty Scriptable Object
+        int maxObstacles = difficultyManager.currentDifficulty.maxObstaclesPerTrack;
         List<SpawnableItem> allowedItems = difficultyManager.currentDifficulty.allowedItems;
         
-        // Only spawn if we have obstacles allowed AND items in the list
-        if (maxObstacles > 0 && allowedItems.Count > 0) 
+        // NEW: Check if this tile is allowed to have obstacles!
+        if (spawnObstacles && maxObstacles > 0 && allowedItems.Count > 0) 
         {
             float availableLength = tileLength - 20f; 
             float zSpacing = availableLength / maxObstacles; 
@@ -112,18 +117,15 @@ public class TrackManager : MonoBehaviour
                 float sliceStart = 10f + (i * zSpacing);
                 float randomZOffset = sliceStart + Random.Range(0f, zSpacing * 0.8f);
 
-                //  Calculate the total weight of all probabilities
                 float totalWeight = 0f;
                 foreach (SpawnableItem item in allowedItems)
                 {
                     totalWeight += item.spawnProbability;
                 }
 
-                // Pick a random number between 0 and the total weight
                 float randomVal = Random.Range(0f, totalWeight);
                 SpawnableItem chosenItem = allowedItems[0];
 
-                // Loop through the items to find the winner
                 foreach (SpawnableItem item in allowedItems)
                 {
                     if (randomVal <= item.spawnProbability)
@@ -134,7 +136,6 @@ public class TrackManager : MonoBehaviour
                     randomVal -= item.spawnProbability;
                 }
 
-                // Apply the data from the Scriptable Object
                 string itemTag = chosenItem.poolTag;
                 float itemY = chosenItem.spawnHeight; 
 
@@ -149,6 +150,8 @@ public class TrackManager : MonoBehaviour
                 }
             }
         }
+        
+        // Always save the count to the recycling queue, even if it's just the scenery!
         itemsPerTileQueue.Enqueue(itemsSpawnedOnThisTile);
     }
 
@@ -157,7 +160,6 @@ public class TrackManager : MonoBehaviour
         GameObject oldTile = activeTiles.Dequeue();
         pooler.ReturnTile(oldTile);
 
-        // Dequeue the exact number of items that were on this specific tile
         int itemsToRecycle = itemsPerTileQueue.Dequeue();
         
         for(int i = 0; i < itemsToRecycle; i++) 

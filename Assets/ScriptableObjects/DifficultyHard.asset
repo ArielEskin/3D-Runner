@@ -15,12 +15,12 @@ MonoBehaviour:
   movementSpeed: 10
   distanceToReach: 400
   spawnRate: 1
-  maxObstaclesPerTrack: 20
+  maxObstaclesPerTrack: 16
   allowedItems:
-  - poolTag: LowObstacles
+  - poolTag: LowObstacle
     spawnProbability: 0.5
     spawnHeight: 0.8
-  - poolTag: HighObstacles
+  - poolTag: HighObstacle
     spawnProbability: 0.35
     spawnHeight: 1.8
   - poolTag: Coin
