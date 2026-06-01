@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Obstacles : MonoBehaviour
 {
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other) // If player hits Obstacle ----> DIE
     {
         if (other.CompareTag("Player"))
         {

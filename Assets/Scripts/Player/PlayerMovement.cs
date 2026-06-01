@@ -1,13 +1,16 @@
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+// Handles all player movement logic including constant forward running,
+// snapping to left/middle/right lanes, and jumping over obstacles.
+public class PlayerMovement : MonoBehaviour 
 {
+    // [field: SerializeField] allows the GameManager to read and change this speed 
+    // when the difficulty levels up, while keeping it visible in the Inspector
     [field: SerializeField] public float moveSpeed {get; set;} = 5f;
-    [SerializeField] private int sideSpeed = 9;
-    
+    [SerializeField] private int sideSpeed = 9; // How fast the player visibly slides from one lane to anothe
     
     [SerializeField] int trackNumber = 0; // Tracks target X position (-1, 0, 1)
-    [SerializeField] private bool isMoving;
+    [SerializeField] private bool isMoving; // Prevents the player from starting a new turn while they are already sliding
     [SerializeField] int moveDirection; // (1=Left) (2=Right)
 
     [Header("Jump Settings")]
@@ -15,13 +18,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float jumpSpeed = 6f;
     [SerializeField] private Animator animator; // Reference to trigger the jump animation
     
-    private bool isJumping = false;
+    private bool isJumping = false; // Physics state tracking so the player can't double jump while in the air
     public bool isFalling {get; set;}
-    private float originalY;
+    private float originalY; // Remembers where the "ground" is so the player doesn't fall through the floor
 
     void Start()
     {
-        originalY = transform.position.y;
+        originalY = transform.position.y; // Save the exact starting height of the player as our permanent ground level
         if (animator == null) animator = GetComponentInChildren<Animator>(); 
     }
 
@@ -52,7 +55,7 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
         }
-        HandleJump();
+        HandleJump(); // Always run the jump logic to see if we need to move up or down
     }
     
 
@@ -80,25 +83,25 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-
-    private void StopMoving() 
+    
+    private void StopMoving() // Snaps the player exactly to the center of their lane to correct any tiny math errors 
     {
         isMoving = false;
         moveDirection = 0;
-        transform.position = new Vector3(trackNumber, transform.position.y, transform.position.z);
+        transform.position = new Vector3(trackNumber, transform.position.y, transform.position.z); // Force the X position to be exactly -1, 0, or 1 based on the trackNumber
     }
     
-    public void LeftMove()
+    public void LeftMove() // Called when the UI Left Button is pressed
     {
-        if (isMoving) return; 
+        if (isMoving) return;  // Don't accept input if we are already in the middle of sliding
 
-        if (trackNumber == 0)
+        if (trackNumber == 0) // If in the middle, go left
         {
             isMoving = true;
             moveDirection = 1;
             trackNumber = -1;
         }
-        else if (trackNumber == 1)
+        else if (trackNumber == 1) // If on the right, go to the middle
         {
             isMoving = true;
             moveDirection = 1;
@@ -106,27 +109,27 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    public void RightMove()
+    public void RightMove() // Called when the UI Right Button is pressed
     {
-        if (isMoving) return; 
+        if (isMoving) return; // Don't accept input if we are already in the middle of sliding
 
-        if (trackNumber == 0)
+        if (trackNumber == 0) // If in the middle, go right
         {
             isMoving = true;
             moveDirection = 2;
             trackNumber = 1;
         }
-        else if (trackNumber == -1)
+        else if (trackNumber == -1) // If on the left, go to the middle
         {
             isMoving = true;
             moveDirection = 2;
             trackNumber = 0;
         }
     }
-    public void Jump()
+    public void Jump() // Called when the UI Jump Button is pressed
     {
-        bool isPhysicallyGrounded = !isJumping && !isFalling;
-        bool isVisuallyRunning = animator.GetCurrentAnimatorStateInfo(0).IsName("Running") && !animator.IsInTransition(0);
+        bool isPhysicallyGrounded = !isJumping && !isFalling; // Ensure the player is firmly on the ground
+        bool isVisuallyRunning = animator.GetCurrentAnimatorStateInfo(0).IsName("Running") && !animator.IsInTransition(0); 
         
         if (isPhysicallyGrounded && isVisuallyRunning)
         {
@@ -138,15 +141,15 @@ public class PlayerMovement : MonoBehaviour
             }
         }
     }
-    public void TriggerDeathAnimation(string obstacleTag)
+    public void TriggerDeathAnimation(string obstacleTag) // Triggered by the GameManager when the player collides with an obstacle box.
     {
         if (animator != null)
         {
-            if (obstacleTag == "LowObstacle")
+            if (obstacleTag == "LowObstacle") // Play a tripping animation if they hit a low hurdle
             {
                 animator.SetTrigger("DieLow");
             }
-            else if (obstacleTag == "HighObstacle")
+            else if (obstacleTag == "HighObstacle") // Play a face-plant animation if they crash into a tall wall
             {
                 animator.SetTrigger("DieHigh");
             }
