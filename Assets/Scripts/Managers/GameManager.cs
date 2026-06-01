@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
     [field: SerializeField] public int Coins { get; private set; }
     
     //=========Button=========
-    private Button retryButton;
+    [SerializeField] private Button retryButton;
 
     private void Awake()
     {
@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     
     void Start()
     {
-        
+        retryButton.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -93,6 +93,7 @@ public class GameManager : MonoBehaviour
 
         // Start the timer to wait for the animation to finish
         StartCoroutine(GameOverSequence());
+        StartCoroutine(GameOverRetryButton());
     }
 
     private IEnumerator GameOverSequence()
@@ -133,19 +134,15 @@ public class GameManager : MonoBehaviour
     // =====================Buttons====================
     private IEnumerator GameOverRetryButton()
     {
-        if (isDead)
-        {
-            yield return new WaitForSeconds(3f);
-            Debug.Log("Showing retry button");
-            retryButton.gameObject.SetActive(true);
-            Debug.Log("Press On the retryButton");
-            
-            Time.timeScale = 1f;
-            SceneManager.LoadScene("Game");
+        yield return new WaitForSeconds(3f); // wait 3 seconds
+        retryButton.gameObject.SetActive(true); // active my retry button
+        Time.timeScale = 0f;
+    }
 
-
-        }
-
+    public void RetryButton()
+    {
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("Game");
     }
     
     
