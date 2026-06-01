@@ -141,8 +141,10 @@ public class GameManager : MonoBehaviour
 
     public void RetryButton()
     {
+        
         Time.timeScale = 1f;
         SceneManager.LoadScene("Game");
+        
     }
     
     
