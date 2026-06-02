@@ -50,15 +50,16 @@ public class ObjectPooler : MonoBehaviour
 
     public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation) // Pulls a ready-to-use object from the requested pool, places it at the target location, and activates it.
     {
-        if (!poolDictionary.ContainsKey(tag))
+        if (!poolDictionary.ContainsKey(tag)) // Safety Check: misspelling a tag in another script
         {
             Debug.LogWarning("Pool with tag " + tag + " doesn't exist.");
             return null;
         }
-
         GameObject objectToSpawn = poolDictionary[tag].Dequeue(); // Grab the next object in the queue
-
-        if (objectToSpawn.activeInHierarchy)
+        
+        // If the object we just pulled is turned on, it means every single 
+        // object in the pool is currently being used on the track. pool needs to be expanded
+        if (objectToSpawn.activeInHierarchy) 
         {
             poolDictionary[tag].Enqueue(objectToSpawn); // Put the active object back into the queue safely so we don't lose its reference
             
@@ -66,7 +67,7 @@ public class ObjectPooler : MonoBehaviour
             objectToSpawn = Instantiate(prefabDictionary[tag]);
             objectToSpawn.transform.SetParent(this.transform);
         }
-
+        // Set up the object for gameplay
         objectToSpawn.SetActive(true);
         objectToSpawn.transform.position = position;
         objectToSpawn.transform.rotation = rotation;
@@ -76,6 +77,8 @@ public class ObjectPooler : MonoBehaviour
         return objectToSpawn;
     }
     
+    // Instantly hides an object. Used by items that get "collected" or "destroyed" 
+    // before they naturally despawn with the track (a Coin that the player touches).
     public void ReturnToPool(GameObject obj) 
     {
         obj.SetActive(false);

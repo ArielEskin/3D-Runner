@@ -40,6 +40,11 @@ public class GameManager : MonoBehaviour
     private void Awake()
     {
         gameManager = this;
+        // Force the difficulty back to Easy every time the scene loads (when retrying)
+        if (difficultyManager != null)
+        {
+            difficultyManager.ResetDifficulty();
+        }
     }
     
     void Start()

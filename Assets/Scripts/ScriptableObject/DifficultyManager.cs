@@ -10,7 +10,7 @@ public class DifficultyManager : ScriptableObject
     public List<DifficultyData> difficultyTiers; //  0=Easy, 1=Medium, 2=Hard
     public int currentTierIndex = 0;
     
-    private void OnEnable()
+    public void ResetDifficulty() 
     {
         currentTierIndex = 0;
 
