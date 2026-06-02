@@ -13,6 +13,16 @@ MonoBehaviour:
   m_Name: DifficultyMedium
   m_EditorClassIdentifier: 
   movementSpeed: 7
+  distanceToReach: 150
   spawnRate: 1
-  maxObstaclesPerTrack: 3
-  allowedItems: []
+  maxObstaclesPerTrack: 13
+  allowedItems:
+  - poolTag: LowObstacle
+    spawnProbability: 0.5
+    spawnHeight: 0.8
+  - poolTag: HighObstacle
+    spawnProbability: 0.3
+    spawnHeight: 1.8
+  - poolTag: Coin
+    spawnProbability: 0.2
+    spawnHeight: 1.5
