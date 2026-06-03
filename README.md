@@ -1,2 +1,3 @@
-# 3D-Runner
-Ariel&amp;Maxim Project
+# 3D-Runner Ariel&Maxim Project
+Student A - Ariel Eskin
+Student B - Maxim Abramov
