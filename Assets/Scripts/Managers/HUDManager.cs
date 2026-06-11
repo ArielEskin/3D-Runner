@@ -113,6 +113,7 @@ public class HUDManager : MonoBehaviour
         if (gameManager.isDead)
         {
             DeadText.gameObject.SetActive(true);
+            
         }
     }
 }
