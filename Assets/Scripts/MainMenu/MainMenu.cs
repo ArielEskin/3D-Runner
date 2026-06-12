@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
@@ -11,6 +12,11 @@ public class MainMenu : MonoBehaviour
     public Slider MusicSlider;
     public Slider SFXSlider;
     
+    [Header("Loading Screen")]
+    [SerializeField] private GameObject loadingScreen;
+    [SerializeField] private GameObject mainMenu;
+    [SerializeField] private Slider loadingSlider;
+    
     public void Start()
     {
         LoadVolume();
@@ -20,10 +26,35 @@ public class MainMenu : MonoBehaviour
     public void Play()
     {
         Debug.Log("Press On StartButton");
-        
         MusicManager.instance.PlayMusic("GameMusic");
         
-        SceneManager.LoadScene("Game");
+        mainMenu.SetActive(false);
+        loadingScreen.SetActive(true);
+        
+        StartCoroutine(LoadLevelASync("Game"));
+    }
+    
+    IEnumerator LoadLevelASync(string levelToLoad)
+    {
+        AsyncOperation loadOperation = SceneManager.LoadSceneAsync(levelToLoad);
+        loadOperation.allowSceneActivation = false;
+
+        float fakeProgress = 0f;
+
+        while (fakeProgress < 1f || loadOperation.progress < 0.9f)
+        {
+            fakeProgress += Time.deltaTime / 3f;
+
+            loadingSlider.value = Mathf.Clamp01(fakeProgress);
+
+            yield return null;
+        }
+
+        loadingSlider.value = 1f;
+
+        yield return new WaitForSeconds(0.5f);
+
+        loadOperation.allowSceneActivation = true;
     }
 
     public void Quit()
@@ -40,11 +71,13 @@ public class MainMenu : MonoBehaviour
 
     public void UpdateMusicVolume(float volume)
     {
+        Debug.Log("Music slider value: " + volume);
         audioMixer.SetFloat("MusicVolume", volume);
     }
 
     public void UpdateSoundVolume(float volume)
     {
+        Debug.Log("SFX slider value: " + volume);
         audioMixer.SetFloat("SFXVolume", volume);
     }
 
