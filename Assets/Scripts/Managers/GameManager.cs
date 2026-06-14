@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     public static GameManager gameManager;
     [SerializeField] private DifficultyManager difficultyManager;
     
+    public MainMenu mainMenu; // give access to Main Menu script
+    
 
     [Header("=========GameManager Settings=========")]
     [field: SerializeField] public float timeSurvived { get; private set; }
@@ -147,8 +149,17 @@ public class GameManager : MonoBehaviour
     {
         
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("Game"); // when Retry button pressed its play the game again
         
+        
+    }
+
+    public void BackButton()
+    {
+        
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");// when press on the back button go back to the MainMenu
+
     }
     
     

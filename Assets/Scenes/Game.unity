@@ -206,9 +206,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
-        m_MethodName: BackToMenu
+      - m_Target: {fileID: 494387969}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: BackButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -217,7 +217,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 1
+        m_CallState: 2
 --- !u!114 &93713929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -992,6 +992,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerMovement: {fileID: 1808064514}
   difficultyManager: {fileID: 11400000, guid: 2ad2e4ba41ebc3c4e8e0546a8e73c333, type: 2}
+  mainMenu: {fileID: 0}
   <timeSurvived>k__BackingField: 0
   <distanceTravelled>k__BackingField: 0
   <DifficultyUpLevel>k__BackingField: 0
