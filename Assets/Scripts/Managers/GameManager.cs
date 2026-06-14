@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour
     
     //=========Button=========
     [SerializeField] private Button retryButton;
+    [SerializeField] private Button backButton;
 
     private void Awake()
     {
@@ -50,6 +51,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         retryButton.gameObject.SetActive(false);
+        backButton.gameObject.SetActive(false);
+        
     }
 
     // Update is called once per frame
@@ -141,6 +144,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3f); // wait 3 seconds
         retryButton.gameObject.SetActive(true); // active my retry button
+        backButton.gameObject.SetActive(true); // active my back button
         Time.timeScale = 0f;
     }
 

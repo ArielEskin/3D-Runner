@@ -4,11 +4,15 @@ public class Coin : MonoBehaviour
 {
     [SerializeField] private int coinValue = 1;
     
-    private void OnTriggerEnter(Collider other) // If player touches coin return it to pull and add to score
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            GameManager.gameManager.AddCoin(coinValue); // Add to score
+            
+            SoundManager.instance.PlaySound3D("PickUpCoin", transform.position); // play the coin collect sound 
+            
+            GameManager.gameManager.AddCoin(coinValue); // Add to score manager here
+            
             ObjectPooler.Instance.ReturnToPool(gameObject); // Immediately pool on pickup
         }
     }
