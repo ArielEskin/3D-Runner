@@ -10,7 +10,7 @@ public class MainMenu : MonoBehaviour
     public AudioMixer audioMixer;
 
     public Slider MusicSlider;
-    public Slider SFXSlider;
+    public Slider sfxSlider;
     
     [Header("Loading Screen")]
     [SerializeField] private GameObject loadingScreen;
@@ -73,38 +73,34 @@ public class MainMenu : MonoBehaviour
     {
         Debug.Log("Music slider value: " + volume);
         audioMixer.SetFloat("MusicVolume", volume);
-        SaveVolume();
     }
 
     public void UpdateSoundVolume(float volume)
     {
         Debug.Log("SFX slider value: " + volume);
         audioMixer.SetFloat("SFXVolume", volume);
-        SaveVolume();
+
     }
 
     public void SaveVolume()
     {
         audioMixer.GetFloat("MusicVolume", out float musicVolume);
-        audioMixer.GetFloat("SFXVolume", out float sfxVolume);
-        
-        Debug.Log("Saving Music: " + musicVolume);
-        Debug.Log("Saving SFX: " + sfxVolume);
-        
         PlayerPrefs.SetFloat("MusicVolume", musicVolume);
-        PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
+        // Debug.Log("Saving Music: " + musicVolume);
         
-        PlayerPrefs.Save(); // Important
+        audioMixer.GetFloat("SFXVolume", out float sfxVolume);
+        PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
+        //Debug.Log("Saving SFX: " + sfxVolume);
     }
 
     public void LoadVolume()
     {
         
         MusicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
-        SFXSlider.value = PlayerPrefs.GetFloat("SFXVolume");
+        sfxSlider.value = PlayerPrefs.GetFloat("SFXVolume");
         
         Debug.Log("MusicSlider = " + MusicSlider);
-        Debug.Log("SFXSlider = " + SFXSlider);
+        Debug.Log("SFXSlider = " + sfxSlider);
         
     }
 }
