@@ -103,8 +103,8 @@ public class HUDManager : MonoBehaviour
     public void UpdateCoinsText(int amount)
     {
         CoinsAmountText.text = amount.ToString();
-        CoinsAmountText.color = Color.black;
-        CoinsAmountText.fontSize = 40;
+        // CoinsAmountText.color = Color.black;
+        CoinsAmountText.fontSize = 10;
     }
     
     //=============Death===============
