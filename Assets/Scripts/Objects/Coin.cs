@@ -8,8 +8,11 @@ public class Coin : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            GameManager.gameManager.AddCoin(coinValue);
-            // Add to score manager here
+            
+            SoundManager.instance.PlaySound3D("PickUpCoin", transform.position); // play the coin collect sound 
+            
+            GameManager.gameManager.AddCoin(coinValue); // Add to score manager here
+            
             ObjectPooler.Instance.ReturnToPool(gameObject); // Immediately pool on pickup
         }
     }

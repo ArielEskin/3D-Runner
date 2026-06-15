@@ -17,6 +17,8 @@ public class GameManager : MonoBehaviour
     public static GameManager gameManager;
     [SerializeField] private DifficultyManager difficultyManager;
     
+    public MainMenu mainMenu; // give access to Main Menu script
+    
 
     [Header("=========GameManager Settings=========")]
     [field: SerializeField] public float timeSurvived { get; private set; }
@@ -36,6 +38,7 @@ public class GameManager : MonoBehaviour
     
     //=========Button=========
     [SerializeField] private Button retryButton;
+    [SerializeField] private Button backButton;
 
     private void Awake()
     {
@@ -45,6 +48,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         retryButton.gameObject.SetActive(false);
+        backButton.gameObject.SetActive(false);
+        
     }
 
     // Update is called once per frame
@@ -136,6 +141,7 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3f); // wait 3 seconds
         retryButton.gameObject.SetActive(true); // active my retry button
+        backButton.gameObject.SetActive(true); // active my back button
         Time.timeScale = 0f;
     }
 
@@ -143,8 +149,17 @@ public class GameManager : MonoBehaviour
     {
         
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("Game"); // when Retry button pressed its play the game again
         
+        
+    }
+
+    public void BackButton()
+    {
+        
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");// when press on the back button go back to the MainMenu
+
     }
     
     
