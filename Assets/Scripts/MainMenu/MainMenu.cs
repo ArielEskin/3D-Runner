@@ -73,29 +73,38 @@ public class MainMenu : MonoBehaviour
     {
         Debug.Log("Music slider value: " + volume);
         audioMixer.SetFloat("MusicVolume", volume);
+        SaveVolume();
     }
 
     public void UpdateSoundVolume(float volume)
     {
         Debug.Log("SFX slider value: " + volume);
         audioMixer.SetFloat("SFXVolume", volume);
+        SaveVolume();
     }
 
     public void SaveVolume()
     {
         audioMixer.GetFloat("MusicVolume", out float musicVolume);
-        PlayerPrefs.SetFloat("MusicVolume", musicVolume);
-        
         audioMixer.GetFloat("SFXVolume", out float sfxVolume);
+        
+        Debug.Log("Saving Music: " + musicVolume);
+        Debug.Log("Saving SFX: " + sfxVolume);
+        
+        PlayerPrefs.SetFloat("MusicVolume", musicVolume);
         PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
+        
+        PlayerPrefs.Save(); // Important
     }
 
     public void LoadVolume()
     {
-        Debug.Log("MusicSlider = " + MusicSlider);
-        Debug.Log("SFXSlider = " + SFXSlider);
         
         MusicSlider.value = PlayerPrefs.GetFloat("MusicVolume");
         SFXSlider.value = PlayerPrefs.GetFloat("SFXVolume");
+        
+        Debug.Log("MusicSlider = " + MusicSlider);
+        Debug.Log("SFXSlider = " + SFXSlider);
+        
     }
 }

@@ -2676,7 +2676,6 @@ MonoBehaviour:
   soundEffect:
   - groupID: PickUpCoin
     clips:
-    - {fileID: 8300000, guid: 51b199740b0801f44a6bdd255c256e04, type: 3}
     - {fileID: 8300000, guid: a348be8c54194214a8d0988887b664fc, type: 3}
 --- !u!114 &1418150154
 MonoBehaviour:
