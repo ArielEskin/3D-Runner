@@ -1,8 +1,12 @@
 using UnityEngine;
+using UnityEngine.UIElements;
+
 
 public class GameplayUI : MonoBehaviour
 {
     [SerializeField] private GameObject buttonControlsPanel;
+
+    
     
     // Update is called once per frame
     void Update()
@@ -10,10 +14,14 @@ public class GameplayUI : MonoBehaviour
         if (InputManager.instance.currentMode == InputMode.Buttons)
         {
             buttonControlsPanel.SetActive(true);
+
+
         }
         else
         {
             buttonControlsPanel.SetActive(false);
+
+            
         }
     }
 }
