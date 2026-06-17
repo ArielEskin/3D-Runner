@@ -122,3 +122,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cab8179528b4f38448f45a8a84752878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canBecomeTransparent: 1
+  targetAlpha: 0.3
+  fadeSpeed: 8

@@ -23,7 +23,7 @@ MonoBehaviour:
   - poolTag: HighObstacle
     spawnProbability: 0.4
     spawnHeight: 1.8
-  powerUpSpawnChancePerTrack: 10
+  powerUpSpawnChancePerTrack: 100
   allowedPowerUps:
   - powerUpConfig: {fileID: 11400000, guid: 1c508d69b5f9de74c9a91d2e1108b093, type: 2}
     spawnProbability: 1

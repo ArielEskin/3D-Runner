@@ -11,6 +11,10 @@ public class GameplayUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (InputManager.instance == null) 
+        {
+            return; 
+        }
         if (InputManager.instance.currentMode == InputMode.Buttons)
         {
             buttonControlsPanel.SetActive(true);
