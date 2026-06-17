@@ -26,6 +26,16 @@ public class GameManager : MonoBehaviour
     
     [field: SerializeField] public int DifficultyUpLevel { get; private set; }
     
+    [Header("=========Power-Up States=========")]
+    public bool isInvincible = false;
+    public bool isMagnetActive = false;
+    public int coinMultiplier = 1;
+    public float magnetRadius = 10f;
+    // Timers
+    private float invincibilityTimer = 0f;
+    private float magnetTimer = 0f;
+    private float multiplierTimer = 0f;
+    
     // =========DifficultyManager=========
     [SerializeField] private float nextDifficultyDistance;
     public DifficultyTier currentTier = DifficultyTier.Easy;
@@ -64,14 +74,53 @@ public class GameManager : MonoBehaviour
         DistancePlayed();
         LevelUp();
         
-        // when is falling will stop the game need to stop the counting
+        HandlePowerUpTimers();
+    }
+
+    public void ActivatePowerUp(PowerUpData data)
+    {
+        if (data.powerUpName == "Invincibility") 
+        {
+            isInvincible = true;
+            invincibilityTimer = data.effectDuration; // Sets/Resets the clock
+        }
+        else if (data.powerUpName == "x2 Coins") 
+        {
+            coinMultiplier = 2; 
+            multiplierTimer = data.effectDuration;
+        }
+        else if (data.powerUpName == "Magnet") 
+        {
+            isMagnetActive = true;
+            magnetRadius = data.magnetRadius;
+            magnetTimer = data.effectDuration;
+        }
     }
     
+    private void HandlePowerUpTimers() // Counts down the timers every frame
+    {
+        if (invincibilityTimer > 0)
+        {
+            invincibilityTimer -= Time.deltaTime;
+            if (invincibilityTimer <= 0) isInvincible = false;
+        }
+
+        if (multiplierTimer > 0)
+        {
+            multiplierTimer -= Time.deltaTime;
+            if (multiplierTimer <= 0) coinMultiplier = 1; // Back to normal
+        }
+
+        if (magnetTimer > 0)
+        {
+            magnetTimer -= Time.deltaTime;
+            if (magnetTimer <= 0) isMagnetActive = false;
+        }
+    }
     public void AddCoin(int amount)
     {
-        Coins += amount;
+        Coins += (amount * coinMultiplier);
         HUDManager.instance.UpdateCoinsText(Coins);
-        
     }
 
     private void TimeSurvived()

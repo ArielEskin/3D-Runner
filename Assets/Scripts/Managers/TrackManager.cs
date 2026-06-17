@@ -84,24 +84,22 @@ public class TrackManager : MonoBehaviour
         spawnZ += tileLength; // Move Forward the spawning point for the next time this is called
     }
 
-    private void SpawnItemsOnTile(float currentZ, bool spawnObstacles) // Handles the randomized placement of scenery and gameplay obstacles.
+    private void SpawnItemsOnTile(float currentZ, bool spawnObstacles)
     {
         int itemsSpawnedOnThisTile = 0;
-        
+
         // ====================================================================================
         // NATURAL SCENERY SPAWNING
         // ====================================================================================
         
         int leftSceneryCount = Random.Range(2, 6); 
-        for (int i = 0; i < leftSceneryCount; i++) // Spawning the Left Side Environment
+        for (int i = 0; i < leftSceneryCount; i++) 
         {
             string sceneryTag = Random.Range(0, 100) < 20 ? "Tree" : "Plant"; 
-            
-            float randomX = Random.Range(-8f, -3.5f); // Randomize position outside the playable track (for natural environment feel)
+            float randomX = Random.Range(-8f, -3.5f); 
             float randomZ = currentZ + Random.Range(0f, tileLength);
             float sceneryY = -0.6f; 
 
-            // Pull the scenery from the ObjectPooler instead of using Instantiate
             GameObject scenery = ObjectPooler.Instance.SpawnFromPool(sceneryTag, new Vector3(randomX, sceneryY, randomZ), Quaternion.identity);
             if (scenery != null)
             {
@@ -111,15 +109,13 @@ public class TrackManager : MonoBehaviour
         }
         
         int rightSceneryCount = Random.Range(2, 6);
-        for (int i = 0; i < rightSceneryCount; i++) // Spawning the Left Side Environment
+        for (int i = 0; i < rightSceneryCount; i++) 
         {
             string sceneryTag = Random.Range(0, 100) < 20 ? "Tree" : "Plant";
-            
-            float randomX = Random.Range(3.5f, 8f); // Randomize position outside the playable track (for natural environment feel)
+            float randomX = Random.Range(3.5f, 8f); 
             float randomZ = currentZ + Random.Range(0f, tileLength);
             float sceneryY = -0.5f;
 
-            // Pull the scenery from the ObjectPooler instead of using Instantiate
             GameObject scenery = ObjectPooler.Instance.SpawnFromPool(sceneryTag, new Vector3(randomX, sceneryY, randomZ), Quaternion.identity);
             if (scenery != null)
             {
@@ -127,61 +123,172 @@ public class TrackManager : MonoBehaviour
                 itemsSpawnedOnThisTile++;
             }
         } 
-        
+
         // ====================================================================================
-        // GAMEPLAY OBJECTS
+        // OBSTACLES
         // ====================================================================================
-        
-        int maxObstacles = difficultyManager.currentDifficulty.maxObstaclesPerTrack; // Pull the current difficulty rules from the Scriptable Object
+
+        List<Vector2> lowObstaclePositions = new List<Vector2>(); 
+        List<Vector2> highObstaclePositions = new List<Vector2>();
+
+        int maxObstacles = difficultyManager.currentDifficulty.maxObstaclesPerTrack; 
         List<SpawnableItem> allowedItems = difficultyManager.currentDifficulty.allowedItems;
         
-        if (spawnObstacles && maxObstacles > 0 && allowedItems.Count > 0)  // Enters if tile allows at least 1 object spawn, and the difficulty has objects set up
+        if (spawnObstacles && maxObstacles > 0 && allowedItems.Count > 0)  
         {
-            // Chop the track into equal segments so obstacles don't spawn inside each other
-            float availableLength = tileLength - 20f; // Leave a 10 unit buffer at the start and end of the tile
-            float zSpacing = availableLength / maxObstacles;
+            int rowsToSpawn = Mathf.Clamp(maxObstacles, 1, 4);
+            float availableLength = tileLength - 20f; 
+            float zSpacing = availableLength / rowsToSpawn;
 
-            for (int i = 0; i < maxObstacles; i++)
+            for (int i = 0; i < rowsToSpawn; i++)
             {
-                int randomLane = Random.Range(-1, 2); 
-                float sliceStart = 10f + (i * zSpacing); // Calculate where this specific item's "slice" begins, and pick a random spot within it
-                float randomZOffset = sliceStart + Random.Range(0f, zSpacing * 0.8f);
+                float sliceStart = 10f + (i * zSpacing); 
+                float exactZ = sliceStart + (zSpacing / 2f); 
 
-                float totalWeight = 0f; // Calculate the total probability weight of all allowed items
-                foreach (SpawnableItem item in allowedItems)
+                int itemsInThisRow = 1;
+                if (maxObstacles > 4 && Random.Range(0, 100) < 60)
                 {
-                    totalWeight += item.spawnProbability;
+                    itemsInThisRow = 2;
                 }
 
-                float randomVal = Random.Range(0f, totalWeight); // Pick a random number between 0 and the total weight
-                SpawnableItem chosenItem = allowedItems[0];
+                List<int> availableLanes = new List<int> { -1, 0, 1 };
 
-                foreach (SpawnableItem item in allowedItems) // Subtract weights until we hit 0 to find the winner
+                for (int j = 0; j < itemsInThisRow; j++)
                 {
-                    if (randomVal <= item.spawnProbability)
+                    int laneIndex = Random.Range(0, availableLanes.Count);
+                    int randomLane = availableLanes[laneIndex];
+                    availableLanes.RemoveAt(laneIndex); 
+
+                    float totalWeight = 0f; 
+                    foreach (SpawnableItem item in allowedItems)
                     {
-                        chosenItem = item;
-                        break;
+                        totalWeight += item.spawnProbability;
                     }
-                    randomVal -= item.spawnProbability;
-                }
 
-                string itemTag = chosenItem.poolTag; // Extract the data from the winning ScriptableObject item
-                float itemY = chosenItem.spawnHeight; 
+                    float randomVal = Random.Range(0f, totalWeight); 
+                    SpawnableItem chosenItem = allowedItems[0];
 
-                // If it's an obstacle, rotate it 90 degrees on the Y axis so it faces the player
-                Quaternion spawnRotation = (itemTag == "LowObstacle" || itemTag == "HighObstacle") ? Quaternion.Euler(0, 90, 0) : Quaternion.identity;
+                    foreach (SpawnableItem item in allowedItems) 
+                    {
+                        if (randomVal <= item.spawnProbability)
+                        {
+                            chosenItem = item;
+                            break;
+                        }
+                        randomVal -= item.spawnProbability;
+                    }
 
-                GameObject spawnedItem = ObjectPooler.Instance.SpawnFromPool(itemTag, new Vector3(randomLane, itemY, currentZ + randomZOffset), spawnRotation);
-                
-                if (spawnedItem != null)
-                {
-                    activeItemsOnTracks.Enqueue(spawnedItem);
-                    itemsSpawnedOnThisTile++; 
+                    string itemTag = chosenItem.poolTag; 
+                    float itemY = chosenItem.spawnHeight; 
+                    
+                    if (itemTag == "LowObstacle") 
+                    {
+                        lowObstaclePositions.Add(new Vector2(randomLane, exactZ));
+                    }
+                    else if (itemTag == "HighObstacle") 
+                    {
+                        highObstaclePositions.Add(new Vector2(randomLane, exactZ));
+                    }
+
+                    Quaternion spawnRotation = (itemTag == "LowObstacle" || itemTag == "HighObstacle") ? Quaternion.Euler(0, 90, 0) : Quaternion.identity;
+
+                    GameObject spawnedItem = ObjectPooler.Instance.SpawnFromPool(itemTag, new Vector3(randomLane, itemY, currentZ + exactZ), spawnRotation);
+                    
+                    if (spawnedItem != null)
+                    {
+                        activeItemsOnTracks.Enqueue(spawnedItem);
+                        itemsSpawnedOnThisTile++; 
+                    }
                 }
             }
         }
-        itemsPerTileQueue.Enqueue(itemsSpawnedOnThisTile); // Push the final count of items created into the queue.
+        
+        // ====================================================================================
+        // COIN STREAKS 
+        // ====================================================================================
+        
+        if (spawnObstacles && Random.Range(0, 100) < difficultyManager.currentDifficulty.coinStreakChance)
+        {
+            int streakLength = Random.Range(difficultyManager.currentDifficulty.minCoinsInStreak, difficultyManager.currentDifficulty.maxCoinsInStreak + 1);
+            int coinLane = Random.Range(-1, 2);
+            float coinSpacing = difficultyManager.currentDifficulty.coinSpacing;
+            
+            float maxAvailableLength = tileLength - 20f; 
+            float totalStreakLength = streakLength * coinSpacing;
+            
+            if (totalStreakLength < maxAvailableLength)
+            {
+                float randomStartZ = 10f + Random.Range(0f, maxAvailableLength - totalStreakLength);
+                
+                for (int i = 0; i < streakLength; i++)
+                {
+                    float coinZ = randomStartZ + (i * coinSpacing);
+                    
+                    float coinY = 1.5f; // Default height for running into it
+                    bool cancelCoin = false;
+
+                    //  Is this coin touching a Low Obstacle? Raise it
+                    foreach (Vector2 obs in lowObstaclePositions)
+                    {
+                        // If it's in the same lane and within 3 units of distance
+                        if (obs.x == coinLane && Mathf.Abs(obs.y - coinZ) < 3f)
+                        {
+                            coinY = 2.8f; // Pushed up perfectly into the player's jump arc
+                            break;
+                        }
+                    }
+
+                    //  Is this coin touching a High Obstacle? Delete it
+                    foreach (Vector2 obs in highObstaclePositions)
+                    {
+                        if (obs.x == coinLane && Mathf.Abs(obs.y - coinZ) < 3f)
+                        {
+                            cancelCoin = true; // Player can't go through a wall, so don't trick them!
+                            break;
+                        }
+                    }
+
+                    // If it overlaps a tall wall, skip this specific coin and move to the next one
+                    if (cancelCoin) continue;
+
+                    GameObject spawnedCoin = ObjectPooler.Instance.SpawnFromPool("Coin", new Vector3(coinLane, coinY, currentZ + coinZ), Quaternion.identity);
+                    
+                    if (spawnedCoin != null)
+                    {
+                        activeItemsOnTracks.Enqueue(spawnedCoin);
+                        itemsSpawnedOnThisTile++;
+                    }
+                }
+            }
+        }
+        // ====================================================================================
+        // POWER-UPS 
+        // ====================================================================================
+        
+        if (spawnObstacles && difficultyManager.currentDifficulty.allowedPowerUps.Count > 0)
+        {
+            // Roll the dice to see if a powerup should spawn on this tile
+            if (Random.Range(0, 100) < difficultyManager.currentDifficulty.powerUpSpawnChancePerTrack)
+            {
+                int randomLane = Random.Range(-1, 2); 
+                float randomZOffset = Random.Range(10, tileLength - 10);
+                
+                // Pick a random powerup from the Allowed PowerUps list
+                int randomIndex = Random.Range(0, difficultyManager.currentDifficulty.allowedPowerUps.Count);
+                SpawnablePowerUp chosenPU = difficultyManager.currentDifficulty.allowedPowerUps[randomIndex];
+
+                // Spawn it!
+                GameObject spawnedPU = ObjectPooler.Instance.SpawnFromPool(chosenPU.powerUpConfig.poolTag, new Vector3(randomLane, chosenPU.spawnHeight, currentZ + randomZOffset), Quaternion.identity);
+                
+                if (spawnedPU != null)
+                {
+                    activeItemsOnTracks.Enqueue(spawnedPU);
+                    itemsSpawnedOnThisTile++;
+                }
+            }
+        }
+
+        itemsPerTileQueue.Enqueue(itemsSpawnedOnThisTile); 
     }
 
     private void RecycleTile() // Removes the oldest tile and its objects behind the camera and returns them to their respective pools.

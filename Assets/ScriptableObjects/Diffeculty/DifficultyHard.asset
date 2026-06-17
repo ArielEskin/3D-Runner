@@ -18,11 +18,23 @@ MonoBehaviour:
   maxObstaclesPerTrack: 16
   allowedItems:
   - poolTag: LowObstacle
-    spawnProbability: 0.5
+    spawnProbability: 0.4
     spawnHeight: 0.8
   - poolTag: HighObstacle
-    spawnProbability: 0.35
+    spawnProbability: 0.6
     spawnHeight: 1.8
-  - poolTag: Coin
-    spawnProbability: 0.15
-    spawnHeight: 1.5
+  powerUpSpawnChancePerTrack: 10
+  allowedPowerUps:
+  - powerUpConfig: {fileID: 11400000, guid: 1c508d69b5f9de74c9a91d2e1108b093, type: 2}
+    spawnProbability: 0.3
+    spawnHeight: 1
+  - powerUpConfig: {fileID: 11400000, guid: caaf8e66f76ba9646a6dbf8c56c07b1e, type: 2}
+    spawnProbability: 0.4
+    spawnHeight: 1
+  - powerUpConfig: {fileID: 11400000, guid: 721fa856774920f4f85fc5876cff43c0, type: 2}
+    spawnProbability: 0.3
+    spawnHeight: 1
+  coinStreakChance: 70
+  minCoinsInStreak: 3
+  maxCoinsInStreak: 8
+  coinSpacing: 2.5

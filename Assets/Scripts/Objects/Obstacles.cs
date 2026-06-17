@@ -6,8 +6,16 @@ public class Obstacles : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // Pass the tag of this obstacle to the GameManager
-            GameManager.gameManager.KillPlayer(gameObject.tag);
+            if (GameManager.gameManager.isInvincible) return; // Invincibility power ups active
+
+            if (gameObject.name.Contains("Low"))
+            {
+                GameManager.gameManager.KillPlayer("LowObstacle");
+            }
+            else
+            {
+                GameManager.gameManager.KillPlayer("HighObstacle");
+            }
         }
     }
 }

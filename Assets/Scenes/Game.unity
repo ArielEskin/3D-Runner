@@ -996,6 +996,10 @@ MonoBehaviour:
   <timeSurvived>k__BackingField: 0
   <distanceTravelled>k__BackingField: 0
   <DifficultyUpLevel>k__BackingField: 0
+  isInvincible: 0
+  isMagnetActive: 0
+  coinMultiplier: 1
+  magnetRadius: 10
   nextDifficultyDistance: 100
   currentTier: 0
   isDead: 0
@@ -1448,6 +1452,15 @@ MonoBehaviour:
   - tag: Bush
     prefab: {fileID: 1309910605144772, guid: 27ce25370e5628e4097b7cb95b3a151d, type: 3}
     size: 30
+  - tag: Magnet
+    prefab: {fileID: 4643275794592476676, guid: ad9ea3874163c6746a19b5a4e66f1923, type: 3}
+    size: 2
+  - tag: Invincibility
+    prefab: {fileID: 5204841484755068143, guid: 2c87c2081a86a404d8aa9bb680d203f2, type: 3}
+    size: 2
+  - tag: DoubleCoins
+    prefab: {fileID: 2244109573250462322, guid: 53455c5c7685c284fa4d204edec92ed4, type: 3}
+    size: 2
 --- !u!4 &922626213
 Transform:
   m_ObjectHideFlags: 0
@@ -2141,6 +2154,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   buttonControlsPanel: {fileID: 1533317656}
+  buttonModeImage: {fileID: 0}
+  touchModeImage: {fileID: 0}
 --- !u!1 &1471194427
 GameObject:
   m_ObjectHideFlags: 0
