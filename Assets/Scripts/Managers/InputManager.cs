@@ -13,6 +13,7 @@ public class InputManager : MonoBehaviour
 {
     public static InputManager instance;
     public InputMode currentMode = InputMode.Touch;
+    [SerializeField] private GameplayUI gameplayUI;
 
     public void Awake()
     {
@@ -32,11 +33,13 @@ public class InputManager : MonoBehaviour
     public void SetButtonMode()
     {
         currentMode = InputMode.Buttons;
+        gameplayUI.UpdateButtons();
         
     }
     public void SetTouchMode()
     {
         currentMode = InputMode.Touch;
+        gameplayUI.UpdateButtons();
     }
 }
 

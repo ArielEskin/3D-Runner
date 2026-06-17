@@ -97,12 +97,14 @@ public class PlayerMovement : MonoBehaviour
 
         if (trackNumber == 0) // If in the middle, go left
         {
+            SoundManager.instance.PlaySound3D("DashingSound",  transform.position);
             isMoving = true;
             moveDirection = 1;
             trackNumber = -1;
         }
         else if (trackNumber == 1) // If on the right, go to the middle
         {
+            SoundManager.instance.PlaySound3D("DashingSound",  transform.position);
             isMoving = true;
             moveDirection = 1;
             trackNumber = 0;
@@ -115,12 +117,14 @@ public class PlayerMovement : MonoBehaviour
 
         if (trackNumber == 0) // If in the middle, go right
         {
+            SoundManager.instance.PlaySound3D("DashingSound",  transform.position);
             isMoving = true;
             moveDirection = 2;
             trackNumber = 1;
         }
         else if (trackNumber == -1) // If on the left, go to the middle
         {
+            SoundManager.instance.PlaySound3D("DashingSound",  transform.position);
             isMoving = true;
             moveDirection = 2;
             trackNumber = 0;
@@ -137,6 +141,7 @@ public class PlayerMovement : MonoBehaviour
             
             if (animator != null)
             {
+                SoundManager.instance.PlaySound3D("JumpingSound",  transform.position);
                 animator.SetTrigger("Jump");
             }
         }

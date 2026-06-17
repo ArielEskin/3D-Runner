@@ -86,17 +86,15 @@ public class HUDManager : MonoBehaviour
     private void UpdateTime()
     {
         // managing the time text 
-        timeText.text = $"Time:{gameManager.timeSurvived:F1}";
-        timeText.color = Color.black;
-        timeText.fontSize = 60;
+        timeText.text = $"{gameManager.timeSurvived:F1}";
+        
     }
 
     private void UpdateDistance()
     {
         //managing the distance text 
-        distanceText.text = $"{Mathf.RoundToInt(gameManager.distanceTravelled)}/M";
-        distanceText.color = Color.black;
-        distanceText.fontSize = 60;
+        distanceText.text = $"{Mathf.RoundToInt(gameManager.distanceTravelled)}";
+
     }
     
     //=============COINS===============
