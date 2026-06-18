@@ -57,12 +57,12 @@ public class MainMenu : MonoBehaviour
         loadOperation.allowSceneActivation = true;
     }
 
-    public void Quit()
-    {
-        Debug.Log("Press On QuitButton");
-        Application.Quit();
-        Debug.Log("Game Closed");
-    }
+    // public void Quit()
+    // {
+    //     Debug.Log("Press On QuitButton");
+    //     Application.Quit();
+    //     Debug.Log("Game Closed");
+    // }
 
     public void BackToMenu()
     {

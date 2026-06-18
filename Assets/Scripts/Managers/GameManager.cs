@@ -145,6 +145,7 @@ public class GameManager : MonoBehaviour
         if (isDead) return; // Prevent this from triggering twice if you hit two hitboxes at once
         
         isDead = true;
+        SoundManager.instance.PlaySound3D("DeathSound", transform.position);
         Debug.Log("Player hit: " + obstacleTag);
 
         // Tell the player to play the specific death animation
