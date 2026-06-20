@@ -84,9 +84,9 @@ public class GameManager : MonoBehaviour
             isInvincible = true;
             invincibilityTimer = data.effectDuration; // Sets/Resets the clock
         }
-        else if (data.powerUpName == "x2 Coins") 
+        else if (data.powerUpName == "DoubleCoins") 
         {
-            coinMultiplier = 2; 
+            coinMultiplier = Mathf.RoundToInt(data.scoreMultiplierValue);
             multiplierTimer = data.effectDuration;
         }
         else if (data.powerUpName == "Magnet") 

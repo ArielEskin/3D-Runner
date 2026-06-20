@@ -23,17 +23,17 @@ MonoBehaviour:
   - poolTag: HighObstacle
     spawnProbability: 0.5
     spawnHeight: 1.8
-  powerUpSpawnChancePerTrack: 10
+  powerUpSpawnChancePerTrack: 30
   allowedPowerUps:
   - powerUpConfig: {fileID: 11400000, guid: 1c508d69b5f9de74c9a91d2e1108b093, type: 2}
     spawnProbability: 0.4
-    spawnHeight: 1
+    spawnHeight: 1.5
   - powerUpConfig: {fileID: 11400000, guid: caaf8e66f76ba9646a6dbf8c56c07b1e, type: 2}
     spawnProbability: 0.2
-    spawnHeight: 1
+    spawnHeight: 1.5
   - powerUpConfig: {fileID: 11400000, guid: 721fa856774920f4f85fc5876cff43c0, type: 2}
     spawnProbability: 0.4
-    spawnHeight: 1
+    spawnHeight: 1.5
   coinStreakChance: 70
   minCoinsInStreak: 3
   maxCoinsInStreak: 8

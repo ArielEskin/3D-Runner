@@ -273,9 +273,25 @@ public class TrackManager : MonoBehaviour
                 int randomLane = Random.Range(-1, 2); 
                 float randomZOffset = Random.Range(10, tileLength - 10);
                 
-                // Pick a random powerup from the Allowed PowerUps list
-                int randomIndex = Random.Range(0, difficultyManager.currentDifficulty.allowedPowerUps.Count);
-                SpawnablePowerUp chosenPU = difficultyManager.currentDifficulty.allowedPowerUps[randomIndex];
+                // Pick a powerup from the Allowed PowerUps list
+                float totalWeight = 0f;
+                foreach (SpawnablePowerUp pu in difficultyManager.currentDifficulty.allowedPowerUps)
+                {
+                    totalWeight += pu.spawnProbability;
+                }
+
+                float randomVal = Random.Range(0f, totalWeight);
+                SpawnablePowerUp chosenPU = difficultyManager.currentDifficulty.allowedPowerUps[0];
+
+                foreach (SpawnablePowerUp pu in difficultyManager.currentDifficulty.allowedPowerUps)
+                {
+                    if (randomVal <= pu.spawnProbability)
+                    {
+                        chosenPU = pu;
+                        break;
+                    }
+                    randomVal -= pu.spawnProbability;
+                }
 
                 // Spawn it!
                 GameObject spawnedPU = ObjectPooler.Instance.SpawnFromPool(chosenPU.powerUpConfig.poolTag, new Vector3(randomLane, chosenPU.spawnHeight, currentZ + randomZOffset), Quaternion.identity);
