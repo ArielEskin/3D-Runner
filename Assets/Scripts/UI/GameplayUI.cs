@@ -28,11 +28,13 @@ public class GameplayUI : MonoBehaviour
         {
             SetAlpha(buttonModeImage, 1f);
             SetAlpha(touchModeImage, 0.5f);
+            
         }
         else
         {
             SetAlpha(buttonModeImage, 0.5f);
             SetAlpha(touchModeImage, 1f);
+            
         }
     }
     
