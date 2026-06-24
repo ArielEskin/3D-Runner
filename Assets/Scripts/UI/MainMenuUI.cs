@@ -7,6 +7,10 @@ public class MainMenuUI : MonoBehaviour
     [SerializeField] private Image buttonModeImage;
     [SerializeField] private Image touchModeImage;
     
+    private void OnEnable()
+    {
+        UpdateButtons(); // IMPORTANT: refresh after scene load
+    }
     
     private void Update()
     {
@@ -15,6 +19,7 @@ public class MainMenuUI : MonoBehaviour
     
     public void UpdateButtons()
     {
+        
         if (InputManager.instance == null) 
         {
             return; 

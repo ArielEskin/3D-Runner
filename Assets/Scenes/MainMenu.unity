@@ -1032,6 +1032,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 574555895}
+  - component: {fileID: 574555896}
   m_Layer: 5
   m_Name: ControlsOptionsMenu
   m_TagString: Untagged
@@ -1061,6 +1062,20 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &574555896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 574555894}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 64494300655c5564d985e6dd2e8d8114, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  touchButton: {fileID: 1901908908}
+  buttonModeButton: {fileID: 876018685}
 --- !u!1 &658376301
 GameObject:
   m_ObjectHideFlags: 0
@@ -1342,19 +1357,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 876018686}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2142983688}
-        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
-        m_MethodName: SetButtonMode
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &876018686
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1816,6 +1819,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 941803846}
   m_CullTransparentMesh: 1
+--- !u!1 &975801870
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 975801872}
+  - component: {fileID: 975801871}
+  m_Layer: 0
+  m_Name: MainMenuUI
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &975801871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 975801870}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91ab07d5bc339ab47b448c4c55caf1bc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonModeImage: {fileID: 876018686}
+  touchModeImage: {fileID: 1901908909}
+--- !u!4 &975801872
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 975801870}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 787.0348, y: 1349.0652, z: -2.3882296}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1026522087
 GameObject:
   m_ObjectHideFlags: 0
@@ -2754,7 +2803,7 @@ MonoBehaviour:
   soundEffect:
   - groupID: PickUpCoin
     clips:
-    - {fileID: 8300000, guid: 80d04db3cf261d140aadca8113aefe0e, type: 3}
+    - {fileID: 8300000, guid: a348be8c54194214a8d0988887b664fc, type: 3}
   - groupID: DashingSound
     clips:
     - {fileID: 8300000, guid: 80d04db3cf261d140aadca8113aefe0e, type: 3}
@@ -2764,6 +2813,9 @@ MonoBehaviour:
   - groupID: DeathSound
     clips:
     - {fileID: 8300000, guid: 4eecb3b53c28d4340a284f72f07d9e48, type: 3}
+  - groupID: PowerUPSound
+    clips:
+    - {fileID: 8300000, guid: 51b199740b0801f44a6bdd255c256e04, type: 3}
 --- !u!114 &1418150154
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3526,19 +3578,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1901908909}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 2142983688}
-        m_TargetAssemblyTypeName: InputManager, Assembly-CSharp
-        m_MethodName: SetTouchMode
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1901908909
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4339,7 +4379,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   currentMode: 1
-  MainMenuUI: {fileID: 0}
 --- !u!4 &2142983689
 Transform:
   m_ObjectHideFlags: 0
@@ -4599,6 +4638,7 @@ SceneRoots:
   - {fileID: 1316309019}
   - {fileID: 670743537}
   - {fileID: 1026522090}
-  - {fileID: 1418150155}
   - {fileID: 1111909496}
   - {fileID: 2142983689}
+  - {fileID: 975801872}
+  - {fileID: 1418150155}
