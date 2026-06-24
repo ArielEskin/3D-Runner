@@ -216,6 +216,10 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene("MainMenu");// when press on the back button go back to the MainMenu
 
     }
-    
+
+    public void CheckInputSystem()
+    {
+
+    }
     
 }

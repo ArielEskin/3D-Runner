@@ -3,46 +3,24 @@ using UnityEngine.UI;
 
 public class GameplayUI : MonoBehaviour
 {
-    [SerializeField] private GameObject buttonControlsPanel;
-    [SerializeField] private Image buttonModeImage;
-    [SerializeField] private Image touchModeImage;
+    [SerializeField] private GameObject ButtonInputSystemImage;
+
     
     
     private void Start()
     {
-        UpdateButtons();
-    }
-
-    private void Update()
-    {
-        UpdateButtons();
-    }
-    
-    public void UpdateButtons()
-    {
-        if (InputManager.instance == null) 
+        // Check the choice made in the main menu as soon as the level loads
+        if (InputManager.instance != null)
         {
-            return; 
+            if (InputManager.instance.currentMode == InputMode.Buttons)
+            {
+                ButtonInputSystemImage.SetActive(true);  // Show buttons
+            }
+            else
+            {
+                ButtonInputSystemImage.SetActive(false); // Hide buttons for swipe mode
+            }
         }
-        if (InputManager.instance.currentMode == InputMode.Buttons)
-        {
-            SetAlpha(buttonModeImage, 1f);
-            SetAlpha(touchModeImage, 0.5f);
-            
-        }
-        else
-        {
-            SetAlpha(buttonModeImage, 0.5f);
-            SetAlpha(touchModeImage, 1f);
-            
-        }
-    }
-    
-    private void SetAlpha(Image image, float alpha)
-    {
-        Color c = image.color;
-        c.a = alpha;
-        image.color = c;
     }
     
 }
