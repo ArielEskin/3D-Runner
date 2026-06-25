@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour
     {
         if (!isDead)
         {
-            distanceTravelled += Time.deltaTime * playerMovement.moveSpeed; // The playerspeed is 5f so the distance will be 5 units/meter
+            distanceTravelled += Time.deltaTime * playerMovement.moveSpeed; // The playerSpeed is 5f so the distance will be 5 units/meter
         }
     }
     
@@ -145,12 +145,11 @@ public class GameManager : MonoBehaviour
         if (isDead) return; // Prevent this from triggering twice if you hit two hitboxes at once
         
         isDead = true;
-        SoundManager.instance.PlaySound3D("DeathSound", transform.position);
+        SoundManager.instance.PlaySound3D("DeathSound", playerMovement.transform.position);  // play death sound when player is dead
         Debug.Log("Player hit: " + obstacleTag);
 
         // Tell the player to play the specific death animation
         playerMovement.TriggerDeathAnimation(obstacleTag);
-
         // Start the timer to wait for the animation to finish
         StartCoroutine(GameOverSequence());
         StartCoroutine(GameOverRetryButton());
@@ -161,7 +160,7 @@ public class GameManager : MonoBehaviour
         // Wait for 3 seconds so death animations finishes
         yield return new WaitForSeconds(3f);
         HUDManager.instance.UpdateDeadText();
-        Time.timeScale = 0f;
+        Time.timeScale = 1f;
     }
     
     //================== Difficulty Changer methods ==================
@@ -202,20 +201,14 @@ public class GameManager : MonoBehaviour
 
     public void RetryButton()
     {
-        
         Time.timeScale = 1f;
         SceneManager.LoadScene("Game"); // when Retry button pressed its play the game again
-        
-        
     }
 
     public void BackButton()
     {
-        
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");// when press on the back button go back to the MainMenu
-
     }
-    
     
 }

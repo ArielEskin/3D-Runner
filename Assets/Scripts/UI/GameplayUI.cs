@@ -3,44 +3,46 @@ using UnityEngine.UI;
 
 public class GameplayUI : MonoBehaviour
 {
-    [SerializeField] private GameObject buttonControlsPanel;
-    [SerializeField] private Image buttonModeImage;
-    [SerializeField] private Image touchModeImage;
+    // ========== Reference ===========
+    [Header ("UI Elements")]
+    [SerializeField] private GameObject ButtonInputSystemImage;
     
+    
+    // ===== coin =====
+    [SerializeField] private GameObject DoubleCoinAmountImage;
     
     private void Start()
     {
-        UpdateButtons();
+        DoubleCoinAmountImage.SetActive(false); // x2 is disabled when the game start
+        // Check the choice made in the main menu as soon as the level loads
+        if (InputManager.instance != null)
+        {
+            if (InputManager.instance.currentMode == InputMode.Buttons)
+            {
+                ButtonInputSystemImage.SetActive(true);  // Show buttons
+            }
+            else
+            {
+                ButtonInputSystemImage.SetActive(false); // Hide buttons for swipe mode
+            }
+        }
     }
 
     private void Update()
     {
-        UpdateButtons();
+        DoubleCoinBuff();
     }
-    
-    public void UpdateButtons()
+
+    private void DoubleCoinBuff()
     {
-        if (InputManager.instance == null) 
+        if (GameManager.gameManager.coinMultiplier > 1)
         {
-            return; 
-        }
-        if (InputManager.instance.currentMode == InputMode.Buttons)
-        {
-            SetAlpha(buttonModeImage, 1f);
-            SetAlpha(touchModeImage, 0.5f);
+            DoubleCoinAmountImage.SetActive(true); // set the image active true when the double x2 buff 
         }
         else
         {
-            SetAlpha(buttonModeImage, 0.5f);
-            SetAlpha(touchModeImage, 1f);
+            DoubleCoinAmountImage.SetActive(false);
         }
-    }
-    
-    private void SetAlpha(Image image, float alpha)
-    {
-        Color c = image.color;
-        c.a = alpha;
-        image.color = c;
     }
     
 }

@@ -8,7 +8,7 @@ public class PowerUpItem : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            SoundManager.instance.PlaySound3D("PickUpCoin", transform.position); // add a powerup sound!
+            SoundManager.instance.PlaySound3D("PowerUPSound", transform.position); // add a powerup sound!
 
             GameManager.gameManager.ActivatePowerUp(powerUpData);
             
