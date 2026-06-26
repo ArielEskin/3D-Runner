@@ -1,4 +1,6 @@
+#if UNITY_EDITOR
 using UnityEditorInternal;
+#endif
 using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.InputSystem;
