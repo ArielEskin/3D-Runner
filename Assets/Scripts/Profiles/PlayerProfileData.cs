@@ -5,8 +5,8 @@ using UnityEngine;
 public class PlayerProfileData
 {
     [Header("Profile Metadata")]
-    public string profileID;          // Unique identifier for the slot
-    public string profileName;        // Name the player types in
+    public string profileID; // Unique identifier for the slot
+    public string profileName; // Name the player types in for save file
 
     [Header("Progression & Stats")]
     public int totalCoins;
@@ -14,20 +14,18 @@ public class PlayerProfileData
     public float longestTimeSurvived;
 
     [Header("Last Run Details")]
-    public int lastRunSeed;           // The exact pseudorandom seed needed to replay the same track
-    public string screenshotPath;     // The local file path to the saved thumbnail image
-    public string lastPlayedDate;     // To show on the UI
+    public int lastRunSeed; // The seed needed to replay the same track
+    public string screenshotPath; // The local file path to the saved thumbnail image
+    public string lastPlayedDate;  // Last time played To show on the UI
 
     [Header("Player Preferences")]
-    // Moving your MainMenu PlayerPrefs into the JSON save file
-    public string selectedThemeID;    // The theme string to pass to the Scene Manager
+    public string selectedThemeID; // The theme string to pass to the Scene Manager
     public List<string> unlockedThemes; // List of themes the player has bought/unlocked
     public float musicVolume;         
     public float sfxVolume;
-    public int inputModeIndex;        // 0 for Buttons, 1 for Touch 
+    public int inputModeIndex; // 0 for Buttons, 1 for Touch 
     
-    // Constructor to create a fresh, default profile if one doesn't exist
-    public PlayerProfileData(string id, string name)
+    public PlayerProfileData(string id, string name) // Constructor to create a fresh, default profile if one doesn't exist
     {
         profileID = id;
         profileName = name;

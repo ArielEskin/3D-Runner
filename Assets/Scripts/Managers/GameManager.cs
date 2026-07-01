@@ -11,19 +11,17 @@ public enum DifficultyTier
 }
 
 public class GameManager : MonoBehaviour
-{
-    // ==========reference=========
+{ 
+    // ==========references================================================================================================================================================
+    
     [SerializeField] private PlayerMovement playerMovement;
     public static GameManager gameManager;
     [SerializeField] private DifficultyManager difficultyManager;
+    public MainMenu mainMenu; 
     
-    public MainMenu mainMenu; // give access to Main Menu script
-    
-
     [Header("=========GameManager Settings=========")]
     [field: SerializeField] public float timeSurvived { get; private set; }
     [field: SerializeField] public  float distanceTravelled { get; private set; }
-    
     [field: SerializeField] public int DifficultyUpLevel { get; private set; }
     
     [Header("=========Power-Up States=========")]
@@ -49,35 +47,34 @@ public class GameManager : MonoBehaviour
     //=========Button=========
     [SerializeField] private Button retryButton;
     [SerializeField] private Button backButton;
+    
+    // ==========================================================================================================================================================
 
-    private void Awake()
+    private void Awake() // Sets the GameManager instance and resets the difficulty
     {
         gameManager = this;
-        // Force the difficulty back to Easy every time the scene loads (when retrying)
         if (difficultyManager != null)
         {
             difficultyManager.ResetDifficulty();
         }
     }
     
-    void Start()
+    void Start() // Hides the game over UI buttons at the start of a run
     {
         retryButton.gameObject.SetActive(false);
         backButton.gameObject.SetActive(false);
         
     }
 
-    // Update is called once per frame
-    private void Update()
+    private void Update() // Tracks player survival time, distance traveled, active power-up durations, and checks for level-ups
     {
         TimeSurvived();
         DistancePlayed();
         LevelUp();
-        
         HandlePowerUpTimers();
     }
 
-    public void ActivatePowerUp(PowerUpData data)
+    public void ActivatePowerUp(PowerUpData data) // Identifies which power-up was collected and triggers its specific effects and timers.
     {
         if (data.powerUpName == "Invincibility") 
         {
@@ -117,98 +114,87 @@ public class GameManager : MonoBehaviour
             if (magnetTimer <= 0) isMagnetActive = false;
         }
     }
-    public void AddCoin(int amount)
+    public void AddCoin(int amount) // Increases the player's total coin count, factoring in any active multipliers
     {
         Coins += (amount * coinMultiplier);
         HUDManager.instance.UpdateCoinsText(Coins);
     }
 
-    private void TimeSurvived()
+    private void TimeSurvived() // Calculates the run's time survived based on time and movement speed
     {
         if (!isDead)
         {
-            timeSurvived += Time.deltaTime; // count +1 after every 1 second
+            timeSurvived += Time.deltaTime;
         }
     }
 
-    private void DistancePlayed()
+    private void DistancePlayed() // Calculates the run's distance traveled based on time and movement speed
     {
         if (!isDead)
         {
-            distanceTravelled += Time.deltaTime * playerMovement.moveSpeed; // The playerSpeed is 5f so the distance will be 5 units/meter
+            distanceTravelled += Time.deltaTime * playerMovement.moveSpeed;
         }
     }
     
     
-    public void KillPlayer(string obstacleTag)
+    public void KillPlayer(string obstacleTag) // Stops the game loop, plays the specific death animation, triggers audio, and starts the game over sequences
     {
-        if (isDead) return; // Prevent this from triggering twice if you hit two hitboxes at once
+        if (isDead) return;
         
         isDead = true;
-        SoundManager.instance.PlaySound3D("DeathSound", playerMovement.transform.position);  // play death sound when player is dead
+        SoundManager.instance.PlaySound3D("DeathSound", playerMovement.transform.position);
         Debug.Log("Player hit: " + obstacleTag);
-
-        // Tell the player to play the specific death animation
+        
         playerMovement.TriggerDeathAnimation(obstacleTag);
-        // Start the timer to wait for the animation to finish
+
         StartCoroutine(GameOverSequence());
         StartCoroutine(GameOverRetryButton());
     }
 
-    private IEnumerator GameOverSequence()
+    private IEnumerator GameOverSequence() // Waits for the death animation to finish before showing the "Dead" UI text
     {
-        // Wait for 3 seconds so death animations finishes
         yield return new WaitForSeconds(3f);
         HUDManager.instance.UpdateDeadText();
         Time.timeScale = 1f;
     }
-    
-    //================== Difficulty Changer methods ==================
-    public void LevelUp()
+
+    public void LevelUp() // Checks if the player has passed the current difficulty's distance threshold and triggers a tier upgrade if they have
     {
-        // Check if there is another difficulty tier available to upgrade to
         if (difficultyManager.currentTierIndex < difficultyManager.difficultyTiers.Count - 1)
         {
-            // Get the data for the NEXT tier
             DifficultyData nextTierData = difficultyManager.difficultyTiers[difficultyManager.currentTierIndex + 1];
 
-            // Check if distance travelled meets the requirement in the Scriptable Object
             if (distanceTravelled >= nextTierData.distanceToReach)
             {
-                // Update our Enum (Easy -> Medium -> Hard)
                 if (currentTier == DifficultyTier.Easy) currentTier = DifficultyTier.Medium;
                 else if (currentTier == DifficultyTier.Medium) currentTier = DifficultyTier.Hard;
 
                 Debug.Log(currentTier.ToString() + " reached!");
-
-                // Tell the DifficultyManager to step up its index
-                difficultyManager.LevelUpDifficulty(); 
                 
-                // Apply the new movement speed from the Scriptable Object
+                difficultyManager.LevelUpDifficulty(); 
                 playerMovement.moveSpeed = difficultyManager.currentDifficulty.movementSpeed; 
             }
         }
     }
     
-    // =====================Buttons====================
-    private IEnumerator GameOverRetryButton()
+    private IEnumerator GameOverRetryButton() // Delays the appearance of the retry/menu buttons and pauses the game time
     {
-        yield return new WaitForSeconds(3f); // wait 3 seconds
-        retryButton.gameObject.SetActive(true); // active my retry button
-        backButton.gameObject.SetActive(true); // active my back button
+        yield return new WaitForSeconds(3f);
+        retryButton.gameObject.SetActive(true);
+        backButton.gameObject.SetActive(true);
         Time.timeScale = 0f;
     }
 
-    public void RetryButton()
+    public void RetryButton() // Restores the timescale and loads the game scene again
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("Game"); // when Retry button pressed its play the game again
+        SceneManager.LoadScene("Game");
     }
 
-    public void BackButton()
+    public void BackButton() // Restores the timescale and loads the main menu scene
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene("MainMenu");// when press on the back button go back to the MainMenu
+        SceneManager.LoadScene("MainMenu");
     }
     
 }

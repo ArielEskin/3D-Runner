@@ -7,6 +7,9 @@ using UnityEngine.UI;
 
 public class MainMenu : MonoBehaviour
 {
+    
+    // ==========references================================================================================================================================================
+
     public AudioMixer audioMixer;
 
     public Slider MusicSlider;
@@ -17,13 +20,15 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject mainMenu;
     [SerializeField] private Slider loadingSlider;
     
-    public void Start()
+    // ==========================================================================================================================================================
+
+    public void Start() // Loads the saved audio preferences and starts the menu music
     {
         LoadVolume();
         MusicManager.instance.PlayMusic("MainMenu");
     }
 
-    public void Play()
+    public void Play() // Swaps the UI to the loading screen and triggers the scene loading sequence
     {
         Debug.Log("Press On StartButton");
         MusicManager.instance.PlayMusic("GameMusic");
@@ -34,7 +39,7 @@ public class MainMenu : MonoBehaviour
         StartCoroutine(LoadLevelASync("Game"));
     }
     
-    IEnumerator LoadLevelASync(string levelToLoad)
+    IEnumerator LoadLevelASync(string levelToLoad) // A Coroutine that fakes a smooth loading bar while Unity loads the 3D environment in the background
     {
         AsyncOperation loadOperation = SceneManager.LoadSceneAsync(levelToLoad);
         loadOperation.allowSceneActivation = false;
@@ -57,43 +62,34 @@ public class MainMenu : MonoBehaviour
         loadOperation.allowSceneActivation = true;
     }
 
-    // public void Quit()
-    // {
-    //     Debug.Log("Press On QuitButton");
-    //     Application.Quit();
-    //     Debug.Log("Game Closed");
-    // }
-
-    public void BackToMenu()
+    public void BackToMenu() // Loads the main menu scene from gameplay
     {
         SceneManager.LoadScene("MainMenu");
     }
 
-    public void UpdateMusicVolume(float volume)
+    public void UpdateMusicVolume(float volume) // Adjusts the live AudioMixer levels when the UI sliders are dragged.
     {
         Debug.Log("Music slider value: " + volume);
         audioMixer.SetFloat("MusicVolume", volume);
     }
 
-    public void UpdateSoundVolume(float volume)
+    public void UpdateSoundVolume(float volume) // Adjusts the live AudioMixer levels when the UI sliders are dragged.
     {
         Debug.Log("SFX slider value: " + volume);
         audioMixer.SetFloat("SFXVolume", volume);
 
     }
 
-    public void SaveVolume()
+    public void SaveVolume() // Writes the exact slider values using PlayerPrefs
     {
         audioMixer.GetFloat("MusicVolume", out float musicVolume);
         PlayerPrefs.SetFloat("MusicVolume", musicVolume);
-        // Debug.Log("Saving Music: " + musicVolume);
         
         audioMixer.GetFloat("SFXVolume", out float sfxVolume);
         PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
-        //Debug.Log("Saving SFX: " + sfxVolume);
     }
 
-    public void LoadVolume()
+    public void LoadVolume() // Reads the exact slider values using PlayerPrefs
     {
         
         MusicSlider.value = PlayerPrefs.GetFloat("MusicVolume");

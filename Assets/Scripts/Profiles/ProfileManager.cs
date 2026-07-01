@@ -11,7 +11,7 @@ public class ProfileManager : MonoBehaviour
     [Tooltip("Drag your Canvas here so the UI hides when the screenshot is taken!")]
     public Canvas mainGameplayUI; 
 
-    private void Awake()
+    private void Awake() //Initializes the Singleton pattern
     {
         if (instance == null)
         {
@@ -24,17 +24,17 @@ public class ProfileManager : MonoBehaviour
         }
     }
 
-    // ====================================================================================
+    // ========================================================================================================================================================================
     // SCREEN CAPTURE & SAVING SEQUENCE
-    // ====================================================================================
+    // ========================================================================================================================================================================
     
-    public void TriggerSaveSequence() // Call when the player dies, pauses, or clicks "Save & Quit"
+    public void TriggerSaveSequence() //Initiates the Coroutine to safely capture a screenshot before saving.
     {
         if (activeProfile == null) return;
         StartCoroutine(CaptureScreenshotAndSave());
     }
 
-    private IEnumerator CaptureScreenshotAndSave()
+    private IEnumerator CaptureScreenshotAndSave() // Hides the UI, saves the image as a PNG, and then triggers the JSON save
     {
         // Hide the UI for the thumbnail
         if (mainGameplayUI != null) mainGameplayUI.enabled = false;
@@ -71,10 +71,10 @@ public class ProfileManager : MonoBehaviour
         SaveActiveProfileJSON(); 
     }
 
-    // ====================================================================================
+    // ========================================================================================================================================================================
     // JSON SERIALIZATION (Backend Logic)
-    // ====================================================================================
-    private void SaveActiveProfileJSON()
+    // ========================================================================================================================================================================
+    private void SaveActiveProfileJSON() // Converts the active profile object into a JSON string and writes it to the device's data path
     {
         string json = JsonUtility.ToJson(activeProfile, true); 
         string filePath = Path.Combine(Application.persistentDataPath, activeProfile.profileID + ".json"); 
@@ -83,7 +83,7 @@ public class ProfileManager : MonoBehaviour
         Debug.Log("Profile JSON Saved Successfully at: " + filePath);
     }
 
-    public PlayerProfileData LoadProfile(string profileID)
+    public PlayerProfileData LoadProfile(string profileID) // Reads a specific JSON file from the device and deserializes it back into a usable C# object
     {
         string filePath = Path.Combine(Application.persistentDataPath, profileID + ".json");
 
@@ -97,22 +97,19 @@ public class ProfileManager : MonoBehaviour
         return null;
     }
     
-    private void OnApplicationPause(bool isPaused) 
+    private void OnApplicationPause(bool isPaused)  // Automatically triggers a JSON data save when the mobile app is pushed to the background or closed.
     {
-        if (isPaused)
-        {
-            SaveActiveProfileJSON();
-        }
+        if (isPaused) { SaveActiveProfileJSON(); }
     }
     
-    // ====================================================================================
+    // ========================================================================================================================================================================
     // RESTORE STATE (Applying the JSON to the game)
-    // ====================================================================================
-    public void ApplyProfileToGameSession()
+    // ========================================================================================================================================================================
+    public void ApplyProfileToGameSession() // Pushes the loaded JSON preferences (audio, controls, and seed) directly into the active game systems
     {
         if (activeProfile == null) return;
 
-        // Restore Audio n
+        // Restore Audio
         PlayerPrefs.SetFloat("MusicVolume", activeProfile.musicVolume);
         PlayerPrefs.SetFloat("SFXVolume", activeProfile.sfxVolume);
 
@@ -131,10 +128,10 @@ public class ProfileManager : MonoBehaviour
             Debug.Log("Game state restored for profile: " + activeProfile.profileName);
         }
     }
-    // ====================================================================================
+    // ========================================================================================================================================================================
     // DIRECTORY SCANNING (For  UI)
-    // ====================================================================================
-    public System.Collections.Generic.List<PlayerProfileData> GetAllSavedProfiles()
+    // ========================================================================================================================================================================
+    public System.Collections.Generic.List<PlayerProfileData> GetAllSavedProfiles() //Scans the Android storage for all JSON files and returns them as a list for the UI profile selector
     {
         System.Collections.Generic.List<PlayerProfileData> allProfiles = new System.Collections.Generic.List<PlayerProfileData>();
         

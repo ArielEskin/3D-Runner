@@ -10,7 +10,7 @@ public class DifficultyManager : ScriptableObject
     public List<DifficultyData> difficultyTiers; //  0=Easy, 1=Medium, 2=Hard
     public int currentTierIndex = 0;
     
-    public void ResetDifficulty() 
+    public void ResetDifficulty() // Forces the game back to the Easy tier when starting a new run
     {
         currentTierIndex = 0;
 
@@ -20,7 +20,7 @@ public class DifficultyManager : ScriptableObject
         }
     }
     
-    public void LevelUpDifficulty() // Call this when the player reaches a certain distance/score
+    public void LevelUpDifficulty() // Advances the active difficulty profile to the next tier in the list when certain distance is met
     {
         Debug.Log("Trying To Level Up");
         if (currentTierIndex < difficultyTiers.Count - 1)

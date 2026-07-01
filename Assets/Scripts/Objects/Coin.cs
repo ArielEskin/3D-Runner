@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Coin : MonoBehaviour
 {
+    // ==========references================================================================================================================================================
+
     [Header("Coin Settings")]
     [SerializeField] private int coinValue = 1;
     [SerializeField] private float flySpeed = 25f; // How fast they fly to the player with magnet active
@@ -16,8 +18,10 @@ public class Coin : MonoBehaviour
     private MeshRenderer meshRenderer;
     private Color originalColor;
     private bool isFading = false;
+    
+    // ==========================================================================================================================================================
 
-    private void Awake()
+    private void Awake() // Caches the renderer and locates the player target
     {
         meshRenderer = GetComponentInChildren<MeshRenderer>();
         if (meshRenderer != null)
@@ -26,25 +30,25 @@ public class Coin : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void Start() // Caches the renderer and locates the player target.
     {
         // Find the player once so we know who to fly towards and check distance against
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null) playerTransform = player.transform;
     }
 
-    private void OnEnable()
+    private void OnEnable() // Resets the coin's transparency back to 100% solid every time it is pulled from the object pool
     {
         isFading = false;
         if (meshRenderer != null)
         {
             Color resetColor = originalColor;
-            resetColor.a = 1f; // Force Alpha back to 100%
+            resetColor.a = 1f;
             meshRenderer.material.color = resetColor;
         }
     }
 
-    private void Update()
+    private void Update() // Pulls the coin towards the player if the magnet is active, or fades it out if the player runs past it
     {
         if (playerTransform == null) return;
 
@@ -57,7 +61,6 @@ public class Coin : MonoBehaviour
             
             if (distance <= GameManager.gameManager.magnetRadius)
             {
-                // Fly smoothly towards the player's center
                 transform.position = Vector3.MoveTowards(transform.position, playerTransform.position + Vector3.up, flySpeed * Time.deltaTime);
             }
         }
@@ -65,12 +68,7 @@ public class Coin : MonoBehaviour
         // ==========================================
         // TRANSPARENCY LOGIC
         // ==========================================
-        if (playerTransform.position.z > transform.position.z)
-        {
-            isFading = true;
-        }
-
-        // Smoothly fade the material's alpha over time
+        if (playerTransform.position.z > transform.position.z) { isFading = true; }
         if (isFading && meshRenderer != null)
         {
             Color currentColor = meshRenderer.material.color;
@@ -79,11 +77,10 @@ public class Coin : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other) // Adds to the score, plays a sound, and returns the coin to the pool upon collision
     {
         if (other.CompareTag("Player"))
         {
-            // Safety net so the game doesn't crash when testing the scene directly
             if (SoundManager.instance != null)
             {
                 SoundManager.instance.PlaySound3D("PickUpCoin", transform.position); 

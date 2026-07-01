@@ -8,36 +8,31 @@ using TouchPhase = UnityEngine.TouchPhase;
 
 public class PlayerSwipeInput : MonoBehaviour
 {
-    // ============== References ==============
+    // ==========references================================================================================================================================================
+    
     [SerializeField] private PlayerMovement playerMovement;
     
-    // ============= Swipe Distance count ============ 
     [SerializeField] private float miniSwipeDistance = 50f;
+    private Vector2 startTouch;
+    private Vector2 endTouch; 
+    private bool isSwiping;
     
-    // =========== touch ==========
-    private Vector2 startTouch; // where is the touch start
-    private Vector2 endTouch; // where is the touch end
+    // ==========================================================================================================================================================
     
-    private bool isSwiping; // track the swipe
-    
-    // Update is called once per frame
-    void Update()
+    void Update() // Verifies the game is in Touch mode and listens for input
     {
-        //check if the player is dead if yes stop the input
         if (GameManager.gameManager.isDead) return; 
         
         if (InputManager.instance.currentMode != InputMode.Touch)
         {
-            return; // disable swipe input
+            return;
         }
-        
         HandleTouch();
         HandleMouse();
     }
 
-    private void HandleMouse()
+    private void HandleMouse() // Records the exact screen coordinates where a click starts and ends (for PC testing only)
     {
-        // check if there is a mouse 
         if (Mouse.current == null) return;
 
         if (Mouse.current.leftButton.wasPressedThisFrame)
@@ -45,7 +40,6 @@ public class PlayerSwipeInput : MonoBehaviour
             startTouch = Mouse.current.position.ReadValue();
             isSwiping = true;
         }
-        
         if (Mouse.current.leftButton.wasReleasedThisFrame &&  isSwiping)
         {
             endTouch = Mouse.current.position.ReadValue();
@@ -54,9 +48,8 @@ public class PlayerSwipeInput : MonoBehaviour
         }
     }
 
-    private void HandleTouch()
+    private void HandleTouch() // Records the exact screen coordinates where a touch starts and ends
     {
-        // check if finger pressing the screen
         if (Touchscreen.current == null) return;
 
         if (Touchscreen.current.primaryTouch.press.wasPressedThisFrame)
@@ -65,46 +58,28 @@ public class PlayerSwipeInput : MonoBehaviour
             isSwiping = true;
             
         }
-
         if (Touchscreen.current.primaryTouch.press.wasReleasedThisFrame && isSwiping)
         {
             endTouch = Touchscreen.current.primaryTouch.position.ReadValue();
             DetectSwipte();
             isSwiping = false;
         }
-        
     }
 
-    private void DetectSwipte()
+    private void DetectSwipte() // Calculates the distance and direction of the swipe to trigger a jump, left move, or right move
     {
-        Vector2 delta = endTouch - startTouch; // Difference between start and end position
+        Vector2 delta = endTouch - startTouch;
 
-        if (delta.magnitude < miniSwipeDistance) // if the swipe is to small ignore it
-        {
-            return;
-        }
+        if (delta.magnitude < miniSwipeDistance) { return; }
         
         float x = delta.x;
         float y = delta.y;
 
         if (Mathf.Abs(x) > Mathf.Abs(y))
         {
-            if (x > 0)
-            {
-                playerMovement.RightMove(); //player move right
-            }
-            else
-            {
-                playerMovement.LeftMove(); //player move left
-            }
+            if (x > 0) { playerMovement.RightMove(); }
+            else { playerMovement.LeftMove(); }
         }
-        else
-        {
-            if (y > 0)
-            {
-                playerMovement.Jump(); //player jump
-            }
-        }
-
+        else { if (y > 0) { playerMovement.Jump(); } }
     }
 }

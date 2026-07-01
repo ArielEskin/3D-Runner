@@ -4,17 +4,18 @@ using UnityEngine;
 
 public class MusicManager : MonoBehaviour
 {
-    public static MusicManager instance;
+    // ==========references================================================================================================================================================
 
-    // ============ refernce ============
+    public static MusicManager instance;
+    
     [SerializeField]
     private MusicLibrary musicLibrary;
     [SerializeField]
     private AudioSource musicSource;
     
+    // ==========================================================================================================================================================
     
-    
-    public void Awake()
+    public void Awake() // Initializes the audio Singletons that persist across all menus and gameplay
     {
         if (instance != null)
         {
@@ -27,7 +28,7 @@ public class MusicManager : MonoBehaviour
         }
     }
 
-    public void PlayMusic(string trackName, float fadeDuration = 0.5f)
+    public void PlayMusic(string trackName, float fadeDuration = 0.5f) // Requests a specific music track and triggers the fading sequence
     {
         Debug.Log("PlayMusic called: " + trackName);
     
@@ -38,7 +39,7 @@ public class MusicManager : MonoBehaviour
         StartCoroutine(AnimateMusicCrossFade(clip, fadeDuration));
     }
     
-    IEnumerator AnimateMusicCrossFade(AudioClip nextTrack, float fadeDuration = 0.5f)
+    IEnumerator AnimateMusicCrossFade(AudioClip nextTrack, float fadeDuration = 0.5f) // A Coroutine that smoothly lowers the volume of the old track and raises the volume of the new one
     {
         float percent = 0;
         while (percent < 1)

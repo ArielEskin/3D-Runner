@@ -11,7 +11,7 @@ public class SoundLibrary : MonoBehaviour
 {
     public SoundEffect[] soundEffect;
 
-    public AudioClip GetClipFromName(string name)
+    public AudioClip GetClipFromName(string name) // Searches the Inspector arrays for a specific string ID and returns the matching AudioClip
     {
         foreach (var soundEffect in soundEffect)
         {

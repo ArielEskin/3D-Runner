@@ -11,7 +11,7 @@ public class MusicLibrary : MonoBehaviour
 {
     public MusicTrack[] tracks;
 
-    public AudioClip GetClipFromName(string trackName)
+    public AudioClip GetClipFromName(string trackName) // Searches the Inspector arrays for a specific string ID and returns the matching AudioClip
     {
         foreach (var track in tracks)
         {

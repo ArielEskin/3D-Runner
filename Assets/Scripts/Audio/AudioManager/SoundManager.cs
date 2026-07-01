@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class SoundManager : MonoBehaviour
 {
+    // ==========references================================================================================================================================================
+
     public static SoundManager instance;
     
     [SerializeField]
@@ -10,7 +12,9 @@ public class SoundManager : MonoBehaviour
     [SerializeField]
     private AudioSource sfx2Dsource;
 
-    public void Awake()
+    // ==========================================================================================================================================================
+
+    public void Awake() // Initializes the audio Singletons that persist across all menus and gameplay
     {
         if (instance != null)
         {
@@ -23,20 +27,19 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    public void PlaySound3D(AudioClip clip, Vector3 position)
+    public void PlaySound3D(AudioClip clip, Vector3 position) // Spawns a temporary audio source at a specific coordinate for spatial sound (like picking up a coin)
     {
         if (clip != null)
         {
             AudioSource.PlayClipAtPoint(clip, position);
         }
     }
-
     public void PlaySound3D(string soundName, Vector3 position)
     {
         PlaySound3D(sfxLibrary.GetClipFromName(soundName), position);
     }
 
-    public void PlaySound2D(string soundName)
+    public void PlaySound2D(string soundName) // Plays flat UI or system sounds directly into the player's ears
     {
         sfx2Dsource.PlayOneShot(sfxLibrary.GetClipFromName(soundName));
     }

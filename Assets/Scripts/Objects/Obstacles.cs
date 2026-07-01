@@ -2,20 +2,22 @@ using UnityEngine;
 
 public class Obstacles : MonoBehaviour
 {
+    // ==========references================================================================================================================================================
+
     [Header("Transparency Settings")]
-    [Tooltip("Check this box ONLY for High Obstacles in the Inspector!")]
     [SerializeField] private bool canBecomeTransparent = false; 
-    [SerializeField] private float targetAlpha = 0.3f; // How see-through it gets (0 = invisible, 1 = solid)
-    [SerializeField] private float fadeSpeed = 8f;     // How fast it fades
+    [SerializeField] private float targetAlpha = 0.3f;
+    [SerializeField] private float fadeSpeed = 8f;
 
     private Transform playerTransform;
     private MeshRenderer meshRenderer;
     private Color originalColor;
     private bool isFading = false;
+    
+    // ==========================================================================================================================================================
 
-    private void Awake()
+    private void Awake() // Caches references 
     {
-        // Grab the 3D mesh (checks children just in case your model is inside an empty game object)
         meshRenderer = GetComponentInChildren<MeshRenderer>();
         if (meshRenderer != null)
         {
@@ -23,37 +25,32 @@ public class Obstacles : MonoBehaviour
         }
     }
 
-    private void Start()
+    private void Start() // Find the player once so we don't have to search for them every frame
     {
-        // Find the player once so we don't have to search for them every frame
         GameObject player = GameObject.FindGameObjectWithTag("Player");
         if (player != null) playerTransform = player.transform;
     }
 
-    private void OnEnable()
+    private void OnEnable() // Reset the obstacle to fully solid every time it spawns
     {
-        // CRITICAL FOR OBJECT POOLING: Reset the obstacle to fully solid every time it spawns!
         isFading = false;
         if (meshRenderer != null)
         {
             Color resetColor = originalColor;
-            resetColor.a = 1f; // Force Alpha back to 100%
+            resetColor.a = 1f;
             meshRenderer.material.color = resetColor;
         }
     }
 
-    private void Update()
+    private void Update() // Fades tall obstacles to become transparent when they are close to the camera
     {
-        // If this isn't a high obstacle, or we are missing references, do nothing
         if (!canBecomeTransparent || playerTransform == null || meshRenderer == null) return;
-
-        // Trigger the fade the moment the player runs past the obstacle's exact Z coordinate
+        
         if (playerTransform.position.z > transform.position.z)
         {
             isFading = true;
         }
-
-        // Smoothly fade the material's alpha over time
+        
         if (isFading)
         {
             Color currentColor = meshRenderer.material.color;
@@ -62,11 +59,11 @@ public class Obstacles : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other) // If player hits Obstacle ----> DIE
+    private void OnTriggerEnter(Collider other) // Tells the GameManager to kill the player unless they have an active invincibility buff
     {
         if (other.CompareTag("Player"))
         {
-            if (GameManager.gameManager.isInvincible) return; // Invincibility power ups active
+            if (GameManager.gameManager.isInvincible) return;
 
             if (gameObject.name.Contains("Low"))
             {

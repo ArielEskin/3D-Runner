@@ -47,8 +47,9 @@ public class DifficultyData : ScriptableObject
     [Header("Coin Settings")]
     [Tooltip("Percentage chance (0-100) that a track tile will spawn a line of coins")]
     [Range(0, 100)]
-    public int coinStreakChance = 70; 
-    public int minCoinsInStreak = 3;  // Minimum coins in a row
-    public int maxCoinsInStreak = 8;  // Maximum coins in a row
+    public int coinStreakChance = 70;
+
+    public int minCoinsInStreak = 3;
+    public int maxCoinsInStreak = 8;
     public float coinSpacing = 2.5f;  // The Z-distance between each coin in the line
 }

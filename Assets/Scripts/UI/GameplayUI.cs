@@ -3,46 +3,38 @@ using UnityEngine.UI;
 
 public class GameplayUI : MonoBehaviour
 {
-    // ========== Reference ===========
+    // ==========references================================================================================================================================================
+
     [Header ("UI Elements")]
     [SerializeField] private GameObject ButtonInputSystemImage;
-    
-    
-    // ===== coin =====
     [SerializeField] private GameObject DoubleCoinAmountImage;
     
-    private void Start()
+    // ==========references================================================================================================================================================
+    
+    private void Start() // Ensures the correct UI layout is showing based on the input mode
     {
-        DoubleCoinAmountImage.SetActive(false); // x2 is disabled when the game start
-        // Check the choice made in the main menu as soon as the level loads
+        DoubleCoinAmountImage.SetActive(false);
         if (InputManager.instance != null)
         {
             if (InputManager.instance.currentMode == InputMode.Buttons)
             {
-                ButtonInputSystemImage.SetActive(true);  // Show buttons
+                ButtonInputSystemImage.SetActive(true);
             }
             else
             {
-                ButtonInputSystemImage.SetActive(false); // Hide buttons for swipe mode
+                ButtonInputSystemImage.SetActive(false);
             }
         }
     }
 
-    private void Update()
+    private void Update() // Ensures the correct UI layout is showing based on the input mode
     {
         DoubleCoinBuff();
     }
 
-    private void DoubleCoinBuff()
+    private void DoubleCoinBuff() // Displays or hides the "x2" icon next to the coin counter based on the active GameManager state
     {
-        if (GameManager.gameManager.coinMultiplier > 1)
-        {
-            DoubleCoinAmountImage.SetActive(true); // set the image active true when the double x2 buff 
-        }
-        else
-        {
-            DoubleCoinAmountImage.SetActive(false);
-        }
+        if (GameManager.gameManager.coinMultiplier > 1) { DoubleCoinAmountImage.SetActive(true); }
+        else { DoubleCoinAmountImage.SetActive(false); }
     }
-    
 }

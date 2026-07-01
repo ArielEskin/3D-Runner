@@ -4,6 +4,8 @@ using UnityEngine;
 // Manages the endless spawning, despawning, and recycling of track tiles and all items (scenery, obstacles, coins).
 public class TrackManager : MonoBehaviour
 {
+    // ==========references================================================================================================================================================
+
     [Header("References")]
     public Transform playerTransform;
     public Transform mainCamera;
@@ -18,59 +20,59 @@ public class TrackManager : MonoBehaviour
     
     [Header("Floating Origin")]
     public float resetThreshold = 1000f; // When the player passes this Z-coordinate, the whole world snaps back to 0
-    private float spawnZ = 0f; // Tracks the Z-coordinate where the NEXT track tile needs to be placed
+    private float spawnZ = 0f; 
     
-    private Queue<GameObject> activeTiles; // Tracks the actual floor pieces
-    private Queue<GameObject> activeItemsOnTracks = new Queue<GameObject>(); // Tracks the trees, coins, and obstacles
+    private Queue<GameObject> activeTiles;
+    private Queue<GameObject> activeItemsOnTracks = new Queue<GameObject>();
     private Queue<int> itemsPerTileQueue = new Queue<int>(); // Remembers exactly how many items were spawned on a specific tile so we know how many to delete later
+    
+    // ==========references================================================================================================================================================
 
-    void Start()
+    void Start() // Fills the screen with the initial set of safe track tiles when the game boots
     {
         activeTiles = new Queue<GameObject>();
         for (int i = 0; i < tilesOnScreen; i++) // Fill the screen with track tiles when the game boots up
         {
-            SpawnTile(i >= startingSafeTiles);  // Prevents Obstacles from spawning in front of the player when starting
+            SpawnTile(i >= startingSafeTiles); 
         }
     }
 
-    void Update()
+    void Update() // Checks if the player has passed a tile to recycle it, and monitors the overall Z-distance to trigger a world reset.
     {
-        float oldestTileZ = spawnZ - (tilesOnScreen * tileLength); // Calculate the exact Z of the oldest tile
+        float oldestTileZ = spawnZ - (tilesOnScreen * tileLength);
 
-        if (playerTransform.position.z > oldestTileZ + tileLength + despawnBuffer)  // Check if the player has passed the oldest tile + the despawn buffer
+        if (playerTransform.position.z > oldestTileZ + tileLength + despawnBuffer)
         {
             SpawnTile(true);
             RecycleTile();
         }
-        if (playerTransform.position.z > resetThreshold) // Check if we have traveled too far ---> snap back to z=0
+        if (playerTransform.position.z > resetThreshold)
         {
             ResetOrigin();
         }
     }
     
-    private void ResetOrigin()
+    private void ResetOrigin() // Snaps the player, camera, and all active objects back to Z=0 to prevent floating-point physics glitches on long runs
     {
-        float offset = playerTransform.position.z; // Find exactly how far we need to move everything back
+        float offset = playerTransform.position.z;
+        
+        playerTransform.position = new Vector3(playerTransform.position.x, playerTransform.position.y, 0f);
 
-        playerTransform.position = new Vector3(playerTransform.position.x, playerTransform.position.y, 0f); // Snap Player back to Z=0
-
-        if (mainCamera != null) // Snap Camera back by the exact same offset from player
+        if (mainCamera != null)
         {
             mainCamera.position = new Vector3(mainCamera.position.x, mainCamera.position.y, mainCamera.position.z - offset);
         }
 
-        spawnZ -= offset; // Reset the Track Spawner's target Z
+        spawnZ -= offset;
 
-        foreach (GameObject tile in activeTiles) // Snap all active track tiles back
+        foreach (GameObject tile in activeTiles)
         {
             tile.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y, tile.transform.position.z - offset);
         }
-        
-        foreach (GameObject item in activeItemsOnTracks) // Snap all active scenery, coins, and obstacles back
+        foreach (GameObject item in activeItemsOnTracks)
         {
             item.transform.position = new Vector3(item.transform.position.x, item.transform.position.y, item.transform.position.z - offset);
         }
-
     }
 
     private void SpawnTile(bool spawnObstacles) // Grabs a new floor tile from the pool and places it at the front of the track
@@ -79,12 +81,12 @@ public class TrackManager : MonoBehaviour
         tile.transform.position = Vector3.forward * spawnZ;
         activeTiles.Enqueue(tile);
         
-        SpawnItemsOnTile(spawnZ, spawnObstacles); // Trigger the item spawner for this specific tile's location
+        SpawnItemsOnTile(spawnZ, spawnObstacles);
 
-        spawnZ += tileLength; // Move Forward the spawning point for the next time this is called
+        spawnZ += tileLength;
     }
 
-    private void SpawnItemsOnTile(float currentZ, bool spawnObstacles)
+    private void SpawnItemsOnTile(float currentZ, bool spawnObstacles) // Handles the math for placing scenery, obstacles, coin streaks, and power-ups on a new tile
     {
         int itemsSpawnedOnThisTile = 0;
 
@@ -237,7 +239,6 @@ public class TrackManager : MonoBehaviour
                             break;
                         }
                     }
-
                     //  Is this coin touching a High Obstacle? Delete it
                     foreach (Vector2 obs in highObstaclePositions)
                     {
@@ -307,7 +308,7 @@ public class TrackManager : MonoBehaviour
         itemsPerTileQueue.Enqueue(itemsSpawnedOnThisTile); 
     }
 
-    private void RecycleTile() // Removes the oldest tile and its objects behind the camera and returns them to their respective pools.
+    private void RecycleTile() // Removes the oldest tile and its objects behind the camera and returns them to their respective pools
     {
         GameObject oldTile = activeTiles.Dequeue(); // Clean up the floor tile
         pooler.ReturnTile(oldTile);
