@@ -4,12 +4,16 @@ using UnityEngine;
 
 public class ProfileManager : MonoBehaviour
 {
+    // ==========references================================================================================================================================================
+
     public static ProfileManager instance;
     public PlayerProfileData activeProfile; 
 
     [Header("Screenshot Settings")]
     [Tooltip("Drag your Canvas here so the UI hides when the screenshot is taken!")]
     public Canvas mainGameplayUI; 
+    
+    // ==========================================================================================================================================================
 
     private void Awake() //Initializes the Singleton pattern
     {
