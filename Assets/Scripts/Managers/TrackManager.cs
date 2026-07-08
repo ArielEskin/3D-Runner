@@ -16,7 +16,8 @@ public class TrackManager : MonoBehaviour
     public float tileLength = 50f;
     public int tilesOnScreen = 5;
     public float despawnBuffer = 10f; // Extra distance player must travel past a tile before it despawns (prevents visual popping)
-    public int startingSafeTiles = 1; // How many tiles at Z=0 spawn completely empty of obstacles so the player can prepare
+    public int startingSafeTiles = 0; // How many tiles at Z=0 spawn completely empty of obstacles so the player can prepare 
+    public float firstTileBuffer = 15f;
     
     [Header("Floating Origin")]
     public float resetThreshold = 1000f; // When the player passes this Z-coordinate, the whole world snaps back to 0
@@ -145,7 +146,10 @@ public class TrackManager : MonoBehaviour
             for (int i = 0; i < rowsToSpawn; i++)
             {
                 float sliceStart = 10f + (i * zSpacing); 
-                float exactZ = sliceStart + (zSpacing / 2f); 
+                float exactZ = sliceStart + (zSpacing / 2f);
+                
+                // To add buffer in the start of the game
+                if (currentZ == 0f && exactZ < firstTileBuffer) { continue; }
 
                 int itemsInThisRow = 1;
                 if (maxObstacles > 4 && Random.Range(0, 100) < 60)

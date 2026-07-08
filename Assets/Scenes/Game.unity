@@ -1375,7 +1375,7 @@ MonoBehaviour:
   tileLength: 50
   tilesOnScreen: 5
   despawnBuffer: 10
-  startingSafeTiles: 1
+  startingSafeTiles: 0
   resetThreshold: 1000
 --- !u!4 &623022674
 Transform:
