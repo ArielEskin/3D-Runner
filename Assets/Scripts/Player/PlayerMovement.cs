@@ -22,6 +22,11 @@ public class PlayerMovement : MonoBehaviour
     
     // ==========================================================================================================================================================
 
+    public void SetAnimator(Animator newAnimator)
+    {
+        animator = newAnimator;
+    }
+
     void Start() // Caches the Animator and saves the player's starting Y-position to act as the permanent ground level
     {
         originalY = transform.position.y;
