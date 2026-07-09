@@ -47,6 +47,7 @@ public class GameManager : MonoBehaviour
     //=========Button=========
     [SerializeField] private Button retryButton;
     [SerializeField] private Button backButton;
+    private bool profileSavedThisRun;
     
     // ==========================================================================================================================================================
 
@@ -56,6 +57,12 @@ public class GameManager : MonoBehaviour
         if (difficultyManager != null)
         {
             difficultyManager.ResetDifficulty();
+        }
+
+        if (ProfileManager.instance != null && ProfileManager.instance.activeProfile != null)
+        {
+            ProfileManager.instance.ApplyProfileToGameSession();
+            Debug.Log("Selected theme for this run: " + ProfileManager.instance.activeProfile.selectedThemeID);
         }
     }
     
@@ -147,6 +154,7 @@ public class GameManager : MonoBehaviour
         
         playerMovement.TriggerDeathAnimation(obstacleTag);
 
+        SaveRunToActiveProfile();
         StartCoroutine(GameOverSequence());
         StartCoroutine(GameOverRetryButton());
     }
@@ -187,14 +195,37 @@ public class GameManager : MonoBehaviour
 
     public void RetryButton() // Restores the timescale and loads the game scene again
     {
+        SaveRunToActiveProfile();
         Time.timeScale = 1f;
         SceneManager.LoadScene("Game");
     }
 
     public void BackButton() // Restores the timescale and loads the main menu scene
     {
+        SaveRunToActiveProfile();
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
+    }
+
+    private void SaveRunToActiveProfile()
+    {
+        if (profileSavedThisRun) return;
+        if (ProfileManager.instance == null || ProfileManager.instance.activeProfile == null) return;
+
+        PlayerProfileData profile = ProfileManager.instance.activeProfile;
+        profile.totalCoins += Coins;
+        profile.highestDistance = Mathf.Max(profile.highestDistance, distanceTravelled);
+        profile.longestTimeSurvived = Mathf.Max(profile.longestTimeSurvived, timeSurvived);
+        profile.lastPlayedDate = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+
+        if (InputManager.instance != null)
+        {
+            profile.inputModeIndex = InputManager.instance.currentMode == InputMode.Buttons ? 0 : 1;
+        }
+
+        ProfileManager.instance.TriggerSaveSequence();
+        profileSavedThisRun = true;
+        Debug.Log("Saved run stats to profile: " + profile.profileName);
     }
     
 }

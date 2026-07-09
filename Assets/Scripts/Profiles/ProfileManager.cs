@@ -78,8 +78,10 @@ public class ProfileManager : MonoBehaviour
     // ========================================================================================================================================================================
     // JSON SERIALIZATION (Backend Logic)
     // ========================================================================================================================================================================
-    private void SaveActiveProfileJSON() // Converts the active profile object into a JSON string and writes it to the device's data path
+    public void SaveActiveProfileJSON() // Converts the active profile object into a JSON string and writes it to the device's data path
     {
+        if (activeProfile == null) return;
+
         string json = JsonUtility.ToJson(activeProfile, true); 
         string filePath = Path.Combine(Application.persistentDataPath, activeProfile.profileID + ".json"); 
         File.WriteAllText(filePath, json); 
@@ -104,6 +106,11 @@ public class ProfileManager : MonoBehaviour
     private void OnApplicationPause(bool isPaused)  // Automatically triggers a JSON data save when the mobile app is pushed to the background or closed.
     {
         if (isPaused) { SaveActiveProfileJSON(); }
+    }
+
+    private void OnApplicationQuit()
+    {
+        SaveActiveProfileJSON();
     }
     
     // ========================================================================================================================================================================
