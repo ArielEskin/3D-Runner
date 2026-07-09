@@ -95,11 +95,11 @@ public class TrackManager : MonoBehaviour
         // NATURAL SCENERY SPAWNING
         // ====================================================================================
         
-        int leftSceneryCount = Random.Range(2, 6); 
+        int leftSceneryCount = Random.Range(4, 12); 
         for (int i = 0; i < leftSceneryCount; i++) 
         {
-            string sceneryTag = Random.Range(0, 100) < 20 ? "Tree" : "Plant"; 
-            float randomX = Random.Range(-8f, -3.5f); 
+            string sceneryTag = Random.Range(0, 100) < 20 ? "Tree" : "Bush"; 
+            float randomX = Random.Range(-20f, -3.5f); // Spread much wider into the grass
             float randomZ = currentZ + Random.Range(0f, tileLength);
             float sceneryY = -0.6f; 
 
@@ -111,11 +111,11 @@ public class TrackManager : MonoBehaviour
             }
         }
         
-        int rightSceneryCount = Random.Range(2, 6);
+        int rightSceneryCount = Random.Range(4, 12);
         for (int i = 0; i < rightSceneryCount; i++) 
         {
-            string sceneryTag = Random.Range(0, 100) < 20 ? "Tree" : "Plant";
-            float randomX = Random.Range(3.5f, 8f); 
+            string sceneryTag = Random.Range(0, 100) < 20 ? "Tree" : "Bush";
+            float randomX = Random.Range(3.5f, 20f); // Spread much wider into the grass
             float randomZ = currentZ + Random.Range(0f, tileLength);
             float sceneryY = -0.5f;
 

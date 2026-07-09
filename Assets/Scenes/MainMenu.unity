@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.42, g: 0.478, b: 0.627, a: 1}
-  m_SkyboxMaterial: {fileID: 10304, guid: 0000000000000000f000000000000000, type: 0}
+  m_SkyboxMaterial: {fileID: 2100000, guid: 06569ceb448dabc42872c934eea7e4f0, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -1637,6 +1637,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 771457424}
   m_CullTransparentMesh: 1
+--- !u!224 &867219971 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 8904967113806180280, guid: b03b0cc58d74d6141a07d9b3a5f36bfc, type: 3}
+  m_PrefabInstance: {fileID: 6232688118861322734}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &876018683
 GameObject:
   m_ObjectHideFlags: 0
@@ -4746,7 +4751,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 6232688118861322735}
+  - {fileID: 867219971}
   m_Father: {fileID: 344941018}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
@@ -5526,11 +5531,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b03b0cc58d74d6141a07d9b3a5f36bfc, type: 3}
---- !u!224 &6232688118861322735 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 58967155932565005, guid: b03b0cc58d74d6141a07d9b3a5f36bfc, type: 3}
-  m_PrefabInstance: {fileID: 6232688118861322734}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
