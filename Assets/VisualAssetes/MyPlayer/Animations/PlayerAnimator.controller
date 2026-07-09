@@ -21,7 +21,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: 8bc9f2906daeaa54b8a5b7d496608e89, type: 3}
+  m_Motion: {fileID: -203655887218126122, guid: 7db5c0579dfada345957246bd65c0f4e, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -47,7 +47,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: a072c42f50bc58544b4f18400666af53, type: 3}
+  m_Motion: {fileID: -203655887218126122, guid: 7715c6c209458c145afd93312be7e307, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -145,7 +145,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: 7cfb2d07f9bd54e4390d8890d57270ed, type: 3}
+  m_Motion: {fileID: -203655887218126122, guid: 4bcdd3ba1820b6c47a3be4ed89c5fa40, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
@@ -157,7 +157,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Ch01_nonPBR@Running
+  m_Name: PlayerAnimator
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: Jump
@@ -212,7 +212,7 @@ AnimatorState:
   m_MirrorParameterActive: 0
   m_CycleOffsetParameterActive: 0
   m_TimeParameterActive: 0
-  m_Motion: {fileID: -203655887218126122, guid: 088c5f79a53dfa54181dba08bc0b4494, type: 3}
+  m_Motion: {fileID: -203655887218126122, guid: d61e4c37cc9a75540a919087fa30b32d, type: 3}
   m_Tag: 
   m_SpeedParameter: 
   m_MirrorParameter: 
