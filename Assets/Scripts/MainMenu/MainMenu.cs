@@ -31,12 +31,8 @@ public class MainMenu : MonoBehaviour
     public void Play() // Swaps the UI to the loading screen and triggers the scene loading sequence
     {
         Debug.Log("Press On StartButton");
-        MusicManager.instance.PlayMusic("GameMusic");
-        
-        mainMenu.SetActive(false);
-        loadingScreen.SetActive(true);
-        
-        StartCoroutine(LoadLevelASync("Game"));
+        MusicManager.instance.PlayMusic("MainMenu");
+        SceneManager.LoadScene("ProfileSelection");
     }
     
     IEnumerator LoadLevelASync(string levelToLoad) // A Coroutine that fakes a smooth loading bar while Unity loads the 3D environment in the background
