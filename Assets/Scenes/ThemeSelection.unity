@@ -388,7 +388,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 7c120736d247fac4794e6577d0e529ea, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1259,11 +1259,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   themes:
-  - themeID: 
-    displayName: 
-    previewImage: {fileID: 0}
-  - themeID: 
-    displayName: 
+  - themeID: Earth
+    displayName: Earth
+    previewImage: {fileID: 21300000, guid: 7c120736d247fac4794e6577d0e529ea, type: 3}
+  - themeID: Hell
+    displayName: Hell
     previewImage: {fileID: 0}
   themeNameText: {fileID: 378635978}
   themePreviewImage: {fileID: 560390871}

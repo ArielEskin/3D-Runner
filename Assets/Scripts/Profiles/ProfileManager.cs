@@ -121,8 +121,8 @@ public class ProfileManager : MonoBehaviour
         if (activeProfile == null) return;
 
         // Restore Audio
-        PlayerPrefs.SetFloat("MusicVolume", activeProfile.musicVolume);
-        PlayerPrefs.SetFloat("SFXVolume", activeProfile.sfxVolume);
+        // PlayerPrefs.SetFloat("MusicVolume", activeProfile.musicVolume);
+        // PlayerPrefs.SetFloat("SFXVolume", activeProfile.sfxVolume);
 
         // Restore Controls
         if (InputManager.instance != null)

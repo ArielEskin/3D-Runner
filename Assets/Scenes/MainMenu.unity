@@ -1385,6 +1385,7 @@ MonoBehaviour:
   loadingScreen: {fileID: 1111909492}
   mainMenu: {fileID: 1316309014}
   loadingSlider: {fileID: 2076996198}
+  coinsAmountText: {fileID: 710022076}
 --- !u!4 &670743537
 Transform:
   m_ObjectHideFlags: 0

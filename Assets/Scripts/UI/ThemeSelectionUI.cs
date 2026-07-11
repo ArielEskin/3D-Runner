@@ -76,7 +76,7 @@ public class ThemeSelectionUI : MonoBehaviour
             ProfileManager.instance.SaveActiveProfileJSON();
         }
 
-        SceneManager.LoadScene("Game");
+        SceneManager.LoadScene("LoadingScene");
         MusicManager.instance.PlayMusic("GameMusic");
     }
 

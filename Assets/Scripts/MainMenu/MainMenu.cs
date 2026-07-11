@@ -4,12 +4,13 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using TMPro;
 
 public class MainMenu : MonoBehaviour
 {
     
     // ==========references================================================================================================================================================
-
+    
     public AudioMixer audioMixer;
 
     public Slider MusicSlider;
@@ -19,12 +20,16 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private GameObject loadingScreen;
     [SerializeField] private GameObject mainMenu;
     [SerializeField] private Slider loadingSlider;
+    [SerializeField] private TMP_Text coinsAmountText;
     
     // ==========================================================================================================================================================
 
     public void Start() // Loads the saved audio preferences and starts the menu music
     {
+        EnsureProfileManagerExists();
         LoadVolume();
+        LoadLastProfile();
+        UpdateCoinText(); // load the coins amount the player have 
         MusicManager.instance.PlayMusic("MainMenu");
     }
 
@@ -33,6 +38,44 @@ public class MainMenu : MonoBehaviour
         Debug.Log("Press On StartButton");
         // MusicManager.instance.PlayMusic("MainMenu");
         SceneManager.LoadScene("ProfileSelection");
+    }
+
+    public void UpdateCoinText()
+    {
+        if (coinsAmountText != null)
+        {
+            int totalCoins = 0;
+            
+            // If a player profile exists, use its saved coin total.
+            if (ProfileManager.instance != null &&
+                ProfileManager.instance.activeProfile != null)
+            {
+                totalCoins = ProfileManager.instance.activeProfile.totalCoins;
+            }
+
+            // Show the number on the Main Menu.
+            coinsAmountText.text = totalCoins.ToString();
+        }
+    }
+
+    private void EnsureProfileManagerExists()
+    {
+        if (ProfileManager.instance != null) return;
+
+        GameObject profileManagerObject = new GameObject("ProfileManager");
+        profileManagerObject.AddComponent<ProfileManager>();
+    }
+
+    private void LoadLastProfile()
+    {
+        string lastProfileID = PlayerPrefs.GetString("LastSelectedProfileID", "");
+        if (string.IsNullOrEmpty(lastProfileID) || ProfileManager.instance == null) return;
+
+        PlayerProfileData savedProfile = ProfileManager.instance.LoadProfile(lastProfileID);
+        if (savedProfile != null)
+        {
+            ProfileManager.instance.activeProfile = savedProfile;
+        }
     }
     
     IEnumerator LoadLevelASync(string levelToLoad) // A Coroutine that fakes a smooth loading bar while Unity loads the 3D environment in the background
@@ -83,6 +126,8 @@ public class MainMenu : MonoBehaviour
         
         audioMixer.GetFloat("SFXVolume", out float sfxVolume);
         PlayerPrefs.SetFloat("SFXVolume", sfxVolume);
+        
+        PlayerPrefs.Save();
     }
 
     public void LoadVolume() // Reads the exact slider values using PlayerPrefs

@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/ThemeSelection.unity
     guid: 4b413df648ecd0848b43e9110a6f5ed7
   - enabled: 1
+    path: Assets/Scenes/LoadingScene.unity
+    guid: 248e36719d03059409b9597ddbbad709
+  - enabled: 1
     path: Assets/Scenes/Game.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:

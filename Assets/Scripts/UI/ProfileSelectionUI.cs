@@ -7,6 +7,7 @@ public class ProfileSelectionUI : MonoBehaviour
 {
     [SerializeField] private Transform contentParent;
     [SerializeField] private ProfileSlotUI profileSlotPrefab;
+    [SerializeField] private Button newProfileButton;
     [SerializeField] private string nextSceneName = "ThemeSelection";
     [SerializeField] private string backSceneName = "MainMenu";
 
@@ -14,7 +15,9 @@ public class ProfileSelectionUI : MonoBehaviour
     {
         EnsureProfileManagerExists();
         AutoFindContentParent();
+        AutoFindNewProfileButton();
         WireBackButton();
+        WireNewProfileButton();
         BuildProfileList();
     }
 
@@ -45,7 +48,12 @@ public class ProfileSelectionUI : MonoBehaviour
 
         foreach (Transform child in contentParent)
         {
-            Destroy(child.gameObject);
+            // Keep the manually placed New Profile button in the ScrollView.
+            // Only the profile-slot objects are rebuilt from saved data.
+            if (child.GetComponent<ProfileSlotUI>() != null)
+            {
+                Destroy(child.gameObject);
+            }
         }
 
         List<PlayerProfileData> profiles = ProfileManager.instance.GetAllSavedProfiles();
@@ -66,6 +74,10 @@ public class ProfileSelectionUI : MonoBehaviour
     {
         PlayerProfileData loadedProfile = ProfileManager.instance.LoadProfile(profile.profileID);
         ProfileManager.instance.activeProfile = loadedProfile != null ? loadedProfile : profile;
+
+        // Remember which profile Main Menu should load when the app is opened again.
+        PlayerPrefs.SetString("LastSelectedProfileID", ProfileManager.instance.activeProfile.profileID);
+        PlayerPrefs.Save();
         ProfileManager.instance.SaveActiveProfileJSON();
 
         Debug.Log("Profile selected: " + ProfileManager.instance.activeProfile.profileName);
@@ -80,6 +92,27 @@ public class ProfileSelectionUI : MonoBehaviour
         return starterProfile;
     }
 
+    public void CreateNewProfile()
+    {
+        EnsureProfileManagerExists();
+
+        List<PlayerProfileData> existingProfiles = ProfileManager.instance.GetAllSavedProfiles();
+        PlayerProfileData previouslyActiveProfile = ProfileManager.instance.activeProfile;
+
+        // A GUID makes the save-file name unique, so no existing profile can be overwritten.
+        string profileID = "profile_" + System.Guid.NewGuid().ToString("N");
+        string profileName = "Player " + (existingProfiles.Count + 1);
+        PlayerProfileData newProfile = new PlayerProfileData(profileID, profileName);
+
+        // Save the new profile, then restore the profile that was selected before.
+        ProfileManager.instance.activeProfile = newProfile;
+        ProfileManager.instance.SaveActiveProfileJSON();
+        ProfileManager.instance.activeProfile = previouslyActiveProfile;
+
+        BuildProfileList();
+        Debug.Log("Created new profile: " + profileName);
+    }
+
     private void WireBackButton()
     {
         GameObject backButtonObject = GameObject.Find("BackToMainMenu");
@@ -90,6 +123,29 @@ public class ProfileSelectionUI : MonoBehaviour
 
         backButton.onClick.RemoveAllListeners();
         backButton.onClick.AddListener(() => SceneManager.LoadScene(backSceneName));
+    }
+
+    private void AutoFindNewProfileButton()
+    {
+        if (newProfileButton != null || contentParent == null) return;
+
+        foreach (Button button in contentParent.GetComponentsInChildren<Button>(true))
+        {
+            string buttonName = button.gameObject.name.ToLowerInvariant();
+            if (buttonName.Contains("new") || buttonName.Contains("add") || buttonName.Contains("create"))
+            {
+                newProfileButton = button;
+                return;
+            }
+        }
+    }
+
+    private void WireNewProfileButton()
+    {
+        if (newProfileButton == null) return;
+
+        newProfileButton.onClick.RemoveListener(CreateNewProfile);
+        newProfileButton.onClick.AddListener(CreateNewProfile);
     }
 
     private void EnsureProfileManagerExists()
