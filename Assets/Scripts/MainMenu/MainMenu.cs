@@ -31,7 +31,7 @@ public class MainMenu : MonoBehaviour
     public void Play() // Swaps the UI to the loading screen and triggers the scene loading sequence
     {
         Debug.Log("Press On StartButton");
-        MusicManager.instance.PlayMusic("MainMenu");
+        // MusicManager.instance.PlayMusic("MainMenu");
         SceneManager.LoadScene("ProfileSelection");
     }
     

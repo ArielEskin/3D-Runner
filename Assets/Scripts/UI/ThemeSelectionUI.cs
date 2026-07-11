@@ -77,6 +77,7 @@ public class ThemeSelectionUI : MonoBehaviour
         }
 
         SceneManager.LoadScene("Game");
+        MusicManager.instance.PlayMusic("GameMusic");
     }
 
     private void AutoFindReferences()
