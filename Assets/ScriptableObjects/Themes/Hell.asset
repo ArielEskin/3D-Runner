@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4711c7995e3066948b0d93cb46a755d4, type: 3}
+  m_Name: Hell
+  m_EditorClassIdentifier: Assembly-CSharp::ThemeData
+  themeID: Hell
+  skyboxMaterial: {fileID: 2100000, guid: 69e10e886d52d20478f9ed5424126be8, type: 2}
+  trackPrefab: {fileID: 4085833383278133223, guid: 99cd6a3c947c1444a88f444f683ce0f6, type: 3}
+  treePrefab: {fileID: 5731753547663996393, guid: 469ec3d16ff5f344d9d89fb0cad9a80b, type: 3}
+  bushPrefab: {fileID: 6167062138974328233, guid: b3205841b2c54e84e941859841c61959, type: 3}
+  lowObstaclePrefab: {fileID: 5007924321860663339, guid: 336f83d095cc7c9459db11fa38f20f7e, type: 3}
+  highObstaclePrefab: {fileID: 7460602978283781795, guid: bf3eb9f382de32b46bf0e7d751ad177f, type: 3}
