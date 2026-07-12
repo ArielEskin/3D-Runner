@@ -48,7 +48,6 @@ public class ThemeManager : MonoBehaviour
         if (theme.skyboxMaterial != null)
         {
             RenderSettings.skybox = theme.skyboxMaterial;
-            DynamicGI.UpdateEnvironment(); 
         }
         if (trackPooler != null && theme.trackPrefab != null)
         {
