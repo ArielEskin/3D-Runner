@@ -1643,6 +1643,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: ProfileSlot
       objectReference: {fileID: 0}
+    - target: {fileID: 7522526942416111969, guid: b03b0cc58d74d6141a07d9b3a5f36bfc, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 23.71202
+      objectReference: {fileID: 0}
+    - target: {fileID: 7522526942416111969, guid: b03b0cc58d74d6141a07d9b3a5f36bfc, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -0.59782
+      objectReference: {fileID: 0}
+    - target: {fileID: 7522526942416111969, guid: b03b0cc58d74d6141a07d9b3a5f36bfc, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -31.3
+      objectReference: {fileID: 0}
     - target: {fileID: 8904967113806180280, guid: b03b0cc58d74d6141a07d9b3a5f36bfc, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

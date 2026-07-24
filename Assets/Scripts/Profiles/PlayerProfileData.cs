@@ -25,6 +25,20 @@ public class PlayerProfileData
     public float sfxVolume;
     public int inputModeIndex; // 0 for Buttons, 1 for Touch 
     
+    [Header("Task 4 Progression")]
+    // Lets old save files be safely upgraded exactly once.
+    public bool task4ProgressMigrated;
+    public int lifetimeCoinsCollected;
+    public float lifetimeDistanceTravelled;
+    public float lifetimeSecondsSurvived;
+    public int permanentCoinBonusPercent;
+
+    [Header("Task 4 Daily Reward")]
+    public string lastDailyRewardUtc;
+
+    [Header("Task 4 Milestones")]
+    public List<MilestoneProgressData> milestones;
+    
     public PlayerProfileData(string id, string name) // Constructor to create a fresh, default profile if one doesn't exist
     {
         profileID = id;
@@ -43,5 +57,27 @@ public class PlayerProfileData
         musicVolume = 0f;
         sfxVolume = 0f;
         inputModeIndex = 1; // Default to Touch
+        
+        task4ProgressMigrated = true;
+        lifetimeCoinsCollected = 0;
+        lifetimeDistanceTravelled = 0f;
+        lifetimeSecondsSurvived = 0f;
+        permanentCoinBonusPercent = 0;
+
+        lastDailyRewardUtc = "";
+        milestones = new List<MilestoneProgressData>();
+    }
+    
+    [System.Serializable]
+    public class MilestoneProgressData
+    {
+        public string milestoneId;
+        public bool rewardClaimed;
+
+        public MilestoneProgressData(string id)
+        {
+            milestoneId = id;
+            rewardClaimed = false;
+        }
     }
 }

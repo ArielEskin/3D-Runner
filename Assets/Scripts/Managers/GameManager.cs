@@ -121,10 +121,38 @@ public class GameManager : MonoBehaviour
             if (magnetTimer <= 0) isMagnetActive = false;
         }
     }
-    public void AddCoin(int amount) // Increases the player's total coin count, factoring in any active multipliers
+    public void AddCoin(int amount)
     {
-        Coins += (amount * coinMultiplier);
+        int permanentBonusPercent = 0;
+
+        if (ProfileManager.instance != null &&
+            ProfileManager.instance.activeProfile != null)
+        {
+            permanentBonusPercent =
+                ProfileManager.instance.activeProfile.permanentCoinBonusPercent;
+        }
+
+        float permanentMultiplier = 1f + (permanentBonusPercent / 100f);
+
+        int earnedCoins = Mathf.CeilToInt(
+            amount * coinMultiplier * permanentMultiplier
+        );
+
+        Coins += earnedCoins;
+
         HUDManager.instance.UpdateCoinsText(Coins);
+
+        // Record coin-goal progress at pickup time. This keeps the achievement
+        // correct even if the player leaves a run before the normal run save.
+        if (GoalManager.Instance != null)
+        {
+            GoalManager.Instance.RecordCoins(earnedCoins);
+        }
+
+        if (AnalyticsManager.Instance != null)
+        {
+            AnalyticsManager.Instance.TrackCoinsCollected(earnedCoins, Coins);
+        }
     }
 
     private void TimeSurvived() // Calculates the run's time survived based on time and movement speed
@@ -216,6 +244,14 @@ public class GameManager : MonoBehaviour
         profile.totalCoins += Coins;
         profile.highestDistance = Mathf.Max(profile.highestDistance, distanceTravelled);
         profile.longestTimeSurvived = Mathf.Max(profile.longestTimeSurvived, timeSurvived);
+        if (GoalManager.Instance != null)
+        {
+            GoalManager.Instance.RecordRun(
+                Coins,
+                distanceTravelled,
+                timeSurvived
+            );
+        }
         profile.lastPlayedDate = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm");
 
         if (InputManager.instance != null)

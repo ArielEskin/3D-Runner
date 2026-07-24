@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class ProfileSelectionUI : MonoBehaviour
 {
+    private const int MaxProfiles = 4;
+
     [SerializeField] private Transform contentParent;
     [SerializeField] private ProfileSlotUI profileSlotPrefab;
     [SerializeField] private Button newProfileButton;
@@ -66,8 +68,10 @@ public class ProfileSelectionUI : MonoBehaviour
         foreach (PlayerProfileData profile in profiles)
         {
             ProfileSlotUI slot = Instantiate(profileSlotPrefab, contentParent);
-            slot.Setup(profile, SelectProfile);
+            slot.Setup(profile, SelectProfile, DeleteProfile);
         }
+
+        UpdateNewProfileButtonState(profiles.Count);
     }
 
     private void SelectProfile(PlayerProfileData profile)
@@ -97,6 +101,14 @@ public class ProfileSelectionUI : MonoBehaviour
         EnsureProfileManagerExists();
 
         List<PlayerProfileData> existingProfiles = ProfileManager.instance.GetAllSavedProfiles();
+
+        if (existingProfiles.Count >= MaxProfiles)
+        {
+            Debug.Log("Profile limit reached. Maximum profiles: " + MaxProfiles);
+            UpdateNewProfileButtonState(existingProfiles.Count);
+            return;
+        }
+
         PlayerProfileData previouslyActiveProfile = ProfileManager.instance.activeProfile;
 
         // A GUID makes the save-file name unique, so no existing profile can be overwritten.
@@ -111,6 +123,19 @@ public class ProfileSelectionUI : MonoBehaviour
 
         BuildProfileList();
         Debug.Log("Created new profile: " + profileName);
+    }
+
+    private void DeleteProfile(PlayerProfileData profile)
+    {
+        if (profile == null || ProfileManager.instance == null)
+        {
+            return;
+        }
+
+        if (ProfileManager.instance.DeleteProfile(profile))
+        {
+            BuildProfileList();
+        }
     }
 
     private void WireBackButton()
@@ -146,6 +171,16 @@ public class ProfileSelectionUI : MonoBehaviour
 
         newProfileButton.onClick.RemoveListener(CreateNewProfile);
         newProfileButton.onClick.AddListener(CreateNewProfile);
+    }
+
+    private void UpdateNewProfileButtonState(int profileCount)
+    {
+        if (newProfileButton == null)
+        {
+            return;
+        }
+
+        newProfileButton.interactable = profileCount < MaxProfiles;
     }
 
     private void EnsureProfileManagerExists()

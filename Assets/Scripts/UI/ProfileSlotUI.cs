@@ -9,6 +9,7 @@ public class ProfileSlotUI : MonoBehaviour
     [SerializeField] private TMP_Text profileNameText;
     [SerializeField] private TMP_Text statsText;
     [SerializeField] private Button selectButton;
+    [SerializeField] private Button deleteButton;
 
     private PlayerProfileData profileData;
 
@@ -17,7 +18,10 @@ public class ProfileSlotUI : MonoBehaviour
         AutoFindReferences();
     }
 
-    public void Setup(PlayerProfileData profile, System.Action<PlayerProfileData> onSelected)
+    public void Setup(
+        PlayerProfileData profile,
+        System.Action<PlayerProfileData> onSelected,
+        System.Action<PlayerProfileData> onDeleted)
     {
         profileData = profile;
 
@@ -35,10 +39,21 @@ public class ProfileSlotUI : MonoBehaviour
 
         LoadThumbnail(profile.screenshotPath);
 
-        if (selectButton == null) return;
+        if (selectButton != null)
+        {
+            selectButton.onClick.RemoveAllListeners();
+            selectButton.onClick.AddListener(
+                () => onSelected?.Invoke(profileData)
+            );
+        }
 
-        selectButton.onClick.RemoveAllListeners();
-        selectButton.onClick.AddListener(() => onSelected?.Invoke(profileData));
+        if (deleteButton != null)
+        {
+            deleteButton.onClick.RemoveAllListeners();
+            deleteButton.onClick.AddListener(
+                () => onDeleted?.Invoke(profileData)
+            );
+        }
     }
 
     private void AutoFindReferences()
@@ -65,6 +80,12 @@ public class ProfileSlotUI : MonoBehaviour
         {
             Transform select = transform.Find("SelectButton");
             if (select != null) selectButton = select.GetComponent<Button>();
+        }
+
+        if (deleteButton == null)
+        {
+            Transform delete = transform.Find("DeleteButton");
+            if (delete != null) deleteButton = delete.GetComponent<Button>();
         }
     }
 

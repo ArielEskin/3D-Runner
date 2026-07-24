@@ -95,12 +95,124 @@ public class ProfileManager : MonoBehaviour
 
         if (File.Exists(filePath))
         {
-            string json = File.ReadAllText(filePath); 
-            return JsonUtility.FromJson<PlayerProfileData>(json); 
+            string json = File.ReadAllText(filePath);
+            PlayerProfileData loadedProfile =
+                JsonUtility.FromJson<PlayerProfileData>(json);
+
+            // Profiles made before Task 4 have no lifetime milestone data.
+            // Use their best saved records as a fair starting point, once only.
+            if (UpgradeTask4Progress(loadedProfile))
+            {
+                File.WriteAllText(
+                    filePath,
+                    JsonUtility.ToJson(loadedProfile, true)
+                );
+
+                Debug.Log(
+                    "Old profile upgraded for Task 4 milestones: " +
+                    loadedProfile.profileName
+                );
+            }
+
+            return loadedProfile;
         }
         
         Debug.LogWarning("Save file not found for: " + profileID);
         return null;
+    }
+
+    public bool DeleteProfile(PlayerProfileData profile)
+    {
+        if (profile == null || string.IsNullOrEmpty(profile.profileID))
+        {
+            return false;
+        }
+
+        string saveFolder = Path.GetFullPath(Application.persistentDataPath);
+        string savePath = Path.GetFullPath(
+            Path.Combine(saveFolder, profile.profileID + ".json")
+        );
+
+        // Safety check: only profile files inside this game's save folder may be removed.
+        if (!savePath.StartsWith(saveFolder + Path.DirectorySeparatorChar))
+        {
+            Debug.LogError("Blocked an unsafe profile delete path.");
+            return false;
+        }
+
+        if (!File.Exists(savePath))
+        {
+            Debug.LogWarning("Profile save was not found: " + profile.profileName);
+            return false;
+        }
+
+        DeleteThumbnailIfSafe(profile.screenshotPath, saveFolder);
+        File.Delete(savePath);
+
+        if (activeProfile != null &&
+            activeProfile.profileID == profile.profileID)
+        {
+            activeProfile = null;
+
+            if (PlayerPrefs.GetString("LastSelectedProfileID", "") ==
+                profile.profileID)
+            {
+                PlayerPrefs.DeleteKey("LastSelectedProfileID");
+                PlayerPrefs.Save();
+            }
+        }
+
+        Debug.Log("Deleted profile: " + profile.profileName);
+        return true;
+    }
+
+    private void DeleteThumbnailIfSafe(string thumbnailPath, string saveFolder)
+    {
+        if (string.IsNullOrEmpty(thumbnailPath))
+        {
+            return;
+        }
+
+        string fullThumbnailPath = Path.GetFullPath(thumbnailPath);
+        if (fullThumbnailPath.StartsWith(saveFolder + Path.DirectorySeparatorChar) &&
+            File.Exists(fullThumbnailPath))
+        {
+            File.Delete(fullThumbnailPath);
+        }
+    }
+
+    private bool UpgradeTask4Progress(PlayerProfileData profile)
+    {
+        if (profile == null || profile.task4ProgressMigrated)
+        {
+            return false;
+        }
+
+        // An old profile did not record every historical run separately.
+        // Its existing saved totals are the best trustworthy baseline.
+        profile.lifetimeCoinsCollected = Mathf.Max(
+            profile.lifetimeCoinsCollected,
+            profile.totalCoins
+        );
+        profile.lifetimeDistanceTravelled = Mathf.Max(
+            profile.lifetimeDistanceTravelled,
+            profile.highestDistance
+        );
+        profile.lifetimeSecondsSurvived = Mathf.Max(
+            profile.lifetimeSecondsSurvived,
+            profile.longestTimeSurvived
+        );
+
+        if (profile.milestones == null)
+        {
+            profile.milestones =
+                new System.Collections.Generic.List<
+                    PlayerProfileData.MilestoneProgressData
+                >();
+        }
+
+        profile.task4ProgressMigrated = true;
+        return true;
     }
     
     private void OnApplicationPause(bool isPaused)  // Automatically triggers a JSON data save when the mobile app is pushed to the background or closed.
