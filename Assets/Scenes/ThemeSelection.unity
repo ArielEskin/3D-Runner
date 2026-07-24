@@ -510,14 +510,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 694623756}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 12
   m_Type: 1
   m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
   m_Intensity: 1
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 2
     m_Resolution: -1
@@ -1261,10 +1261,13 @@ MonoBehaviour:
   themes:
   - themeID: Earth
     displayName: Earth
-    previewImage: {fileID: 21300000, guid: 7c120736d247fac4794e6577d0e529ea, type: 3}
+    previewImage: {fileID: 21300000, guid: 914783f8b5b174f42bfda46607f4a124, type: 3}
+  - themeID: Winter
+    displayName: Winter
+    previewImage: {fileID: 21300000, guid: 98ef87af155eb834691ed4538d00aa05, type: 3}
   - themeID: Hell
     displayName: Hell
-    previewImage: {fileID: 0}
+    previewImage: {fileID: 21300000, guid: 39986125abd72be49af02a8c501834f3, type: 3}
   themeNameText: {fileID: 378635978}
   themePreviewImage: {fileID: 560390871}
   leftButton: {fileID: 741572219}

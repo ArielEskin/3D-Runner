@@ -101,7 +101,7 @@ public class TrackManager : MonoBehaviour
             string sceneryTag = Random.Range(0, 100) < 20 ? "Tree" : "Bush"; 
             float randomX = Random.Range(-20f, -3.5f); // Spread much wider into the grass
             float randomZ = currentZ + Random.Range(0f, tileLength);
-            float sceneryY = -0.6f; 
+            float sceneryY = -0.8f; 
 
             GameObject scenery = ObjectPooler.Instance.SpawnFromPool(sceneryTag, new Vector3(randomX, sceneryY, randomZ), Quaternion.identity);
             if (scenery != null)
