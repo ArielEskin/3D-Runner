@@ -20,6 +20,8 @@ public class PlayerProfileData
 
     [Header("Player Preferences")]
     public string selectedThemeID; // The theme string to pass to the Scene Manager
+    public int selectedSkinIndex; // The currently equipped skin
+    public List<int> unlockedSkins; // The indices of all skins the player has bought
     public List<string> unlockedThemes; // List of themes the player has bought/unlocked
     public float musicVolume;         
     public float sfxVolume;
@@ -51,6 +53,8 @@ public class PlayerProfileData
         longestTimeSurvived = 0f;
         
         selectedThemeID = "Default";
+        selectedSkinIndex = 0; // Default to first skin
+        unlockedSkins = new List<int> { 0 }; // Player always owns the default skin
         lastRunSeed = Random.Range(1000, 99999); // Generate a random seed for the very first run
         unlockedThemes = new List<string> { "Default" };
         

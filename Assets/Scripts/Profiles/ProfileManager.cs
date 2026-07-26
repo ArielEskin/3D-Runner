@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -6,6 +7,9 @@ public class ProfileManager : MonoBehaviour
 {
     // ==========references================================================================================================================================================
 
+    public int selectedSkinIndex;
+    public List<int> unlockedSkins;
+    
     public static ProfileManager instance;
     public PlayerProfileData activeProfile; 
 

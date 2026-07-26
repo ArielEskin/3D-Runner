@@ -13,6 +13,16 @@ public class AnalyticsManager : MonoBehaviour
 
     private const string ConsentKey = "AnalyticsConsent";
 
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
+    private static void AutoInitialize()
+    {
+        if (Instance == null)
+        {
+            GameObject managerObj = new GameObject("AnalyticsManager");
+            managerObj.AddComponent<AnalyticsManager>();
+        }
+    }
+
     private void Awake()
     {
         if (Instance != null && Instance != this)
@@ -28,68 +38,22 @@ public class AnalyticsManager : MonoBehaviour
 
     private void Start()
     {
-        if (PlayerPrefs.HasKey(ConsentKey))
-        {
-            bool playerAccepted =
-                PlayerPrefs.GetInt(ConsentKey) == 1;
-
-            InitializeAnalytics(playerAccepted);
-        }
-        else if (analyticsConsentPanel != null)
-        {
-            analyticsConsentPanel.SetActive(true);
-        }
+        InitializeAnalytics();
     }
 
-    public void AcceptAnalytics()
+    private async void InitializeAnalytics()
     {
-        if (analyticsConsentPanel != null)
-        {
-            analyticsConsentPanel.SetActive(false);
-        }
-
-        InitializeAnalytics(true);
-    }
-
-    public void DeclineAnalytics()
-    {
-        if (analyticsConsentPanel != null)
-        {
-            analyticsConsentPanel.SetActive(false);
-        }
-
-        InitializeAnalytics(false);
-    }
-
-    private async void InitializeAnalytics(bool playerAccepted)
-    {
-        PlayerPrefs.SetInt(ConsentKey, playerAccepted ? 1 : 0);
-        PlayerPrefs.Save();
-
         try
         {
             await UnityServices.InitializeAsync();
-
-            if (!playerAccepted)
-            {
-                analyticsReady = false;
-                return;
-            }
-
             AnalyticsService.Instance.StartDataCollection();
-
             analyticsReady = true;
-
             TrackSessionStarted();
-
             Debug.Log("Unity Analytics is ready.");
         }
         catch (System.Exception exception)
         {
-            Debug.LogError(
-                "Unity Analytics could not start: " +
-                exception.Message
-            );
+            Debug.LogError("Unity Analytics could not start: " + exception.Message);
         }
     }
 
@@ -136,9 +100,11 @@ public class AnalyticsManager : MonoBehaviour
 
     public void TrackMilestoneClaimed(MilestoneData milestone)
     {
+        string safeId = string.IsNullOrEmpty(milestone.id) ? milestone.name : milestone.id;
+
         Record(new CustomEvent("milestone_claimed")
         {
-            { "milestone_id", milestone.id },
+            { "milestone_id", safeId },
             { "reward_coins", milestone.rewardCoins },
             {
                 "permanent_coin_bonus_percent",
@@ -155,5 +121,7 @@ public class AnalyticsManager : MonoBehaviour
         }
 
         AnalyticsService.Instance.RecordEvent(customEvent);
+        AnalyticsService.Instance.Flush();
     }
+
 }
