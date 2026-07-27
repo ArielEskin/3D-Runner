@@ -12,14 +12,12 @@ public class SkinManager : MonoBehaviour
     {
         playerMovement = GetComponent<PlayerMovement>();
         
-        int selectedSkinIndex = 0;
-        if (ProfileManager.instance != null && ProfileManager.instance.activeProfile != null)
+        int selectedSkinIndex = PlayerPrefs.GetInt("SelectedSkin", 0);
+        if (ProfileManager.instance != null &&
+            ProfileManager.instance.activeProfile != null)
         {
-            selectedSkinIndex = ProfileManager.instance.activeProfile.selectedSkinIndex;
-        }
-        else
-        {
-            selectedSkinIndex = PlayerPrefs.GetInt("SelectedSkin", 0);
+            selectedSkinIndex =
+                ProfileManager.instance.activeProfile.selectedSkinIndex;
         }
 
         // Safety check

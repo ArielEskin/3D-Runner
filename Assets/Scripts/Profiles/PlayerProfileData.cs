@@ -20,9 +20,9 @@ public class PlayerProfileData
 
     [Header("Player Preferences")]
     public string selectedThemeID; // The theme string to pass to the Scene Manager
-    public int selectedSkinIndex; // The currently equipped skin
-    public List<int> unlockedSkins; // The indices of all skins the player has bought
     public List<string> unlockedThemes; // List of themes the player has bought/unlocked
+    public List<int> unlockedSkinIndices;
+    public int selectedSkinIndex;
     public float musicVolume;         
     public float sfxVolume;
     public int inputModeIndex; // 0 for Buttons, 1 for Touch 
@@ -52,11 +52,11 @@ public class PlayerProfileData
         highestDistance = 0f;
         longestTimeSurvived = 0f;
         
-        selectedThemeID = "Default";
-        selectedSkinIndex = 0; // Default to first skin
-        unlockedSkins = new List<int> { 0 }; // Player always owns the default skin
+        selectedThemeID = "Earth";
         lastRunSeed = Random.Range(1000, 99999); // Generate a random seed for the very first run
-        unlockedThemes = new List<string> { "Default" };
+        unlockedThemes = new List<string> { "Earth" };
+        unlockedSkinIndices = new List<int> { 0 };
+        selectedSkinIndex = 0;
         
         musicVolume = 0f;
         sfxVolume = 0f;

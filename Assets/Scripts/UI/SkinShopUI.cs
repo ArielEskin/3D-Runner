@@ -1,78 +1,197 @@
+using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SkinShopUI : MonoBehaviour
 {
-    public void TryBuyOrEquipSkin(int skinIndex, int price)
+    private static readonly string[] SkinNames = { "Claire", "Ty", "Zoe" };
+    private static readonly int[] SkinIndices = { 1, 2, 3 };
+    private static readonly int[] Prices = { 100, 250, 500 };
+
+    private readonly List<Button> skinButtons = new List<Button>();
+    private readonly List<TMP_Text> statusTexts = new List<TMP_Text>();
+
+    private void Start()
     {
-        if (ProfileManager.instance == null || ProfileManager.instance.activeProfile == null)
-        {
-            Debug.LogError("No active profile found! Cannot buy skin.");
-            return;
-        }
+        FindShopButtons();
 
-        PlayerProfileData profile = ProfileManager.instance.activeProfile;
+        for (int i = 0; i < skinButtons.Count; i++)
+        {
+            int capturedIndex = i;
+            skinButtons[i].onClick.AddListener(
+                () => HandleSkinPressed(capturedIndex)
+            );
 
-        // The player already owns this skin. Just equip it!
-        if (profile.unlockedSkins != null && profile.unlockedSkins.Contains(skinIndex))
-        {
-            profile.selectedSkinIndex = skinIndex;
-            ProfileManager.instance.SaveActiveProfileJSON();
-            Debug.Log("Equipped Skin: " + skinIndex);
-        }
-        // They don't own it, but they have enough coins to buy it!
-        else if (profile.totalCoins >= price)
-        {
-            profile.totalCoins -= price;              // Deduct coins
-            
-            if (profile.unlockedSkins == null)
+            Texture2D iconTexture = Resources.Load<Texture2D>(
+                "SkinIcons/" + SkinNames[i] + "Icon"
+            );
+            if (iconTexture != null)
             {
-                profile.unlockedSkins = new System.Collections.Generic.List<int>();
+                Sprite icon = Sprite.Create(
+                    iconTexture,
+                    new Rect(0f, 0f, iconTexture.width, iconTexture.height),
+                    new Vector2(0.5f, 0.5f),
+                    100f
+                );
+                Image image = skinButtons[i].GetComponent<Image>();
+                image.sprite = icon;
+                image.preserveAspect = true;
             }
-            profile.unlockedSkins.Add(skinIndex);     // Unlock it
-            
-            profile.selectedSkinIndex = skinIndex;    // Equip it immediately
-            ProfileManager.instance.SaveActiveProfileJSON();
-            Debug.Log("Bought and Equipped Skin: " + skinIndex);
         }
-        //  They are broke.
-        else
+
+        Refresh();
+    }
+
+    private void FindShopButtons()
+    {
+        for (int i = 0; i < transform.childCount; i++)
         {
-            Debug.LogWarning("Not enough coins to buy skin " + skinIndex + "!");
+            Button button = transform.GetChild(i).GetComponent<Button>();
+            if (button == null)
+            {
+                continue;
+            }
+
+            skinButtons.Add(button);
+        }
+
+        skinButtons.Sort(
+            (left, right) =>
+                left.transform.position.x.CompareTo(right.transform.position.x)
+        );
+
+        int count = Mathf.Min(SkinNames.Length, skinButtons.Count);
+        if (skinButtons.Count > count)
+        {
+            skinButtons.RemoveRange(count, skinButtons.Count - count);
+        }
+
+        for (int i = 0; i < skinButtons.Count; i++)
+        {
+            statusTexts.Add(CreateStatusText(skinButtons[i], i));
         }
     }
 
-    public void TryBuyTheme(string themeID, int price)
+    private TMP_Text CreateStatusText(Button button, int index)
     {
-        if (ProfileManager.instance == null || ProfileManager.instance.activeProfile == null)
+        TMP_Text existing = button.GetComponentInChildren<TMP_Text>(true);
+        if (existing != null)
         {
+            return existing;
+        }
+
+        GameObject textObject = new GameObject(
+            SkinNames[index] + " Status",
+            typeof(RectTransform),
+            typeof(TextMeshProUGUI)
+        );
+        textObject.transform.SetParent(button.transform, false);
+
+        RectTransform rect = textObject.GetComponent<RectTransform>();
+        rect.anchorMin = new Vector2(0.5f, 0f);
+        rect.anchorMax = new Vector2(0.5f, 0f);
+        rect.pivot = new Vector2(0.5f, 1f);
+        rect.anchoredPosition = new Vector2(0f, -12f);
+        rect.sizeDelta = new Vector2(280f, 65f);
+
+        TextMeshProUGUI text = textObject.GetComponent<TextMeshProUGUI>();
+        text.alignment = TextAlignmentOptions.Center;
+        text.enableAutoSizing = true;
+        text.fontSizeMin = 18f;
+        text.fontSizeMax = 34f;
+        text.color = Color.white;
+        text.raycastTarget = false;
+        text.fontStyle = FontStyles.Bold;
+        text.outlineWidth = 0.2f;
+        text.outlineColor = new Color32(45, 20, 12, 255);
+        return text;
+    }
+
+    private void HandleSkinPressed(int shopIndex)
+    {
+        PlayerProfileData profile = GetProfile();
+        if (profile == null)
+        {
+            statusTexts[shopIndex].text = "Select a profile";
             return;
         }
 
-        PlayerProfileData profile = ProfileManager.instance.activeProfile;
+        EnsureSkinData(profile);
+        int skinIndex = SkinIndices[shopIndex];
+        bool unlocked = profile.unlockedSkinIndices.Contains(skinIndex);
 
-        // : The player already owns this theme.
-        if (profile.unlockedThemes != null && profile.unlockedThemes.Contains(themeID))
+        if (!unlocked)
         {
-            Debug.Log("You already own the theme: " + themeID);
-        }
-        // They don't own it, but they have enough coins to buy it!
-        else if (profile.totalCoins >= price)
-        {
-            profile.totalCoins -= price;              // Deduct coins
-            
-            if (profile.unlockedThemes == null)
+            if (profile.totalCoins < Prices[shopIndex])
             {
-                profile.unlockedThemes = new System.Collections.Generic.List<string>();
+                statusTexts[shopIndex].text = "Not enough coins";
+                return;
             }
-            profile.unlockedThemes.Add(themeID);     // Unlock it (but do NOT equip it!)
-            
-            ProfileManager.instance.SaveActiveProfileJSON();
-            Debug.Log("Bought Theme: " + themeID);
+
+            profile.totalCoins -= Prices[shopIndex];
+            profile.unlockedSkinIndices.Add(skinIndex);
         }
-        // They are broke.
         else
         {
-            Debug.LogWarning("Not enough coins to buy theme " + themeID + "!");
+            profile.selectedSkinIndex =
+                profile.selectedSkinIndex == skinIndex ? 0 : skinIndex;
+            PlayerPrefs.SetInt("SelectedSkin", profile.selectedSkinIndex);
+            PlayerPrefs.Save();
+        }
+
+        ProfileManager.instance.SaveActiveProfileJSON();
+
+        MainMenu mainMenu = FindFirstObjectByType<MainMenu>();
+        if (mainMenu != null)
+        {
+            mainMenu.UpdateCoinText();
+        }
+
+        Refresh();
+    }
+
+    private void Refresh()
+    {
+        PlayerProfileData profile = GetProfile();
+
+        for (int i = 0; i < statusTexts.Count; i++)
+        {
+            if (profile == null)
+            {
+                statusTexts[i].text = Prices[i] + " coins";
+                continue;
+            }
+
+            EnsureSkinData(profile);
+            int skinIndex = SkinIndices[i];
+            if (!profile.unlockedSkinIndices.Contains(skinIndex))
+            {
+                statusTexts[i].text = Prices[i] + " coins";
+            }
+            else if (profile.selectedSkinIndex == skinIndex)
+            {
+                statusTexts[i].text = "Equipped";
+            }
+            else
+            {
+                statusTexts[i].text = "Unequipped";
+            }
+        }
+    }
+
+    private PlayerProfileData GetProfile()
+    {
+        return ProfileManager.instance != null
+            ? ProfileManager.instance.activeProfile
+            : null;
+    }
+
+    private void EnsureSkinData(PlayerProfileData profile)
+    {
+        if (profile.unlockedSkinIndices == null)
+        {
+            profile.unlockedSkinIndices = new List<int> { 0 };
         }
     }
 }

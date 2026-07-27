@@ -103,9 +103,12 @@ public class ProfileManager : MonoBehaviour
             PlayerProfileData loadedProfile =
                 JsonUtility.FromJson<PlayerProfileData>(json);
 
+            bool profileChanged = UpgradeSkinProgress(loadedProfile);
+            profileChanged |= UpgradeThemeProgress(loadedProfile);
+
             // Profiles made before Task 4 have no lifetime milestone data.
             // Use their best saved records as a fair starting point, once only.
-            if (UpgradeTask4Progress(loadedProfile))
+            if (UpgradeTask4Progress(loadedProfile) || profileChanged)
             {
                 File.WriteAllText(
                     filePath,
@@ -217,6 +220,63 @@ public class ProfileManager : MonoBehaviour
 
         profile.task4ProgressMigrated = true;
         return true;
+    }
+
+    private bool UpgradeSkinProgress(PlayerProfileData profile)
+    {
+        if (profile == null || profile.unlockedSkinIndices != null)
+        {
+            return false;
+        }
+
+        profile.unlockedSkinIndices = new System.Collections.Generic.List<int>
+        {
+            0
+        };
+        profile.selectedSkinIndex = 0;
+        return true;
+    }
+
+    private bool UpgradeThemeProgress(PlayerProfileData profile)
+    {
+        if (profile == null)
+        {
+            return false;
+        }
+
+        bool changed = false;
+        if (profile.unlockedThemes == null)
+        {
+            profile.unlockedThemes =
+                new System.Collections.Generic.List<string>();
+            changed = true;
+        }
+
+        if (profile.unlockedThemes.Remove("Default"))
+        {
+            changed = true;
+        }
+
+        if (!profile.unlockedThemes.Contains("Earth"))
+        {
+            profile.unlockedThemes.Add("Earth");
+            changed = true;
+        }
+
+        if (string.IsNullOrWhiteSpace(profile.selectedThemeID) ||
+            profile.selectedThemeID == "Default")
+        {
+            profile.selectedThemeID = "Earth";
+            changed = true;
+        }
+
+        if (!profile.unlockedThemes.Contains(profile.selectedThemeID))
+        {
+            profile.selectedThemeID = "Earth";
+            changed = true;
+        }
+
+        return changed;
     }
     
     private void OnApplicationPause(bool isPaused)  // Automatically triggers a JSON data save when the mobile app is pushed to the background or closed.

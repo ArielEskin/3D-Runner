@@ -14,10 +14,18 @@ public class ThemeManager : MonoBehaviour
 
     private void Awake()
     {
-        string selectedID = "Default";
+        string selectedID = "Earth";
         if (ProfileManager.instance != null && ProfileManager.instance.activeProfile != null)
         {
-            selectedID = ProfileManager.instance.activeProfile.selectedThemeID;
+            PlayerProfileData profile =
+                ProfileManager.instance.activeProfile;
+            bool isUnlocked = profile.unlockedThemes != null &&
+                              profile.unlockedThemes.Contains(
+                                  profile.selectedThemeID
+                              );
+            selectedID = isUnlocked
+                ? profile.selectedThemeID
+                : "Earth";
         }
 
         ThemeData currentTheme = null;

@@ -1,4 +1,5 @@
 using TMPro;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -22,12 +23,14 @@ public class ThemeSelectionUI : MonoBehaviour
     [SerializeField] private Button backButton;
 
     private int currentIndex;
+    private TMP_Text lockedMessageText;
 
     private void Start()
     {
         EnsureProfileManagerExists();
         AutoFindReferences();
         EnsureAtLeastOneTheme();
+        CreateLockedMessage();
 
         if (leftButton != null) leftButton.onClick.AddListener(PreviousTheme);
         if (rightButton != null) rightButton.onClick.AddListener(NextTheme);
@@ -63,12 +66,36 @@ public class ThemeSelectionUI : MonoBehaviour
         if (themePreviewImage != null)
         {
             themePreviewImage.sprite = themes[currentIndex].previewImage;
+            themePreviewImage.color = IsCurrentThemeUnlocked()
+                ? Color.white
+                : new Color(0.45f, 0.45f, 0.45f, 1f);
+        }
+
+        if (lockedMessageText != null)
+        {
+            lockedMessageText.color =
+                new Color32(255, 220, 145, 255);
+            lockedMessageText.text = IsCurrentThemeUnlocked()
+                ? string.Empty
+                : "LOCKED - Buy this theme in the shop";
         }
     }
 
     private void StartRun()
     {
         if (themes == null || themes.Length == 0) return;
+
+        if (!IsCurrentThemeUnlocked())
+        {
+            if (lockedMessageText != null)
+            {
+                lockedMessageText.text =
+                    "You need to buy this theme first!";
+                lockedMessageText.color =
+                    new Color32(255, 185, 95, 255);
+            }
+            return;
+        }
 
         if (ProfileManager.instance.activeProfile != null)
         {
@@ -127,12 +154,12 @@ public class ThemeSelectionUI : MonoBehaviour
             {
                 if (string.IsNullOrWhiteSpace(themes[i].themeID))
                 {
-                    themes[i].themeID = i == 0 ? "Default" : "Theme_" + (i + 1);
+                    themes[i].themeID = i == 0 ? "Earth" : "Theme_" + (i + 1);
                 }
 
                 if (string.IsNullOrWhiteSpace(themes[i].displayName))
                 {
-                    themes[i].displayName = i == 0 ? "Default" : "Theme " + (i + 1);
+                    themes[i].displayName = i == 0 ? "Earth" : "Theme " + (i + 1);
                 }
             }
 
@@ -143,8 +170,8 @@ public class ThemeSelectionUI : MonoBehaviour
         {
             new ThemeOption
             {
-                themeID = "Default",
-                displayName = "Default",
+                themeID = "Earth",
+                displayName = "Earth",
                 previewImage = themePreviewImage != null ? themePreviewImage.sprite : null
             }
         };
@@ -158,5 +185,72 @@ public class ThemeSelectionUI : MonoBehaviour
         ProfileManager profileManager = profileManagerObject.AddComponent<ProfileManager>();
         profileManager.activeProfile = new PlayerProfileData("profile_1", "Player 1");
         profileManager.SaveActiveProfileJSON();
+    }
+
+    private bool IsCurrentThemeUnlocked()
+    {
+        PlayerProfileData profile = ProfileManager.instance != null
+            ? ProfileManager.instance.activeProfile
+            : null;
+        if (profile == null || themes == null || themes.Length == 0)
+        {
+            return currentIndex == 0;
+        }
+
+        EnsureThemeData(profile);
+        return profile.unlockedThemes.Contains(themes[currentIndex].themeID);
+    }
+
+    private void EnsureThemeData(PlayerProfileData profile)
+    {
+        if (profile.unlockedThemes == null)
+        {
+            profile.unlockedThemes = new List<string>();
+        }
+
+        profile.unlockedThemes.Remove("Default");
+        if (!profile.unlockedThemes.Contains("Earth"))
+        {
+            profile.unlockedThemes.Add("Earth");
+        }
+    }
+
+    private void CreateLockedMessage()
+    {
+        if (lockedMessageText != null || themeNameText == null)
+        {
+            return;
+        }
+
+        GameObject messageObject = new GameObject(
+            "LockedThemeMessage",
+            typeof(RectTransform),
+            typeof(TextMeshProUGUI)
+        );
+        messageObject.transform.SetParent(themeNameText.transform.parent, false);
+
+        RectTransform sourceRect =
+            themeNameText.GetComponent<RectTransform>();
+        RectTransform messageRect =
+            messageObject.GetComponent<RectTransform>();
+        messageRect.anchorMin = sourceRect.anchorMin;
+        messageRect.anchorMax = sourceRect.anchorMax;
+        messageRect.pivot = sourceRect.pivot;
+        messageRect.anchoredPosition =
+            sourceRect.anchoredPosition + new Vector2(0f, -95f);
+        messageRect.sizeDelta = new Vector2(620f, 75f);
+
+        lockedMessageText =
+            messageObject.GetComponent<TextMeshProUGUI>();
+        lockedMessageText.alignment = TextAlignmentOptions.Center;
+        lockedMessageText.enableAutoSizing = true;
+        lockedMessageText.fontSizeMin = 20f;
+        lockedMessageText.fontSizeMax = 36f;
+        lockedMessageText.fontStyle = FontStyles.Bold;
+        lockedMessageText.color = new Color32(255, 220, 145, 255);
+        lockedMessageText.outlineWidth = 0.2f;
+        lockedMessageText.outlineColor =
+            new Color32(55, 20, 10, 255);
+        lockedMessageText.raycastTarget = false;
     }
 }
