@@ -13,6 +13,12 @@ public class SkinManager : MonoBehaviour
         playerMovement = GetComponent<PlayerMovement>();
         
         int selectedSkinIndex = PlayerPrefs.GetInt("SelectedSkin", 0);
+        if (ProfileManager.instance != null &&
+            ProfileManager.instance.activeProfile != null)
+        {
+            selectedSkinIndex =
+                ProfileManager.instance.activeProfile.selectedSkinIndex;
+        }
 
         // Safety check
         if (selectedSkinIndex < 0 || selectedSkinIndex >= skins.Length)
