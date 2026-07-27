@@ -16,6 +16,6 @@ MonoBehaviour:
   title: Run Meters
   description: Run 5000 meter across all runs.
   metric: 1
-  targetValue: 5000
+  targetValue: 10
   rewardCoins: 150
   permanentCoinBonusPercent: 15
