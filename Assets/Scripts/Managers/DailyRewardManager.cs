@@ -9,15 +9,14 @@ using Unity.Notifications.Android;
 
 public class DailyRewardManager : MonoBehaviour
 {
+    // ==========references================================================================================================================================================
     public static DailyRewardManager Instance { get; private set; }
 
     [SerializeField] private int dailyRewardCoins = 100;
-
-    [Tooltip("Use 24 for the final version. Use 0.02 while testing (about 1 minute).")]
     [SerializeField] private float notificationDelayHours = 24f;
-
     public event Action RewardStateChanged;
 
+    // ==========================================================================================================================================================
     private PlayerProfileData CurrentProfile
     {
         get
@@ -36,7 +35,7 @@ public class DailyRewardManager : MonoBehaviour
         get { return dailyRewardCoins; }
     }
 
-    private void Awake()
+    private void Awake() // Enforces the singleton pattern and persists the manager across scene loads
     {
         if (Instance != null && Instance != this)
         {
@@ -48,7 +47,7 @@ public class DailyRewardManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    private void Start()
+    private void Start() // Requests notification permissions on Android and updates the initial reward state
     {
 #if UNITY_ANDROID
         StartCoroutine(RequestAndroidNotificationPermission());
@@ -58,7 +57,7 @@ public class DailyRewardManager : MonoBehaviour
         RefreshRewardState();
     }
 
-    private void OnApplicationFocus(bool hasFocus)
+    private void OnApplicationFocus(bool hasFocus) // Refreshes the reward state when returning to the game from the background
     {
         if (hasFocus)
         {
@@ -66,7 +65,7 @@ public class DailyRewardManager : MonoBehaviour
         }
     }
 
-    private void OnApplicationPause(bool paused)
+    private void OnApplicationPause(bool paused) // Schedules the push notification for the next reward when minimizing the game
     {
         if (paused)
         {
@@ -74,7 +73,7 @@ public class DailyRewardManager : MonoBehaviour
         }
     }
 
-    public bool IsRewardAvailable()
+    public bool IsRewardAvailable() // Checks if 24 hours have passed since the last claimed reward
     {
         PlayerProfileData profile = CurrentProfile;
 
@@ -105,7 +104,7 @@ public class DailyRewardManager : MonoBehaviour
         return DateTime.UtcNow >= lastClaimTime.ToUniversalTime().AddHours(24);
     }
 
-    public void ClaimDailyReward()
+    public void ClaimDailyReward() // Awards coins to the player and records the claim time in the active profile
     {
         if (!IsRewardAvailable())
         {
@@ -141,12 +140,12 @@ public class DailyRewardManager : MonoBehaviour
         Debug.Log("Daily reward claimed: " + dailyRewardCoins + " coins.");
     }
 
-    public void RefreshRewardState()
+    public void RefreshRewardState() // Triggers an event to notify the UI to update its buttons and text
     {
         RewardStateChanged?.Invoke();
     }
 
-    public void ScheduleDailyRewardNotification()
+    public void ScheduleDailyRewardNotification() // Cancels old notifications and sets a new one to fire in 24 hours
     {
 #if UNITY_ANDROID
         AndroidNotificationCenter.CancelAllScheduledNotifications();
@@ -178,7 +177,7 @@ public class DailyRewardManager : MonoBehaviour
     }
 
 #if UNITY_ANDROID
-    private IEnumerator RequestAndroidNotificationPermission()
+    private IEnumerator RequestAndroidNotificationPermission() // Asks the user for permission to send push notifications on Android 13+
     {
         PermissionRequest request = new PermissionRequest();
 

@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class ProfileSelectionUI : MonoBehaviour
 {
+    // ==========references================================================================================================================================================
+    
     private const int MaxProfiles = 4;
 
     [SerializeField] private Transform contentParent;
@@ -12,8 +14,10 @@ public class ProfileSelectionUI : MonoBehaviour
     [SerializeField] private Button newProfileButton;
     [SerializeField] private string nextSceneName = "ThemeSelection";
     [SerializeField] private string backSceneName = "MainMenu";
+    
+    // ==========================================================================================================================================================
 
-    private void Start()
+    private void Start() // Initializes the UI, locates references, and populates the profile list
     {
         EnsureProfileManagerExists();
         AutoFindContentParent();
@@ -23,7 +27,7 @@ public class ProfileSelectionUI : MonoBehaviour
         BuildProfileList();
     }
 
-    private void AutoFindContentParent()
+    private void AutoFindContentParent() // Finds the scroll view content container automatically if missing
     {
         if (contentParent != null) return;
 
@@ -34,7 +38,7 @@ public class ProfileSelectionUI : MonoBehaviour
         }
     }
 
-    private void BuildProfileList()
+    private void BuildProfileList() // Clears old slots and instantiates new ones for every saved profile
     {
         if (contentParent == null)
         {
@@ -74,7 +78,7 @@ public class ProfileSelectionUI : MonoBehaviour
         UpdateNewProfileButtonState(profiles.Count);
     }
 
-    private void SelectProfile(PlayerProfileData profile)
+    private void SelectProfile(PlayerProfileData profile) // Loads the chosen profile as active and transitions to the next scene
     {
         PlayerProfileData loadedProfile = ProfileManager.instance.LoadProfile(profile.profileID);
         ProfileManager.instance.activeProfile = loadedProfile != null ? loadedProfile : profile;
@@ -88,7 +92,7 @@ public class ProfileSelectionUI : MonoBehaviour
         SceneManager.LoadScene(nextSceneName);
     }
 
-    private PlayerProfileData CreateStarterProfile()
+    private PlayerProfileData CreateStarterProfile() // Generates a default profile if no saved profiles exist
     {
         PlayerProfileData starterProfile = new PlayerProfileData("profile_1", "Player 1");
         ProfileManager.instance.activeProfile = starterProfile;
@@ -96,7 +100,7 @@ public class ProfileSelectionUI : MonoBehaviour
         return starterProfile;
     }
 
-    public void CreateNewProfile()
+    public void CreateNewProfile() // Generates a new profile with a unique ID and refreshes the list
     {
         EnsureProfileManagerExists();
 
@@ -125,7 +129,7 @@ public class ProfileSelectionUI : MonoBehaviour
         Debug.Log("Created new profile: " + profileName);
     }
 
-    private void DeleteProfile(PlayerProfileData profile)
+    private void DeleteProfile(PlayerProfileData profile) // Deletes the selected profile from disk and refreshes the list
     {
         if (profile == null || ProfileManager.instance == null)
         {
@@ -138,7 +142,7 @@ public class ProfileSelectionUI : MonoBehaviour
         }
     }
 
-    private void WireBackButton()
+    private void WireBackButton() // Automatically finds and connects the back button to load the main menu
     {
         GameObject backButtonObject = GameObject.Find("BackToMainMenu");
         if (backButtonObject == null) return;
@@ -150,7 +154,7 @@ public class ProfileSelectionUI : MonoBehaviour
         backButton.onClick.AddListener(() => SceneManager.LoadScene(backSceneName));
     }
 
-    private void AutoFindNewProfileButton()
+    private void AutoFindNewProfileButton() // Locates the 'New Profile' button in the content container if unassigned
     {
         if (newProfileButton != null || contentParent == null) return;
 
@@ -165,7 +169,7 @@ public class ProfileSelectionUI : MonoBehaviour
         }
     }
 
-    private void WireNewProfileButton()
+    private void WireNewProfileButton() // Connects the 'New Profile' button to the creation logic
     {
         if (newProfileButton == null) return;
 
@@ -173,7 +177,7 @@ public class ProfileSelectionUI : MonoBehaviour
         newProfileButton.onClick.AddListener(CreateNewProfile);
     }
 
-    private void UpdateNewProfileButtonState(int profileCount)
+    private void UpdateNewProfileButtonState(int profileCount) // Disables the 'New Profile' button if the maximum profile limit is reached
     {
         if (newProfileButton == null)
         {
@@ -183,7 +187,7 @@ public class ProfileSelectionUI : MonoBehaviour
         newProfileButton.interactable = profileCount < MaxProfiles;
     }
 
-    private void EnsureProfileManagerExists()
+    private void EnsureProfileManagerExists() // Creates a temporary ProfileManager for testing directly in the scene
     {
         if (ProfileManager.instance != null) return;
 

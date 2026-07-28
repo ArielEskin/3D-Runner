@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class ProfileSlotUI : MonoBehaviour
 {
+    // ==========references================================================================================================================================================
+    
     [SerializeField] private Image thumbnailImage;
     [SerializeField] private TMP_Text profileNameText;
     [SerializeField] private TMP_Text statsText;
@@ -12,8 +14,10 @@ public class ProfileSlotUI : MonoBehaviour
     [SerializeField] private Button deleteButton;
 
     private PlayerProfileData profileData;
+    
+    // ==========================================================================================================================================================
 
-    private void Awake()
+    private void Awake() // Automatically locates internal UI references
     {
         AutoFindReferences();
     }
@@ -21,7 +25,7 @@ public class ProfileSlotUI : MonoBehaviour
     public void Setup(
         PlayerProfileData profile,
         System.Action<PlayerProfileData> onSelected,
-        System.Action<PlayerProfileData> onDeleted)
+        System.Action<PlayerProfileData> onDeleted) // Populates the slot with profile data and wires up the buttons
     {
         profileData = profile;
 
@@ -56,7 +60,7 @@ public class ProfileSlotUI : MonoBehaviour
         }
     }
 
-    private void AutoFindReferences()
+    private void AutoFindReferences() // Automatically finds UI elements if they were not assigned in the Inspector
     {
         if (thumbnailImage == null)
         {
@@ -89,7 +93,7 @@ public class ProfileSlotUI : MonoBehaviour
         }
     }
 
-    private void LoadThumbnail(string path)
+    private void LoadThumbnail(string path) // Loads the saved screenshot from disk and displays it
     {
         if (thumbnailImage == null) return;
         if (string.IsNullOrEmpty(path) || !File.Exists(path)) return;
@@ -105,7 +109,7 @@ public class ProfileSlotUI : MonoBehaviour
         );
     }
 
-    private string FormatDate(string dateText)
+    private string FormatDate(string dateText) // Formats the last played timestamp into a short, readable date string
     {
         if (string.IsNullOrEmpty(dateText)) return "Not played";
         return dateText.Length >= 10 ? dateText.Substring(0, 10) : dateText;

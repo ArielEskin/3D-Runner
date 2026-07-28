@@ -8,6 +8,8 @@ using Unity.Notifications.Android;
 
 public class ShopDailyRewardUI : MonoBehaviour
 {
+    // ==========references================================================================================================================================================
+    
     [Header("Shop")]
     [SerializeField] private GameObject shopPanel;
     [SerializeField] private Button openShopButton;
@@ -19,8 +21,10 @@ public class ShopDailyRewardUI : MonoBehaviour
     [SerializeField] private TMP_Text rewardStatusText;
 
     private bool openedFromDailyRewardNotification;
-
-    private void Start()
+    
+    // ==========================================================================================================================================================
+    
+    private void Start() // Initializes buttons and subscribes to reward state events
     {
         openShopButton.onClick.AddListener(OpenShop);
         closeShopButton.onClick.AddListener(CloseShop);
@@ -43,7 +47,7 @@ public class ShopDailyRewardUI : MonoBehaviour
         Refresh();
     }
 
-    private void OnDestroy()
+    private void OnDestroy() // Cleans up event subscriptions to prevent memory leaks
     {
         if (DailyRewardManager.Instance != null)
         {
@@ -51,18 +55,18 @@ public class ShopDailyRewardUI : MonoBehaviour
         }
     }
 
-    public void OpenShop()
+    public void OpenShop() // Makes the shop panel visible and refreshes UI data
     {
         shopPanel.SetActive(true);
         Refresh();
     }
 
-    public void CloseShop()
+    public void CloseShop() // Hides the shop panel from the screen
     {
         shopPanel.SetActive(false);
     }
 
-    private void ClaimDailyReward()
+    private void ClaimDailyReward() // Requests the DailyRewardManager to claim the current reward
     {
         if (DailyRewardManager.Instance == null)
         {
@@ -73,7 +77,7 @@ public class ShopDailyRewardUI : MonoBehaviour
         Refresh();
     }
 
-    public void Refresh()
+    public void Refresh() // Updates the visual state of the reward button and texts based on availability
     {
         if (DailyRewardManager.Instance == null)
         {

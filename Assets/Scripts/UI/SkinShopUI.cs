@@ -5,14 +5,18 @@ using UnityEngine.UI;
 
 public class SkinShopUI : MonoBehaviour
 {
+    // ==========references================================================================================================================================================
+    
     private static readonly string[] SkinNames = { "Claire", "Ty", "Zoe" };
     private static readonly int[] SkinIndices = { 1, 2, 3 };
     private static readonly int[] Prices = { 100, 250, 500 };
 
     private readonly List<Button> skinButtons = new List<Button>();
     private readonly List<TMP_Text> statusTexts = new List<TMP_Text>();
-
-    private void Start()
+    
+    // ==========================================================================================================================================================
+    
+    private void Start() // Initializes buttons and assigns skin icons
     {
         FindShopButtons();
 
@@ -43,7 +47,7 @@ public class SkinShopUI : MonoBehaviour
         Refresh();
     }
 
-    private void FindShopButtons()
+    private void FindShopButtons() // Locates and sorts the skin shop buttons horizontally
     {
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -73,7 +77,7 @@ public class SkinShopUI : MonoBehaviour
         }
     }
 
-    private TMP_Text CreateStatusText(Button button, int index)
+    private TMP_Text CreateStatusText(Button button, int index) // Spawns or finds the text label showing price or equip status
     {
         TMP_Text existing = button.GetComponentInChildren<TMP_Text>(true);
         if (existing != null)
@@ -108,7 +112,7 @@ public class SkinShopUI : MonoBehaviour
         return text;
     }
 
-    private void HandleSkinPressed(int shopIndex)
+    private void HandleSkinPressed(int shopIndex) // Attempts to purchase or equip the selected skin
     {
         PlayerProfileData profile = GetProfile();
         if (profile == null)
@@ -156,7 +160,7 @@ public class SkinShopUI : MonoBehaviour
         Refresh();
     }
 
-    private void Refresh()
+    private void Refresh() // Updates the visual text of all buttons to show price, Equipped, or Unequipped
     {
         PlayerProfileData profile = GetProfile();
 
@@ -185,14 +189,14 @@ public class SkinShopUI : MonoBehaviour
         }
     }
 
-    private PlayerProfileData GetProfile()
+    private PlayerProfileData GetProfile() // Safely retrieves the currently active player profile
     {
         return ProfileManager.instance != null
             ? ProfileManager.instance.activeProfile
             : null;
     }
 
-    private void EnsureSkinData(PlayerProfileData profile)
+    private void EnsureSkinData(PlayerProfileData profile) // Validates the profile data to ensure the default skin is unlocked
     {
         if (profile.unlockedSkinIndices == null)
         {

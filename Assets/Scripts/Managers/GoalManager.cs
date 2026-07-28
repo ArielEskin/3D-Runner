@@ -40,7 +40,7 @@ public class GoalManager : MonoBehaviour
         }
     }
 
-    private void Awake()
+    private void Awake() // Enforces the singleton pattern and persists the manager across scene loads
     {
         if (Instance != null && Instance != this)
         {
@@ -53,13 +53,13 @@ public class GoalManager : MonoBehaviour
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
-    private void Start()
+    private void Start() // Binds the achievements UI and refreshes its visual state on startup
     {
         BindAchievementsUI();
         RefreshAchievementsUI();
     }
 
-    private void OnDestroy()
+    private void OnDestroy() // Cleans up scene load subscriptions to prevent memory leaks
     {
         if (Instance == this)
         {
@@ -68,7 +68,7 @@ public class GoalManager : MonoBehaviour
         }
     }
 
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode) // Rebinds the UI automatically whenever the Main Menu scene is loaded
     {
         if (scene.name == "MainMenu")
         {
@@ -77,12 +77,12 @@ public class GoalManager : MonoBehaviour
         }
     }
 
-    public IReadOnlyList<MilestoneData> GetMilestones()
+    public IReadOnlyList<MilestoneData> GetMilestones() // Returns the full list of defined milestones
     {
         return milestones;
     }
 
-    public float GetProgress(MilestoneData milestone)
+    public float GetProgress(MilestoneData milestone) // Calculates the current progress value based on the specified milestone metric
     {
         PlayerProfileData profile = CurrentProfile;
 
@@ -127,12 +127,12 @@ public class GoalManager : MonoBehaviour
         }
     }
 
-    public bool IsComplete(MilestoneData milestone)
+    public bool IsComplete(MilestoneData milestone) // Checks if the progress has reached or exceeded the milestone's target value
     {
         return GetProgress(milestone) >= milestone.targetValue;
     }
 
-    public bool CanClaim(MilestoneData milestone)
+    public bool CanClaim(MilestoneData milestone) // Determines if the milestone is complete and the reward has not been claimed yet
     {
         PlayerProfileData.MilestoneProgressData record =
             GetRecord(milestone);
@@ -142,7 +142,7 @@ public class GoalManager : MonoBehaviour
                !record.rewardClaimed;
     }
 
-    public bool HasClaimed(MilestoneData milestone)
+    public bool HasClaimed(MilestoneData milestone) // Checks if the milestone reward was already collected
     {
         PlayerProfileData.MilestoneProgressData record =
             GetRecord(milestone);
@@ -153,7 +153,7 @@ public class GoalManager : MonoBehaviour
     public void RecordRun(
         int coinsCollectedThisRun,
         float distanceThisRun,
-        float secondsThisRun)
+        float secondsThisRun) // Adds the run's distance and time to the lifetime stats and saves the profile
     {
         PlayerProfileData profile = CurrentProfile;
 
@@ -172,7 +172,7 @@ public class GoalManager : MonoBehaviour
         RefreshAchievementsUI();
     }
 
-    public void RecordCoins(int collectedCoins)
+    public void RecordCoins(int collectedCoins) // Adds collected coins to the lifetime total and saves the profile
     {
         PlayerProfileData profile = CurrentProfile;
 
@@ -194,13 +194,13 @@ public class GoalManager : MonoBehaviour
         RefreshAchievementsUI();
     }
 
-    public void CheckProgress()
+    public void CheckProgress() // Fires the progress changed event to notify UI listeners to update
     {
         ProgressChanged?.Invoke();
         RefreshAchievementsUI();
     }
 
-    public void ClaimReward(MilestoneData milestone)
+    public void ClaimReward(MilestoneData milestone) // Awards the milestone bonus to the player and marks it as claimed in the save file
     {
         if (!CanClaim(milestone))
         {
@@ -238,7 +238,7 @@ public class GoalManager : MonoBehaviour
     }
 
     // Connect your Achievements menu button to this method in Button On Click().
-    public void OpenAchievements()
+    public void OpenAchievements() // Makes the achievements panel visible and refreshes UI data
     {
         BindAchievementsUI();
 
@@ -249,7 +249,7 @@ public class GoalManager : MonoBehaviour
         }
     }
 
-    public void CloseAchievements()
+    public void CloseAchievements() // Hides the achievements panel from the screen
     {
         if (achievementsPanel != null)
         {
@@ -257,7 +257,7 @@ public class GoalManager : MonoBehaviour
         }
     }
 
-    private void BindAchievementsUI()
+    private void BindAchievementsUI() // Locates and links all the progress texts and claim buttons inside the achievements panel
     {
         achievementsPanel = FindSceneObject("Achievements");
         goalCards.Clear();
@@ -320,7 +320,7 @@ public class GoalManager : MonoBehaviour
         }
     }
 
-    private void RefreshAchievementsUI()
+    private void RefreshAchievementsUI() // Updates the text labels, button states, and opacity for every milestone card
     {
         foreach (GoalCardUI card in goalCards)
         {
@@ -359,15 +359,12 @@ public class GoalManager : MonoBehaviour
         }
     }
 
-    private TMP_Text FindProgressText(MilestoneData milestone)
+    private TMP_Text FindProgressText(MilestoneData milestone) // Searches the UI hierarchy for the specific text object matching the milestone's target string
     {
         if (achievementsPanel == null || milestone == null)
         {
             return null;
         }
-
-        // Include the unit as well as the number. For example, "/ 500 coins"
-        // must not accidentally match the Long Runner text "/ 5000 meters".
         string targetText = "/ " + milestone.targetValue.ToString("0") +
                             " " + GetUnit(milestone);
 
@@ -383,7 +380,7 @@ public class GoalManager : MonoBehaviour
         return null;
     }
 
-    private string FormatProgress(MilestoneData milestone, float progress)
+    private string FormatProgress(MilestoneData milestone, float progress) // Formats the numeric progress and reward details into a readable string
     {
         string unit = GetUnit(milestone);
 
@@ -399,7 +396,7 @@ public class GoalManager : MonoBehaviour
                "\n" + reward;
     }
 
-    private string GetUnit(MilestoneData milestone)
+    private string GetUnit(MilestoneData milestone) // Determines the correct text unit (coins, meters ect...) for the metric
     {
         switch (milestone.metric)
         {
@@ -429,7 +426,7 @@ public class GoalManager : MonoBehaviour
         }
     }
 
-    private int CompareButtonsFromTopToBottom(Button first, Button second)
+    private int CompareButtonsFromTopToBottom(Button first, Button second) // Sorts UI buttons vertically by comparing their screen positions
     {
         RectTransform firstTransform =
             first.GetComponent<RectTransform>();
@@ -446,7 +443,7 @@ public class GoalManager : MonoBehaviour
         return secondY.CompareTo(firstY);
     }
 
-    private GameObject FindSceneObject(string objectName)
+    private GameObject FindSceneObject(string objectName) // Locates a hidden UI object in the active scene by its name
     {
         foreach (Transform item in Resources.FindObjectsOfTypeAll<Transform>())
         {
@@ -459,8 +456,7 @@ public class GoalManager : MonoBehaviour
         return null;
     }
 
-    private PlayerProfileData.MilestoneProgressData GetRecord(
-        MilestoneData milestone)
+    private PlayerProfileData.MilestoneProgressData GetRecord(MilestoneData milestone) // Retrieves or creates the save record for a specific milestone
     {
         PlayerProfileData profile = CurrentProfile;
 

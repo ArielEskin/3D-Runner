@@ -14,6 +14,8 @@ public class ThemeOption
 
 public class ThemeSelectionUI : MonoBehaviour
 {
+    // ==========references================================================================================================================================================
+    
     [SerializeField] private ThemeOption[] themes;
     [SerializeField] private TMP_Text themeNameText;
     [SerializeField] private Image themePreviewImage;
@@ -24,8 +26,10 @@ public class ThemeSelectionUI : MonoBehaviour
 
     private int currentIndex;
     private TMP_Text lockedMessageText;
+    
+    // ==========================================================================================================================================================
 
-    private void Start()
+    private void Start() // Initializes buttons and displays the currently selected theme
     {
         EnsureProfileManagerExists();
         AutoFindReferences();
@@ -40,21 +44,21 @@ public class ThemeSelectionUI : MonoBehaviour
         ShowTheme();
     }
 
-    private void PreviousTheme()
+    private void PreviousTheme() // Cycles the selection backward to the previous theme in the list
     {
         currentIndex--;
         if (currentIndex < 0) currentIndex = themes.Length - 1;
         ShowTheme();
     }
 
-    private void NextTheme()
+    private void NextTheme() // Cycles the selection forward to the next theme in the list
     {
         currentIndex++;
         if (currentIndex >= themes.Length) currentIndex = 0;
         ShowTheme();
     }
 
-    private void ShowTheme()
+    private void ShowTheme() // Updates the UI preview image and text to match the currently viewed theme
     {
         if (themes == null || themes.Length == 0) return;
 
@@ -81,7 +85,7 @@ public class ThemeSelectionUI : MonoBehaviour
         }
     }
 
-    private void StartRun()
+    private void StartRun() // Starts the game using the selected theme, but blocks if it is locked
     {
         if (themes == null || themes.Length == 0) return;
 
@@ -107,7 +111,7 @@ public class ThemeSelectionUI : MonoBehaviour
         MusicManager.instance.PlayMusic("GameMusic");
     }
 
-    private void AutoFindReferences()
+    private void AutoFindReferences() // Automatically finds UI elements if they were not assigned in the Inspector
     {
         if (themeNameText == null)
         {
@@ -146,7 +150,7 @@ public class ThemeSelectionUI : MonoBehaviour
         }
     }
 
-    private void EnsureAtLeastOneTheme()
+    private void EnsureAtLeastOneTheme() // Populates the theme list with a default option if it is completely empty
     {
         if (themes != null && themes.Length > 0)
         {
@@ -177,7 +181,7 @@ public class ThemeSelectionUI : MonoBehaviour
         };
     }
 
-    private void EnsureProfileManagerExists()
+    private void EnsureProfileManagerExists() // Creates a temporary ProfileManager for testing directly in the scene
     {
         if (ProfileManager.instance != null) return;
 
@@ -187,7 +191,7 @@ public class ThemeSelectionUI : MonoBehaviour
         profileManager.SaveActiveProfileJSON();
     }
 
-    private bool IsCurrentThemeUnlocked()
+    private bool IsCurrentThemeUnlocked() // Checks if the currently viewed theme is owned by the player
     {
         PlayerProfileData profile = ProfileManager.instance != null
             ? ProfileManager.instance.activeProfile
@@ -201,7 +205,7 @@ public class ThemeSelectionUI : MonoBehaviour
         return profile.unlockedThemes.Contains(themes[currentIndex].themeID);
     }
 
-    private void EnsureThemeData(PlayerProfileData profile)
+    private void EnsureThemeData(PlayerProfileData profile) // Validates the profile data to ensure default themes exist
     {
         if (profile.unlockedThemes == null)
         {
@@ -215,7 +219,7 @@ public class ThemeSelectionUI : MonoBehaviour
         }
     }
 
-    private void CreateLockedMessage()
+    private void CreateLockedMessage() // Spawns the warning message text that appears when viewing locked themes
     {
         if (lockedMessageText != null || themeNameText == null)
         {

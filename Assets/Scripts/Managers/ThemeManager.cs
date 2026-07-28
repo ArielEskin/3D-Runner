@@ -12,7 +12,7 @@ public class ThemeManager : MonoBehaviour
     public TrackPooler trackPooler;
     public ObjectPooler objectPooler;
 
-    private void Awake()
+    private void Awake() // Finds the selected theme from the active profile and applies it before anything else spawns
     {
         string selectedID = "Earth";
         if (ProfileManager.instance != null && ProfileManager.instance.activeProfile != null)
@@ -51,7 +51,7 @@ public class ThemeManager : MonoBehaviour
         }
     }
 
-    private void ApplyTheme(ThemeData theme)
+    private void ApplyTheme(ThemeData theme) // Overrides the skybox and object pooler prefabs with the theme's specific assets
     {
         if (theme.skyboxMaterial != null)
         {

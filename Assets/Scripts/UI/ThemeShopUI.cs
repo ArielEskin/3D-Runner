@@ -5,6 +5,8 @@ using UnityEngine.UI;
 
 public class ThemeShopUI : MonoBehaviour
 {
+    // ==========references================================================================================================================================================
+    
     private static readonly string[] ThemeIDs =
     {
         "Earth",
@@ -25,7 +27,9 @@ public class ThemeShopUI : MonoBehaviour
     private readonly List<TMP_Text> statusTexts = new List<TMP_Text>();
     private readonly List<TMP_Text> lockTexts = new List<TMP_Text>();
 
-    private void Start()
+    // ==========================================================================================================================================================
+    
+    private void Start() // Initializes buttons and assigns theme icons
     {
         FindThemeButtons();
 
@@ -41,7 +45,7 @@ public class ThemeShopUI : MonoBehaviour
         Refresh();
     }
 
-    private void FindThemeButtons()
+    private void FindThemeButtons() // Locates and sorts the shop buttons horizontally
     {
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -70,7 +74,7 @@ public class ThemeShopUI : MonoBehaviour
         }
     }
 
-    private void ApplyThemeIcon(Button button, string themeID)
+    private void ApplyThemeIcon(Button button, string themeID) // Loads and applies the specific theme preview image to a button
     {
         Texture2D texture = Resources.Load<Texture2D>(
             "ThemeIcons/" + themeID + "Icon"
@@ -91,7 +95,7 @@ public class ThemeShopUI : MonoBehaviour
         image.preserveAspect = true;
     }
 
-    private TMP_Text CreateStatusText(Button button, int index)
+    private TMP_Text CreateStatusText(Button button, int index) // Spawns the text label showing price or ownership status
     {
         GameObject textObject = new GameObject(
             DisplayNames[index] + " Status",
@@ -120,7 +124,7 @@ public class ThemeShopUI : MonoBehaviour
         return text;
     }
 
-    private TMP_Text CreateLockText(Button button)
+    private TMP_Text CreateLockText(Button button) // Spawns the "LOCKED" overlay text for unowned themes
     {
         GameObject textObject = new GameObject(
             "Lock Label",
@@ -149,7 +153,7 @@ public class ThemeShopUI : MonoBehaviour
         return text;
     }
 
-    private void HandleThemePressed(int index)
+    private void HandleThemePressed(int index) // Attempts to purchase the theme if the player has enough coins
     {
         PlayerProfileData profile = GetProfile();
         if (profile == null)
@@ -190,7 +194,7 @@ public class ThemeShopUI : MonoBehaviour
         Refresh();
     }
 
-    private void Refresh()
+    private void Refresh() // Updates the visual state of all buttons (grayed out vs full color) based on ownership
     {
         PlayerProfileData profile = GetProfile();
         if (profile != null)
@@ -221,14 +225,14 @@ public class ThemeShopUI : MonoBehaviour
         }
     }
 
-    private PlayerProfileData GetProfile()
+    private PlayerProfileData GetProfile() // Safely retrieves the currently active player profile
     {
         return ProfileManager.instance != null
             ? ProfileManager.instance.activeProfile
             : null;
     }
 
-    private void EnsureThemeData(PlayerProfileData profile)
+    private void EnsureThemeData(PlayerProfileData profile) // Validates the profile data to ensure default themes exist
     {
         if (profile.unlockedThemes == null)
         {

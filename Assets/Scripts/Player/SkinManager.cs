@@ -2,11 +2,12 @@ using UnityEngine;
 
 public class SkinManager : MonoBehaviour
 {
-    [Header("Assign your skins here in the Inspector")]
-    [Tooltip("Drag the child skin GameObjects here. The default skin should be element 0, the zombie element 1, etc.")]
+    // ==========references================================================================================================================================================
+    
     public GameObject[] skins;
-
     private PlayerMovement playerMovement;
+    
+    // ==========================================================================================================================================================
 
     void Start()
     {

@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class AnalyticsManager : MonoBehaviour
 {
+    // ==========references================================================================================================================================================
+    
     public static AnalyticsManager Instance { get; private set; }
-
-    [Header("Optional Consent UI")]
+    
     [SerializeField] private GameObject analyticsConsentPanel;
-
+    
     private bool analyticsReady;
-
     private const string ConsentKey = "AnalyticsConsent";
-
-    private void Awake()
+    
+    // ==========================================================================================================================================================
+    
+    private void Awake() // Enforces the singleton pattern and persists the manager across scene loads
     {
         if (Instance != null && Instance != this)
         {
@@ -26,7 +28,7 @@ public class AnalyticsManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
     }
 
-    private void Start()
+    private void Start() // Checks for saved analytics consent and prompts the player if no choice is saved
     {
         if (PlayerPrefs.HasKey(ConsentKey))
         {
@@ -41,7 +43,7 @@ public class AnalyticsManager : MonoBehaviour
         }
     }
 
-    public void AcceptAnalytics()
+    public void AcceptAnalytics() // Closes the consent panel and starts data collection
     {
         if (analyticsConsentPanel != null)
         {
@@ -51,7 +53,7 @@ public class AnalyticsManager : MonoBehaviour
         InitializeAnalytics(true);
     }
 
-    public void DeclineAnalytics()
+    public void DeclineAnalytics() // Closes the consent panel and disables data collection
     {
         if (analyticsConsentPanel != null)
         {
@@ -61,7 +63,7 @@ public class AnalyticsManager : MonoBehaviour
         InitializeAnalytics(false);
     }
 
-    private async void InitializeAnalytics(bool playerAccepted)
+    private async void InitializeAnalytics(bool playerAccepted) // Initializes the Unity Services SDK and starts tracking if permitted
     {
         PlayerPrefs.SetInt(ConsentKey, playerAccepted ? 1 : 0);
         PlayerPrefs.Save();
@@ -93,7 +95,7 @@ public class AnalyticsManager : MonoBehaviour
         }
     }
 
-    public void TrackSessionStarted()
+    public void TrackSessionStarted() // Sends an event recording the start of a new gameplay session
     {
         Record(new CustomEvent("session_started")
         {
@@ -102,7 +104,7 @@ public class AnalyticsManager : MonoBehaviour
         });
     }
 
-    public void TrackCoinsCollected(int amount, int runCoinTotal)
+    public void TrackCoinsCollected(int amount, int runCoinTotal) // Sends an event recording coins picked up during gameplay
     {
         Record(new CustomEvent("coins_collected")
         {
@@ -115,7 +117,7 @@ public class AnalyticsManager : MonoBehaviour
         float distance,
         float seconds,
         int coins,
-        string deathCause)
+        string deathCause) // Sends a detailed event summarizing the entire run when the player dies
     {
         Record(new CustomEvent("run_ended")
         {
@@ -126,7 +128,7 @@ public class AnalyticsManager : MonoBehaviour
         });
     }
 
-    public void TrackDailyRewardClaimed(int rewardAmount)
+    public void TrackDailyRewardClaimed(int rewardAmount) // Sends an event recording that the daily reward was collected
     {
         Record(new CustomEvent("daily_reward_claimed")
         {
@@ -134,7 +136,7 @@ public class AnalyticsManager : MonoBehaviour
         });
     }
 
-    public void TrackMilestoneClaimed(MilestoneData milestone)
+    public void TrackMilestoneClaimed(MilestoneData milestone) // Sends an event recording that a milestone was completed and claimed
     {
         Record(new CustomEvent("milestone_claimed")
         {
@@ -147,7 +149,7 @@ public class AnalyticsManager : MonoBehaviour
         });
     }
 
-    private void Record(CustomEvent customEvent)
+    private void Record(CustomEvent customEvent) // A helper function that safely fires the event to Unity Analytics
     {
         if (!analyticsReady)
         {
