@@ -20,6 +20,7 @@ public class GoalManager : MonoBehaviour
         public TMP_Text progressText;
         public Button claimButton;
         public TMP_Text claimButtonText;
+        public CanvasGroup canvasGroup;
     }
 
     private GameObject achievementsPanel;
@@ -304,7 +305,10 @@ public class GoalManager : MonoBehaviour
                 claimButton = claimButton,
                 claimButtonText =
                     claimButton.GetComponentInChildren<TMP_Text>(true),
-                progressText = FindProgressText(milestone)
+                progressText = FindProgressText(milestone),
+                canvasGroup = claimButton.transform.parent != null 
+                    ? claimButton.transform.parent.GetComponent<CanvasGroup>() 
+                    : null
             };
 
             claimButton.onClick.RemoveAllListeners();
@@ -338,6 +342,7 @@ public class GoalManager : MonoBehaviour
             if (card.claimButton != null)
             {
                 card.claimButton.interactable = canClaim;
+                card.claimButton.gameObject.SetActive(!claimed);
             }
 
             if (card.claimButtonText != null)
@@ -345,6 +350,11 @@ public class GoalManager : MonoBehaviour
                 card.claimButtonText.text = claimed
                     ? "CLAIMED"
                     : canClaim ? "CLAIM" : "LOCKED";
+            }
+            
+            if (card.canvasGroup != null)
+            {
+                card.canvasGroup.alpha = claimed ? 0.6f : 1f;
             }
         }
     }
@@ -400,7 +410,7 @@ public class GoalManager : MonoBehaviour
                 return "meters";
             
             case MilestoneMetric.TotalDailyRewards:
-                return "rewards";
+                return "daily rewards";
             
             case MilestoneMetric.HighestSingleRunDistance:
                 return "meters";
@@ -428,10 +438,10 @@ public class GoalManager : MonoBehaviour
 
         float firstY = firstTransform == null
             ? 0f
-            : firstTransform.anchoredPosition.y;
+            : firstTransform.position.y;
         float secondY = secondTransform == null
             ? 0f
-            : secondTransform.anchoredPosition.y;
+            : secondTransform.position.y;
 
         return secondY.CompareTo(firstY);
     }
@@ -440,7 +450,7 @@ public class GoalManager : MonoBehaviour
     {
         foreach (Transform item in Resources.FindObjectsOfTypeAll<Transform>())
         {
-            if (item.name == objectName && item.gameObject.scene.IsValid())
+            if (item.name == objectName && item.gameObject.scene == SceneManager.GetActiveScene())
             {
                 return item.gameObject;
             }

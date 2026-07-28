@@ -33,13 +33,22 @@ public class InputManager : MonoBehaviour
     {
         Debug.Log("Button Mode Pressed");
         currentMode = InputMode.Buttons;
+        if (ProfileManager.instance != null && ProfileManager.instance.activeProfile != null)
+        {
+            ProfileManager.instance.activeProfile.inputModeIndex = 0;
+            ProfileManager.instance.SaveActiveProfileJSON();
+        }
     }
     
     public void SetTouchMode() // Changes the active control scheme to swipe and tells the UI to update its visual layout
     {
         Debug.Log("Touch Mode Pressed");
         currentMode = InputMode.Touch;
-        
+        if (ProfileManager.instance != null && ProfileManager.instance.activeProfile != null)
+        {
+            ProfileManager.instance.activeProfile.inputModeIndex = 1;
+            ProfileManager.instance.SaveActiveProfileJSON();
+        }
     }
 }
 

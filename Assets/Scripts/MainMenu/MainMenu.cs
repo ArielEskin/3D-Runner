@@ -106,6 +106,14 @@ public class MainMenu : MonoBehaviour
         SceneManager.LoadScene("MainMenu");
     }
 
+    public void OpenAchievements() 
+    {
+        if (GoalManager.Instance != null)
+        {
+            GoalManager.Instance.OpenAchievements();
+        }
+    }
+
     public void UpdateMusicVolume(float volume) // Adjusts the live AudioMixer levels when the UI sliders are dragged.
     {
         Debug.Log("Music slider value: " + volume);
