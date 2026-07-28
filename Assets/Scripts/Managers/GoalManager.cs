@@ -93,9 +93,6 @@ public class GoalManager : MonoBehaviour
         switch (milestone.metric)
         {
             case MilestoneMetric.LifetimeCoins:
-                // Old profiles stored their earned coins in totalCoins before
-                // Task 4 existed. Use the larger value so old progress shows
-                // correctly and new live coin pickups still keep counting.
                 return Mathf.Max(
                     profile.lifetimeCoinsCollected,
                     profile.totalCoins
@@ -107,6 +104,23 @@ public class GoalManager : MonoBehaviour
             case MilestoneMetric.LifetimeSeconds:
                 return profile.lifetimeSecondsSurvived;
 
+            case MilestoneMetric.TotalDailyRewards:
+                return profile.totalDailyRewardsCollected;
+            
+            case MilestoneMetric.HighestSingleRunDistance:
+                return profile.highestDistance;
+            
+            case MilestoneMetric.HighestSingleRunCoins:
+                return profile.highestCoinsInOneRun;
+            
+            case MilestoneMetric.SkinsBought:
+                // Minus 1 because the player starts with 1 default skin unlocked
+                return profile.unlockedSkinIndices.Count - 1; 
+            
+            case MilestoneMetric.ThemesBought:
+                // Minus 1 because the player starts with 1 default theme unlocked
+                return profile.unlockedThemes.Count - 1; 
+            
             default:
                 return 0f;
         }
@@ -175,6 +189,12 @@ public class GoalManager : MonoBehaviour
         profile.lifetimeCoinsCollected += collectedCoins;
 
         ProfileManager.instance.SaveActiveProfileJSON();
+        ProgressChanged?.Invoke();
+        RefreshAchievementsUI();
+    }
+
+    public void CheckProgress()
+    {
         ProgressChanged?.Invoke();
         RefreshAchievementsUI();
     }
@@ -378,6 +398,21 @@ public class GoalManager : MonoBehaviour
 
             case MilestoneMetric.LifetimeDistance:
                 return "meters";
+            
+            case MilestoneMetric.TotalDailyRewards:
+                return "rewards";
+            
+            case MilestoneMetric.HighestSingleRunDistance:
+                return "meters";
+            
+            case MilestoneMetric.HighestSingleRunCoins:
+                return "coins";
+            
+            case MilestoneMetric.SkinsBought:
+                return "skins"; 
+            
+            case MilestoneMetric.ThemesBought:
+                return "themes"; 
 
             default:
                 return "seconds";

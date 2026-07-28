@@ -131,6 +131,11 @@ public class SkinShopUI : MonoBehaviour
 
             profile.totalCoins -= Prices[shopIndex];
             profile.unlockedSkinIndices.Add(skinIndex);
+
+            if (GoalManager.Instance != null)
+            {
+                GoalManager.Instance.CheckProgress();
+            }
         }
         else
         {

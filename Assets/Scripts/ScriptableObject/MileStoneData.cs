@@ -4,7 +4,12 @@ public enum MilestoneMetric
 {
     LifetimeCoins,
     LifetimeDistance,
-    LifetimeSeconds
+    LifetimeSeconds,
+    TotalDailyRewards,       
+    HighestSingleRunDistance, 
+    HighestSingleRunCoins,    
+    SkinsBought,              
+    ThemesBought   
 }
 
 [CreateAssetMenu(

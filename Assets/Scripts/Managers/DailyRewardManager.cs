@@ -116,6 +116,7 @@ public class DailyRewardManager : MonoBehaviour
         PlayerProfileData profile = CurrentProfile;
 
         profile.totalCoins += dailyRewardCoins;
+        profile.totalDailyRewardsCollected++;
 
         profile.lastDailyRewardUtc = DateTime.UtcNow.ToString(
             "O",
@@ -123,6 +124,11 @@ public class DailyRewardManager : MonoBehaviour
         );
 
         ProfileManager.instance.SaveActiveProfileJSON();
+
+        if (GoalManager.Instance != null)
+        {
+            GoalManager.Instance.CheckProgress();
+        }
 
         if (AnalyticsManager.Instance != null)
         {

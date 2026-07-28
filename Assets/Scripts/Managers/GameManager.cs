@@ -242,6 +242,7 @@ public class GameManager : MonoBehaviour
 
         PlayerProfileData profile = ProfileManager.instance.activeProfile;
         profile.totalCoins += Coins;
+        profile.highestCoinsInOneRun = Mathf.Max(profile.highestCoinsInOneRun, Coins);
         profile.highestDistance = Mathf.Max(profile.highestDistance, distanceTravelled);
         profile.longestTimeSurvived = Mathf.Max(profile.longestTimeSurvived, timeSurvived);
         if (GoalManager.Instance != null)

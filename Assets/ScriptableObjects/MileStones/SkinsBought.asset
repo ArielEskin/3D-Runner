@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 317f442b364b8de498f2d53fb1d7064c, type: 3}
+  m_Name: SkinsBought
+  m_EditorClassIdentifier: 
+  id: buy_first_skin
+  title: Fashion Statement
+  description: Head to the shop and unlock a new skin.
+  metric: 6
+  targetValue: 1
+  rewardCoins: 20
+  permanentCoinBonusPercent: 0

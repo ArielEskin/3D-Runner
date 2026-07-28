@@ -176,6 +176,11 @@ public class ThemeShopUI : MonoBehaviour
         profile.unlockedThemes.Add(themeID);
         ProfileManager.instance.SaveActiveProfileJSON();
 
+        if (GoalManager.Instance != null)
+        {
+            GoalManager.Instance.CheckProgress();
+        }
+
         MainMenu mainMenu = FindFirstObjectByType<MainMenu>();
         if (mainMenu != null)
         {
