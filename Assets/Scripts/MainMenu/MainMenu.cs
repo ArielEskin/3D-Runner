@@ -37,6 +37,11 @@ public class MainMenu : MonoBehaviour
     {
         Debug.Log("Press On StartButton");
         // MusicManager.instance.PlayMusic("MainMenu");
+        SceneManager.LoadScene("ThemeSelection");
+    }
+
+    public void OpenProfileSelection() // Loads the profile selection screen
+    {
         SceneManager.LoadScene("ProfileSelection");
     }
 

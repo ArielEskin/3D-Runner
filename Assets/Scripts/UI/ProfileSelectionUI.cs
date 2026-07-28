@@ -12,7 +12,7 @@ public class ProfileSelectionUI : MonoBehaviour
     [SerializeField] private Transform contentParent;
     [SerializeField] private ProfileSlotUI profileSlotPrefab;
     [SerializeField] private Button newProfileButton;
-    [SerializeField] private string nextSceneName = "ThemeSelection";
+    [SerializeField] private string nextSceneName = "MainMenu";
     [SerializeField] private string backSceneName = "MainMenu";
     
     // ==========================================================================================================================================================

@@ -17,5 +17,5 @@ MonoBehaviour:
   description: Collect a total of 7 daily rewards
   metric: 3
   targetValue: 7
-  rewardCoins: 100
+  rewardCoins: 300
   permanentCoinBonusPercent: 0
