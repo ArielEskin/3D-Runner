@@ -17,5 +17,5 @@ MonoBehaviour:
   description: Unlock a new environment theme from the shop.
   metric: 7
   targetValue: 1
-  rewardCoins: 20
+  rewardCoins: 50
   permanentCoinBonusPercent: 0

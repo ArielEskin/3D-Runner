@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: collect_500_coins
   title: Coin Collector
-  description: Collect 500 coins across all runs.
+  description: Collect 1000 coins across all runs.
   metric: 0
-  targetValue: 500
+  targetValue: 1000
   rewardCoins: 100
   permanentCoinBonusPercent: 10

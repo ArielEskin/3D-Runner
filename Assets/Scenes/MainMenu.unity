@@ -130,8 +130,9 @@ GameObject:
   - component: {fileID: 58997256}
   - component: {fileID: 58997258}
   - component: {fileID: 58997257}
+  - component: {fileID: 58997259}
   m_Layer: 5
-  m_Name: TextPanelSurvivor
+  m_Name: TextPanelFashion
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -154,9 +155,9 @@ RectTransform:
   - {fileID: 1653343856}
   m_Father: {fileID: 1890363689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 482, y: -1110}
   m_SizeDelta: {x: 850, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &58997257
@@ -197,6 +198,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 58997255}
   m_CullTransparentMesh: 1
+--- !u!225 &58997259
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 58997255}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &62161731
 GameObject:
   m_ObjectHideFlags: 0
@@ -329,8 +342,9 @@ GameObject:
   - component: {fileID: 125464438}
   - component: {fileID: 125464440}
   - component: {fileID: 125464439}
+  - component: {fileID: 125464441}
   m_Layer: 5
-  m_Name: TextPanelSurvivor
+  m_Name: TextPanelDedicated
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -353,9 +367,9 @@ RectTransform:
   - {fileID: 511348024}
   m_Father: {fileID: 1890363689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 482, y: -940}
   m_SizeDelta: {x: 850, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &125464439
@@ -396,6 +410,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 125464437}
   m_CullTransparentMesh: 1
+--- !u!225 &125464441
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 125464437}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &126630488
 GameObject:
   m_ObjectHideFlags: 0
@@ -528,7 +554,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Coin Magnet
+  m_text: The Gainer
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -626,7 +652,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &181532322
 RectTransform:
   m_ObjectHideFlags: 0
@@ -939,8 +965,9 @@ GameObject:
   - component: {fileID: 204909942}
   - component: {fileID: 204909944}
   - component: {fileID: 204909943}
+  - component: {fileID: 204909945}
   m_Layer: 5
-  m_Name: TextPanelCoins
+  m_Name: TextPanelCollector
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -963,9 +990,9 @@ RectTransform:
   - {fileID: 911245276}
   m_Father: {fileID: 1890363689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 482, y: -90}
   m_SizeDelta: {x: 850, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &204909943
@@ -1006,6 +1033,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 204909941}
   m_CullTransparentMesh: 1
+--- !u!225 &204909945
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 204909941}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &214462907
 GameObject:
   m_ObjectHideFlags: 0
@@ -1183,7 +1222,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Long Runner:'
+  m_text: 'The Marathon '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -1683,7 +1722,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '0 / 600 seconds
+  m_text: '0 / 2000 seconds
 
     Reward: 250 coins'
   m_isRightToLeft: 0
@@ -2523,9 +2562,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1890363689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 482, y: -60}
   m_SizeDelta: {x: 100, y: 120}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &398605029
@@ -2539,6 +2578,7 @@ GameObject:
   - component: {fileID: 398605030}
   - component: {fileID: 398605032}
   - component: {fileID: 398605031}
+  - component: {fileID: 398605033}
   m_Layer: 5
   m_Name: TextPanelSurvivor
   m_TagString: Untagged
@@ -2563,9 +2603,9 @@ RectTransform:
   - {fileID: 322264938}
   m_Father: {fileID: 1890363689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 482, y: -430}
   m_SizeDelta: {x: 850, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &398605031
@@ -2606,6 +2646,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 398605029}
   m_CullTransparentMesh: 1
+--- !u!225 &398605033
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 398605029}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &420315854
 GameObject:
   m_ObjectHideFlags: 0
@@ -2815,7 +2867,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "100 FREE COINS \n"
+  m_text: "40 FREE COINS \n"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -2969,17 +3021,17 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 670743536}
+        m_TargetAssemblyTypeName: MainMenu, Assembly-CSharp
+        m_MethodName: OpenAchievements
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 1
+          m_BoolArgument: 0
         m_CallState: 1
       - m_Target: {fileID: 2114072886}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
@@ -2992,19 +3044,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
-      - m_Target: {fileID: 1615962318}
-        m_TargetAssemblyTypeName: GoalManager, Assembly-CSharp
-        m_MethodName: OpenAchievements
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
 --- !u!114 &455659336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3789,7 +3829,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Survivalist
+  m_text: The Long Run
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -4655,7 +4695,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '0 / 500 coins
+  m_text: '0 / 1000 coins
 
     Reward: 100 coins, permanent +10% coins'
   m_isRightToLeft: 0
@@ -5544,8 +5584,9 @@ GameObject:
   - component: {fileID: 907211811}
   - component: {fileID: 907211813}
   - component: {fileID: 907211812}
+  - component: {fileID: 907211814}
   m_Layer: 5
-  m_Name: TextPanelLongRunner
+  m_Name: 'TextPanelMarathon '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5568,9 +5609,9 @@ RectTransform:
   - {fileID: 214462908}
   m_Father: {fileID: 1890363689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 482, y: -260}
   m_SizeDelta: {x: 850, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &907211812
@@ -5611,6 +5652,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 907211810}
   m_CullTransparentMesh: 1
+--- !u!225 &907211814
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 907211810}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &911245275
 GameObject:
   m_ObjectHideFlags: 0
@@ -6510,7 +6563,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'COINS:'
+  m_text: The Collector
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -6824,8 +6877,9 @@ GameObject:
   - component: {fileID: 1038220057}
   - component: {fileID: 1038220059}
   - component: {fileID: 1038220058}
+  - component: {fileID: 1038220060}
   m_Layer: 5
-  m_Name: TextPanelSurvivor
+  m_Name: TextPanelNewWorld
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6848,9 +6902,9 @@ RectTransform:
   - {fileID: 494831865}
   m_Father: {fileID: 1890363689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 482, y: -1280}
   m_SizeDelta: {x: 850, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1038220058
@@ -6891,6 +6945,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1038220056}
   m_CullTransparentMesh: 1
+--- !u!225 &1038220060
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038220056}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1065677419
 GameObject:
   m_ObjectHideFlags: 0
@@ -7649,7 +7715,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Dedicated Player
+  m_text: The Dedicated
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -7896,7 +7962,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'SURVIVOR:'
+  m_text: The Survivor
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -9251,9 +9317,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1890363689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 482, y: -1315}
   m_SizeDelta: {x: 100, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1469850343
@@ -9645,7 +9711,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Fashion Statement
+  m_text: Fashion Icon
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -9897,7 +9963,7 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Collect 100 coins in a single run
 
-    Reward: 250 coins'
+    Reward: 200 coins'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -9988,8 +10054,9 @@ GameObject:
   - component: {fileID: 1593016559}
   - component: {fileID: 1593016561}
   - component: {fileID: 1593016560}
+  - component: {fileID: 1593016562}
   m_Layer: 5
-  m_Name: TextPanelMagnet
+  m_Name: TextPanelGainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -10012,9 +10079,9 @@ RectTransform:
   - {fileID: 650926132}
   m_Father: {fileID: 1890363689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 482, y: -770}
   m_SizeDelta: {x: 850, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1593016560
@@ -10055,6 +10122,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1593016558}
   m_CullTransparentMesh: 1
+--- !u!225 &1593016562
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593016558}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1615962317
 GameObject:
   m_ObjectHideFlags: 0
@@ -10090,6 +10169,11 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 88844d73a6b925044a79df6af6eb37c5, type: 2}
   - {fileID: 11400000, guid: cddf9c75a0113f04b82c24d4deaf8736, type: 2}
   - {fileID: 11400000, guid: 5c23762f25d1d874bac11a6df1c829ac, type: 2}
+  - {fileID: 11400000, guid: 17fea0eac2d764e4e97ae013f031bff7, type: 2}
+  - {fileID: 11400000, guid: ce0e80fc82cc9db4589443216223c438, type: 2}
+  - {fileID: 11400000, guid: 268d75f312facf64e962b6b014b3c4d1, type: 2}
+  - {fileID: 11400000, guid: d3cec13dadb546746bfd3d49f0f53803, type: 2}
+  - {fileID: 11400000, guid: 7ce97381ca73168428ce48e16d65f248, type: 2}
 --- !u!4 &1615962319
 Transform:
   m_ObjectHideFlags: 0
@@ -10117,8 +10201,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 402c575cbfa340b4383641440dd60d09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dailyRewardCoins: 100
-  notificationDelayHours: 24
+  dailyRewardCoins: 40
+  notificationDelayHours: 0.005
 --- !u!114 &1615962321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10326,9 +10410,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Run 5000 meters without dying in a single run.
+  m_text: 'Run 5000 meters in a single run
 
-    Reward: 250 coins'
+    Reward: 200 coins'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -11195,6 +11279,7 @@ GameObject:
   - component: {fileID: 1779394015}
   - component: {fileID: 1779394017}
   - component: {fileID: 1779394016}
+  - component: {fileID: 1779394018}
   m_Layer: 5
   m_Name: TextPanelLongRun
   m_TagString: Untagged
@@ -11219,9 +11304,9 @@ RectTransform:
   - {fileID: 920522690}
   m_Father: {fileID: 1890363689}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 482, y: -600}
   m_SizeDelta: {x: 850, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1779394016
@@ -11262,6 +11347,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1779394014}
   m_CullTransparentMesh: 1
+--- !u!225 &1779394018
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779394014}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1791105725
 GameObject:
   m_ObjectHideFlags: 0
@@ -11439,9 +11536,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '0 / 7 rewards
+  m_text: '0 / 7 daily rewards collected
 
-    Reward: 250 coins'
+    Reward: 300 coins'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -11798,7 +11895,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: cf6389d7093e26f45861a7f34291575a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4bae2a8a5d7c3fc4795c7747670f2b26, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -11861,7 +11958,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 985.70685}
-  m_SizeDelta: {x: 964, y: 0}
+  m_SizeDelta: {x: 964, y: 1380}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1890363690
 MonoBehaviour:
@@ -13092,7 +13189,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '0 / 5000 meters
+  m_text: '0 / 10000 meters
 
     Reward: 150 coins, permanent +15% coins'
   m_isRightToLeft: 0
@@ -13189,7 +13286,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2114072887
 RectTransform:
   m_ObjectHideFlags: 0

@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: run_5000_meters
   title: Run Meters
-  description: Run 5000 meter across all runs.
+  description: Run 10000 meter across all runs.
   metric: 1
-  targetValue: 5000
+  targetValue: 10000
   rewardCoins: 150
   permanentCoinBonusPercent: 15

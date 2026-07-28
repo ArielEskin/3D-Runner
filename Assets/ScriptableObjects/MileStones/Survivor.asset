@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: surivive_600_sec
   title: Surivive Seconds
-  description: Survive 600 seconds across all runs.
+  description: Survive 2000 seconds across all runs.
   metric: 2
-  targetValue: 600
+  targetValue: 2000
   rewardCoins: 250
   permanentCoinBonusPercent: 0
