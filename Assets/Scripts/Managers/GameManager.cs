@@ -11,18 +11,28 @@ public enum DifficultyTier
 }
 
 public class GameManager : MonoBehaviour
-{
-    // ==========reference=========
+{ 
+    // ==========references================================================================================================================================================
+    
     [SerializeField] private PlayerMovement playerMovement;
     public static GameManager gameManager;
     [SerializeField] private DifficultyManager difficultyManager;
+    public MainMenu mainMenu; 
     
-
     [Header("=========GameManager Settings=========")]
     [field: SerializeField] public float timeSurvived { get; private set; }
     [field: SerializeField] public  float distanceTravelled { get; private set; }
-    
     [field: SerializeField] public int DifficultyUpLevel { get; private set; }
+    
+    [Header("=========Power-Up States=========")]
+    public bool isInvincible = false;
+    public bool isMagnetActive = false;
+    public int coinMultiplier = 1;
+    public float magnetRadius = 10f;
+    // Timers
+    private float invincibilityTimer = 0f;
+    private float magnetTimer = 0f;
+    private float multiplierTimer = 0f;
     
     // =========DifficultyManager=========
     [SerializeField] private float nextDifficultyDistance;
@@ -36,121 +46,222 @@ public class GameManager : MonoBehaviour
     
     //=========Button=========
     [SerializeField] private Button retryButton;
+    [SerializeField] private Button backButton;
+    private bool profileSavedThisRun;
+    
+    // ==========================================================================================================================================================
 
-    private void Awake()
+    private void Awake() // Sets the GameManager instance and resets the difficulty
     {
         gameManager = this;
-        // Force the difficulty back to Easy every time the scene loads (when retrying)
         if (difficultyManager != null)
         {
             difficultyManager.ResetDifficulty();
         }
+
+        if (ProfileManager.instance != null && ProfileManager.instance.activeProfile != null)
+        {
+            ProfileManager.instance.ApplyProfileToGameSession();
+            Debug.Log("Selected theme for this run: " + ProfileManager.instance.activeProfile.selectedThemeID);
+        }
     }
     
-    void Start()
+    void Start() // Hides the game over UI buttons at the start of a run
     {
         retryButton.gameObject.SetActive(false);
+        backButton.gameObject.SetActive(false);
+        
     }
 
-    // Update is called once per frame
-    private void Update()
+    private void Update() // Tracks player survival time, distance traveled, active power-up durations, and checks for level-ups
     {
         TimeSurvived();
         DistancePlayed();
         LevelUp();
-        
-        // when is falling will stop the game need to stop the counting
+        HandlePowerUpTimers();
+    }
+
+    public void ActivatePowerUp(PowerUpData data) // Identifies which power-up was collected and triggers its specific effects and timers.
+    {
+        if (data.powerUpName == "Invincibility") 
+        {
+            isInvincible = true;
+            invincibilityTimer = data.effectDuration; // Sets/Resets the clock
+        }
+        else if (data.powerUpName == "DoubleCoins") 
+        {
+            coinMultiplier = Mathf.RoundToInt(data.scoreMultiplierValue);
+            multiplierTimer = data.effectDuration;
+        }
+        else if (data.powerUpName == "Magnet") 
+        {
+            isMagnetActive = true;
+            magnetRadius = data.magnetRadius;
+            magnetTimer = data.effectDuration;
+        }
     }
     
+    private void HandlePowerUpTimers() // Counts down the timers every frame
+    {
+        if (invincibilityTimer > 0)
+        {
+            invincibilityTimer -= Time.deltaTime;
+            if (invincibilityTimer <= 0) isInvincible = false;
+        }
+
+        if (multiplierTimer > 0)
+        {
+            multiplierTimer -= Time.deltaTime;
+            if (multiplierTimer <= 0) coinMultiplier = 1; // Back to normal
+        }
+
+        if (magnetTimer > 0)
+        {
+            magnetTimer -= Time.deltaTime;
+            if (magnetTimer <= 0) isMagnetActive = false;
+        }
+    }
     public void AddCoin(int amount)
     {
-        Coins += amount;
+        int permanentBonusPercent = 0;
+
+        if (ProfileManager.instance != null &&
+            ProfileManager.instance.activeProfile != null)
+        {
+            permanentBonusPercent =
+                ProfileManager.instance.activeProfile.permanentCoinBonusPercent;
+        }
+
+        float permanentMultiplier = 1f + (permanentBonusPercent / 100f);
+
+        int earnedCoins = Mathf.CeilToInt(
+            amount * coinMultiplier * permanentMultiplier
+        );
+
+        Coins += earnedCoins;
+
         HUDManager.instance.UpdateCoinsText(Coins);
-        
-    }
 
-    private void TimeSurvived()
-    {
-        if (!isDead)
+        // Record coin-goal progress at pickup time. This keeps the achievement
+        // correct even if the player leaves a run before the normal run save.
+        if (GoalManager.Instance != null)
         {
-            timeSurvived += Time.deltaTime; // count +1 after every 1 second
+            GoalManager.Instance.RecordCoins(earnedCoins);
+        }
+
+        if (AnalyticsManager.Instance != null)
+        {
+            AnalyticsManager.Instance.TrackCoinsCollected(earnedCoins, Coins);
         }
     }
 
-    private void DistancePlayed()
+    private void TimeSurvived() // Calculates the run's time survived based on time and movement speed
     {
         if (!isDead)
         {
-            distanceTravelled += Time.deltaTime * playerMovement.moveSpeed; // The playerspeed is 5f so the distance will be 5 units/meter
+            timeSurvived += Time.deltaTime;
+        }
+    }
+
+    private void DistancePlayed() // Calculates the run's distance traveled based on time and movement speed
+    {
+        if (!isDead)
+        {
+            distanceTravelled += Time.deltaTime * playerMovement.moveSpeed;
         }
     }
     
     
-    public void KillPlayer(string obstacleTag)
+    public void KillPlayer(string obstacleTag) // Stops the game loop, plays the specific death animation, triggers audio, and starts the game over sequences
     {
-        if (isDead) return; // Prevent this from triggering twice if you hit two hitboxes at once
+        if (isDead) return;
         
         isDead = true;
+        SoundManager.instance.PlaySound3D("DeathSound", playerMovement.transform.position);
         Debug.Log("Player hit: " + obstacleTag);
-
-        // Tell the player to play the specific death animation
+        
         playerMovement.TriggerDeathAnimation(obstacleTag);
 
-        // Start the timer to wait for the animation to finish
+        SaveRunToActiveProfile();
         StartCoroutine(GameOverSequence());
         StartCoroutine(GameOverRetryButton());
     }
 
-    private IEnumerator GameOverSequence()
+    private IEnumerator GameOverSequence() // Waits for the death animation to finish before showing the "Dead" UI text
     {
-        // Wait for 3 seconds so death animations finishes
         yield return new WaitForSeconds(3f);
         HUDManager.instance.UpdateDeadText();
-        Time.timeScale = 0f;
+        Time.timeScale = 1f;
     }
-    
-    //================== Difficulty Changer methods ==================
-    public void LevelUp()
+
+    public void LevelUp() // Checks if the player has passed the current difficulty's distance threshold and triggers a tier upgrade if they have
     {
-        // Check if there is another difficulty tier available to upgrade to
         if (difficultyManager.currentTierIndex < difficultyManager.difficultyTiers.Count - 1)
         {
-            // Get the data for the NEXT tier
             DifficultyData nextTierData = difficultyManager.difficultyTiers[difficultyManager.currentTierIndex + 1];
 
-            // Check if distance travelled meets the requirement in the Scriptable Object
             if (distanceTravelled >= nextTierData.distanceToReach)
             {
-                // Update our Enum (Easy -> Medium -> Hard)
                 if (currentTier == DifficultyTier.Easy) currentTier = DifficultyTier.Medium;
                 else if (currentTier == DifficultyTier.Medium) currentTier = DifficultyTier.Hard;
 
                 Debug.Log(currentTier.ToString() + " reached!");
-
-                // Tell the DifficultyManager to step up its index
-                difficultyManager.LevelUpDifficulty(); 
                 
-                // Apply the new movement speed from the Scriptable Object
+                difficultyManager.LevelUpDifficulty(); 
                 playerMovement.moveSpeed = difficultyManager.currentDifficulty.movementSpeed; 
             }
         }
     }
     
-    // =====================Buttons====================
-    private IEnumerator GameOverRetryButton()
+    private IEnumerator GameOverRetryButton() // Delays the appearance of the retry/menu buttons and pauses the game time
     {
-        yield return new WaitForSeconds(3f); // wait 3 seconds
-        retryButton.gameObject.SetActive(true); // active my retry button
+        yield return new WaitForSeconds(3f);
+        retryButton.gameObject.SetActive(true);
+        backButton.gameObject.SetActive(true);
         Time.timeScale = 0f;
     }
 
-    public void RetryButton()
+    public void RetryButton() // Restores the timescale and loads the game scene again
     {
-        
+        SaveRunToActiveProfile();
         Time.timeScale = 1f;
         SceneManager.LoadScene("Game");
-        
     }
-    
+
+    public void BackButton() // Restores the timescale and loads the main menu scene
+    {
+        SaveRunToActiveProfile();
+        Time.timeScale = 1f;
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    private void SaveRunToActiveProfile()
+    {
+        if (profileSavedThisRun) return;
+        if (ProfileManager.instance == null || ProfileManager.instance.activeProfile == null) return;
+
+        PlayerProfileData profile = ProfileManager.instance.activeProfile;
+        profile.totalCoins += Coins;
+        profile.highestDistance = Mathf.Max(profile.highestDistance, distanceTravelled);
+        profile.longestTimeSurvived = Mathf.Max(profile.longestTimeSurvived, timeSurvived);
+        if (GoalManager.Instance != null)
+        {
+            GoalManager.Instance.RecordRun(
+                Coins,
+                distanceTravelled,
+                timeSurvived
+            );
+        }
+        profile.lastPlayedDate = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+
+        if (InputManager.instance != null)
+        {
+            profile.inputModeIndex = InputManager.instance.currentMode == InputMode.Buttons ? 0 : 1;
+        }
+
+        ProfileManager.instance.TriggerSaveSequence();
+        profileSavedThisRun = true;
+        Debug.Log("Saved run stats to profile: " + profile.profileName);
+    }
     
 }

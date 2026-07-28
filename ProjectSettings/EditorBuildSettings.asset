@@ -9,8 +9,18 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 4466bb173dec0b74ca93c14efd2be7ab
   - enabled: 1
+    path: Assets/Scenes/ProfileSelection.unity
+    guid: 4ac0ded3005635d4bbc23521a4f9e911
+  - enabled: 1
+    path: Assets/Scenes/ThemeSelection.unity
+    guid: 4b413df648ecd0848b43e9110a6f5ed7
+  - enabled: 1
+    path: Assets/Scenes/LoadingScene.unity
+    guid: 248e36719d03059409b9597ddbbad709
+  - enabled: 1
     path: Assets/Scenes/Game.unity
     guid: 99c9720ab356a0642a771bea13969a05
   m_configObjects:
+    com.unity.addressableassets: {fileID: 11400000, guid: 6a9814582771f8b4eb6c41c46382ee60, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4711c7995e3066948b0d93cb46a755d4, type: 3}
+  m_Name: Hearth
+  m_EditorClassIdentifier: Assembly-CSharp::ThemeData
+  themeID: Hearth
+  skyboxMaterial: {fileID: 2100000, guid: 25db3fb34683d9a4295a972f6ecb5627, type: 2}
+  trackPrefab: {fileID: 3313106382144786341, guid: c06e8fd161312e049bc152a0a765f492, type: 3}
+  treePrefab: {fileID: 1400461039152700, guid: c7821bc923171f24094e69062402d005, type: 3}
+  bushPrefab: {fileID: 1309910605144772, guid: 27ce25370e5628e4097b7cb95b3a151d, type: 3}
+  lowObstaclePrefab: {fileID: 5007924321860663339, guid: 336f83d095cc7c9459db11fa38f20f7e, type: 3}
+  highObstaclePrefab: {fileID: 7460602978283781795, guid: bf3eb9f382de32b46bf0e7d751ad177f, type: 3}

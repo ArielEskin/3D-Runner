@@ -7,6 +7,8 @@ using Color = UnityEngine.Color;
 
 public class HUDManager : MonoBehaviour
 {
+    // ==========references================================================================================================================================================
+
    [Header("=========HUDManager Settings=========")]
    [SerializeField] private TextMeshProUGUI timeText;
    [SerializeField] private TextMeshProUGUI distanceText;
@@ -15,26 +17,24 @@ public class HUDManager : MonoBehaviour
    [SerializeField] private TextMeshProUGUI CoinsAmountText;
    [SerializeField] private TextMeshProUGUI DeadText;
    private int lastTierIndex = -1;
-   
-   // ==========reference=========
+
    private GameManager gameManager;
    [SerializeField] private DifficultyManager difficultyManager;
    public static HUDManager instance;
+   
+   // ==========================================================================================================================================================
 
-   private void Awake()
+   private void Awake() // Initializes the HUD singleton and caches the GameManager reference
    {
        instance = this;
    }
 
-   void Start()
+   void Start() // Initializes the HUD singleton and caches the GameManager reference
     {
         gameManager = GameManager.gameManager;
-        
-
     }
 
-    // Update is called once per frame
-    private void Update()
+    private void Update() // Refreshes all text elements every frame.
     {
         UpdateTime();
         UpdateDistance();
@@ -43,7 +43,7 @@ public class HUDManager : MonoBehaviour
         
     }
 
-    private void UpdateLevelText()
+    private void UpdateLevelText() // Detects a difficulty change and triggers the corresponding on-screen announcement
     {
         if (difficultyManager.currentTierIndex == lastTierIndex)
             return;
@@ -65,50 +65,37 @@ public class HUDManager : MonoBehaviour
         }
     }
 
-    private IEnumerator ShowTextFor2SecondsMediumLevel(TextMeshProUGUI MediumLevel)
+    private IEnumerator ShowTextFor2SecondsMediumLevel(TextMeshProUGUI MediumLevel) // Coroutines that flash the "Medium" text on screen temporarily
     {
-        // wait 2 seconds for the medium level text
         MediumLevel.gameObject.SetActive(true);
         yield return new WaitForSeconds(2f);
         MediumLevel.gameObject.SetActive(false);
-        
     }
     
-    private IEnumerator ShowTextFor2SecondsHardLevel(TextMeshProUGUI HardLevel)
+    private IEnumerator ShowTextFor2SecondsHardLevel(TextMeshProUGUI HardLevel) // Coroutines that flash the "Hard" text on screen temporarily
     {
-        // wait 2 seconds for the medium level text
         HardLevel.gameObject.SetActive(true);
         yield return new WaitForSeconds(2f);
         HardLevel.gameObject.SetActive(false);
-        
     }
 
-    private void UpdateTime()
+    private void UpdateTime() // Formats the raw backend numbers into clean strings for the UI text [Time]
     {
-        // managing the time text 
-        timeText.text = $"Time:{gameManager.timeSurvived:F1}";
-        timeText.color = Color.black;
-        timeText.fontSize = 60;
+        timeText.text = $"{gameManager.timeSurvived:F1}";
     }
 
-    private void UpdateDistance()
+    private void UpdateDistance() // Formats the raw backend numbers into clean strings for the UI text [Distance]
     {
-        //managing the distance text 
-        distanceText.text = $"{Mathf.RoundToInt(gameManager.distanceTravelled)}/M";
-        distanceText.color = Color.black;
-        distanceText.fontSize = 60;
+        distanceText.text = $"{Mathf.RoundToInt(gameManager.distanceTravelled)}";
     }
-    
-    //=============COINS===============
-    public void UpdateCoinsText(int amount)
+
+    public void UpdateCoinsText(int amount) // Formats the raw backend numbers into clean strings for the UI text [Coins]
     {
         CoinsAmountText.text = amount.ToString();
-        CoinsAmountText.color = Color.black;
-        CoinsAmountText.fontSize = 40;
+        CoinsAmountText.fontSize = 10;
     }
-    
-    //=============Death===============
-    public void UpdateDeadText()
+
+    public void UpdateDeadText() // Reveals the game-over text overlay when the player dies
     {
         if (gameManager.isDead)
         {
