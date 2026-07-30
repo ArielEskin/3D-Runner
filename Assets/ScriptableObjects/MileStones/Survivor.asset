@@ -16,6 +16,6 @@ MonoBehaviour:
   title: Surivive Seconds
   description: Survive 600 seconds across all runs.
   metric: 2
-  targetValue: 600
+  targetValue: 10
   rewardCoins: 250
   permanentCoinBonusPercent: 0

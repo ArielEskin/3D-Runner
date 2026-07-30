@@ -16,6 +16,6 @@ MonoBehaviour:
   title: Coin Collector
   description: Collect 500 coins across all runs.
   metric: 0
-  targetValue: 500
+  targetValue: 10
   rewardCoins: 100
   permanentCoinBonusPercent: 10
